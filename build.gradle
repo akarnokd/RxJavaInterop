@@ -1,0 +1,195 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        classpath 'gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1'
+        classpath "me.champeau.gradle:jmh-gradle-plugin:0.2.0"
+        classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.1.0'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: "me.champeau.gradle.jmh"
+apply plugin: 'pmd'
+apply plugin: 'jacoco'
+apply plugin: 'ru.vyarus.animalsniffer'
+apply plugin: "com.github.hierynomus.license"
+
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
+
+group = "com.github.akarnokd" 
+ext.githubProjectName = 'rxjava2-interop'
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = ''
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url 'https://oss.sonatype.org/content/groups/public' }
+    maven { url 'https://oss.jfrog.org/libs-snapshot' }
+    maven { url 'http://repo.spring.io/libs-snapshot' }
+}
+
+apply from: file('gradle/maven.gradle')
+apply plugin: 'maven'
+apply plugin: 'osgi'
+
+dependencies {
+    signature 'org.codehaus.mojo.signature:java16:1.1@signature'
+
+    compile "org.reactivestreams:reactive-streams:1.0.0"
+    compile "io.reactivex:rxjava:1.1.9"
+    compile "io.reactivex.rxjava2:rxjava:+"
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives javadocJar
+}
+
+uploadMavenCentral {
+    repositories {
+        mavenDeployer {
+            pom.whenConfigured {
+                p -> p.dependencies = p.dependencies.findAll { 
+                    dep -> dep.artifactId != "rxjava" 
+                }
+            }
+        }
+    }
+}
+
+jar {
+    manifest {
+        name = 'rxjava2-interop'
+        instruction 'Bundle-Vendor', 'akarnokd'
+        instruction 'Bundle-DocURL', 'https://github.com/akarnokd/RxJava2Interop'
+        instruction 'Import-Package', '!org.junit,!junit.framework,!org.mockito.*,*'
+        instruction 'Eclipse-ExtensibleAPI', 'true'
+    }
+}
+
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact (sourcesJar) { 
+                classifier = 'sources'
+            }
+        }
+    }
+}
+
+jmh {
+    jmhVersion = '1.11.3'
+    humanOutputFile = null
+    if (project.hasProperty('jmh')) {
+        include = ".*" + project.jmh + ".*"
+    } else {
+        include = ".*"
+    }
+}
+
+plugins.withType(EclipsePlugin) {
+    project.eclipse.classpath.plusConfigurations += [ configurations.jmh ]
+}
+
+javadoc {
+    failOnError = false
+}
+
+test {
+    maxHeapSize = "2g"
+    testLogging  {
+        events "started", "failed" // "skipped", "passed"
+    //    showStandardStreams = true
+    }
+}
+
+license {
+    header rootProject.file('HEADER')
+    ext.year = Calendar.getInstance().get(Calendar.YEAR)
+    skipExistingHeaders true
+    ignoreFailures true
+    excludes(["**/*.md", "**/*.txt"])
+}
+
+jacoco {
+    toolVersion = '0.7.7.201606060606' // See http://www.eclemma.org/jacoco/.
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+build.dependsOn jacocoTestReport
+
+check.dependsOn jacocoTestReport
+
+pmd {
+    toolVersion = '5.4.2'
+    ignoreFailures = true
+    sourceSets = [sourceSets.main]
+    ruleSets = []
+    ruleSetFiles = files('pmd.xml')
+}
+
+pmdMain {
+    reports {
+        html.enabled = true
+        xml.enabled = true
+    }
+}
+
+task pmdPrint(dependsOn: 'pmdMain') << {
+    File file = rootProject.file('build/reports/pmd/main.xml')
+    if (file.exists()) {
+
+        println("Listing first 100 PMD violations")
+
+        file.eachLine { line, count ->
+            if (count <= 100) {
+               println(line)
+            }
+        }
+
+    } else {
+        println("PMD file not found.")
+    }
+}
+
+build.dependsOn pmdPrint
+check.dependsOn pmdPrint
+
+animalsniffer {
+    annotation = 'rx.internal.util.SuppressAnimalSniffer'
+}
