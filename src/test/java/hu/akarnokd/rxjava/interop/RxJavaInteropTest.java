@@ -241,23 +241,16 @@ public class RxJavaInteropTest {
     // 1.x Single -> 2.x Single
     // ----------------------------------------------------------
 
-    // FIXME once 2.x Single gets its test() method
-    static <T> io.reactivex.subscribers.TestSubscriber<T> test2(io.reactivex.Single<T> s) {
-        io.reactivex.subscribers.TestSubscriber<T> ts = new io.reactivex.subscribers.TestSubscriber<T>();
-        s.subscribe(ts);
-        return ts;
-    }
-
     @Test
     public void s1s2Normal() {
-        test2(toV2Single(rx.Single.just(1)))
+        toV2Single(rx.Single.just(1)).test()
         .assertResult(1);
     }
     
     @Test
     public void s1s2Cancel() {
         rx.subjects.PublishSubject<Integer> ps = rx.subjects.PublishSubject.create();
-        io.reactivex.subscribers.TestSubscriber<Integer> ts = test2(toV2Single(ps.toSingle()));
+        io.reactivex.subscribers.TestSubscriber<Integer> ts = toV2Single(ps.toSingle()).test();
         
         assertTrue("1.x PublishSubject has no observers!", ps.hasObservers());
         
@@ -269,13 +262,13 @@ public class RxJavaInteropTest {
     
     @Test
     public void s1s2Error() {
-        test2(toV2Single(rx.Single.error(new RuntimeException("Forced failure"))))
+        toV2Single(rx.Single.error(new RuntimeException("Forced failure"))).test()
         .assertFailureAndMessage(RuntimeException.class, "Forced failure");
     }
     
     @Test
     public void s1s2ErrorNull() {
-        test2(toV2Single(rx.Single.just(null)))
+        toV2Single(rx.Single.just(null)).test()
         .assertFailure(NullPointerException.class);
     }
 
@@ -304,23 +297,16 @@ public class RxJavaInteropTest {
     // 1.x Completable -> 2.x Completable
     // ----------------------------------------------------------
 
-    // FIXME once 2.x Completable gets its test() method
-    static <T> io.reactivex.subscribers.TestSubscriber<T> test2(io.reactivex.Completable s) {
-        io.reactivex.subscribers.TestSubscriber<T> ts = new io.reactivex.subscribers.TestSubscriber<T>();
-        s.subscribe(ts);
-        return ts;
-    }
-
     @Test
     public void c1c2Normal() {
-        test2(toV2Completable(rx.Completable.complete()))
+        toV2Completable(rx.Completable.complete()).test()
         .assertResult();
     }
     
     @Test
     public void c1c2Cancel() {
         rx.subjects.PublishSubject<Integer> ps = rx.subjects.PublishSubject.create();
-        io.reactivex.subscribers.TestSubscriber<Integer> ts = test2(toV2Completable(ps.toCompletable()));
+        io.reactivex.subscribers.TestSubscriber<Void> ts = toV2Completable(ps.toCompletable()).test();
         
         assertTrue("1.x PublishSubject has no observers!", ps.hasObservers());
         
@@ -331,7 +317,7 @@ public class RxJavaInteropTest {
     
     @Test
     public void c1c2Error() {
-        test2(toV2Completable(rx.Completable.error(new RuntimeException("Forced failure"))))
+        toV2Completable(rx.Completable.error(new RuntimeException("Forced failure"))).test()
         .assertFailureAndMessage(RuntimeException.class, "Forced failure");
     }
     
@@ -494,11 +480,11 @@ public class RxJavaInteropTest {
         io.reactivex.subjects.PublishSubject<Integer> ps = io.reactivex.subjects.PublishSubject.create();
         rx.observers.TestSubscriber<Integer> ts = test1(toV1Single(ps.toSingle()));
         
-        assertTrue("2.x PublishSubject has no observers!", ps.hasSubscribers());
+        assertTrue("2.x PublishSubject has no observers!", ps.hasObservers());
         
         ts.unsubscribe();
         
-        assertFalse("2.x PublishSubject has observers!", ps.hasSubscribers());
+        assertFalse("2.x PublishSubject has observers!", ps.hasObservers());
         
     }
     
@@ -536,11 +522,11 @@ public class RxJavaInteropTest {
         io.reactivex.subjects.PublishSubject<Integer> ps = io.reactivex.subjects.PublishSubject.create();
         rx.observers.TestSubscriber<Integer> ts = test1(toV1Completable(ps.toCompletable()));
         
-        assertTrue("2.x PublishSubject has no observers!", ps.hasSubscribers());
+        assertTrue("2.x PublishSubject has no observers!", ps.hasObservers());
         
         ts.unsubscribe();
         
-        assertFalse("2.x PublishSubject has observers!", ps.hasSubscribers());
+        assertFalse("2.x PublishSubject has observers!", ps.hasObservers());
         
     }
     
