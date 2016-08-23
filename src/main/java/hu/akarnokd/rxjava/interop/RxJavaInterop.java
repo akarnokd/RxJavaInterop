@@ -49,7 +49,7 @@ public final class RxJavaInterop {
      * @throws NullPointerException if {@code source} is null
      */
     public static <T> io.reactivex.Flowable<T> toV2Flowable(rx.Observable<T> source) {
-        io.reactivex.internal.functions.Objects.requireNonNull(source, "source is null");
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return new ObservableV1ToFlowableV2<T>(source);
     }
     
@@ -68,7 +68,7 @@ public final class RxJavaInterop {
      * @throws NullPointerException if {@code source} is null
      */
     public static <T> io.reactivex.Observable<T> toV2Observable(rx.Observable<T> source) {
-        io.reactivex.internal.functions.Objects.requireNonNull(source, "source is null");
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return new ObservableV1ToObservableV2<T>(source);
     }
     
@@ -84,7 +84,7 @@ public final class RxJavaInterop {
      * @throws NullPointerException if {@code source} is null
      */
     public static <T> io.reactivex.Single<T> toV2Single(rx.Single<T> source) {
-        io.reactivex.internal.functions.Objects.requireNonNull(source, "source is null");
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return new SingleV1ToSingleV2<T>(source);
     }
     
@@ -99,7 +99,7 @@ public final class RxJavaInterop {
      * @throws NullPointerException if {@code source} is null
      */
     public static io.reactivex.Completable toV2Completable(rx.Completable source) {
-        io.reactivex.internal.functions.Objects.requireNonNull(source, "source is null");
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return new CompletableV1ToCompletableV2(source);
     }
     
@@ -127,7 +127,7 @@ public final class RxJavaInterop {
      * @throws NullPointerException if {@code source} is null
      */
     public static <T> rx.Observable<T> toV1Observable(org.reactivestreams.Publisher<T> source) {
-        io.reactivex.internal.functions.Objects.requireNonNull(source, "source is null");
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return rx.Observable.create(new FlowableV2ToObservableV1<T>(source));
     }
     
@@ -148,8 +148,8 @@ public final class RxJavaInterop {
      * @throws NullPointerException if {@code source} is null
      */
     public static <T> rx.Observable<T> toV1Observable(io.reactivex.ObservableSource<T> source, io.reactivex.BackpressureStrategy strategy) {
-        io.reactivex.internal.functions.Objects.requireNonNull(source, "source is null");
-        io.reactivex.internal.functions.Objects.requireNonNull(strategy, "strategy is null");
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(strategy, "strategy is null");
         return toV1Observable(io.reactivex.Observable.wrap(source).toFlowable(strategy));
     }
     
@@ -166,7 +166,7 @@ public final class RxJavaInterop {
      * @throws NullPointerException if {@code source} is null
      */
     public static <T> rx.Single<T> toV1Single(io.reactivex.SingleSource<T> source) {
-        io.reactivex.internal.functions.Objects.requireNonNull(source, "source is null");
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return rx.Single.create(new SingleV2ToSingleV1<T>(source));
     }
     
@@ -182,7 +182,7 @@ public final class RxJavaInterop {
      * @throws NullPointerException if {@code source} is null
      */
     public static rx.Completable toV1Completable(io.reactivex.CompletableSource source) {
-        io.reactivex.internal.functions.Objects.requireNonNull(source, "source is null");
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return rx.Completable.create(new CompletableV2ToCompletableV1(source));
     }
 }
