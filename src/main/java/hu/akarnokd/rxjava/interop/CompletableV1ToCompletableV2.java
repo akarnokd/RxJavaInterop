@@ -33,7 +33,7 @@ final class CompletableV1ToCompletableV2 extends io.reactivex.Completable {
     }
     
     static final class SourceCompletableSubscriber
-    implements rx.Completable.CompletableSubscriber, io.reactivex.disposables.Disposable {
+    implements rx.CompletableSubscriber, io.reactivex.disposables.Disposable {
         
         final io.reactivex.CompletableObserver observer;
         

@@ -19,7 +19,7 @@ package hu.akarnokd.rxjava.interop;
 /**
  * Convert a V2 Completable into a V1 Completable, composing cancellation.
  */
-final class CompletableV2ToCompletableV1 implements rx.Completable.CompletableOnSubscribe {
+final class CompletableV2ToCompletableV1 implements rx.Completable.OnSubscribe {
 
     final io.reactivex.CompletableSource source;
     
@@ -28,18 +28,18 @@ final class CompletableV2ToCompletableV1 implements rx.Completable.CompletableOn
     }
     
     @Override
-    public void call(rx.Completable.CompletableSubscriber observer) {
+    public void call(rx.CompletableSubscriber observer) {
         source.subscribe(new SourceCompletableSubscriber(observer));
     }
     
     static final class SourceCompletableSubscriber
     implements io.reactivex.CompletableObserver, rx.Subscription {
         
-        final rx.Completable.CompletableSubscriber observer;
+        final rx.CompletableSubscriber observer;
         
         io.reactivex.disposables.Disposable d; 
         
-        public SourceCompletableSubscriber(rx.Completable.CompletableSubscriber observer) {
+        public SourceCompletableSubscriber(rx.CompletableSubscriber observer) {
             this.observer = observer;
         }
         
