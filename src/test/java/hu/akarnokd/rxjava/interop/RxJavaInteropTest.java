@@ -250,7 +250,7 @@ public class RxJavaInteropTest {
     @Test
     public void s1s2Cancel() {
         rx.subjects.PublishSubject<Integer> ps = rx.subjects.PublishSubject.create();
-        io.reactivex.subscribers.TestSubscriber<Integer> ts = toV2Single(ps.toSingle()).test();
+        io.reactivex.observers.TestObserver<Integer> ts = toV2Single(ps.toSingle()).test();
         
         assertTrue("1.x PublishSubject has no observers!", ps.hasObservers());
         
@@ -306,7 +306,7 @@ public class RxJavaInteropTest {
     @Test
     public void c1c2Cancel() {
         rx.subjects.PublishSubject<Integer> ps = rx.subjects.PublishSubject.create();
-        io.reactivex.subscribers.TestSubscriber<Void> ts = toV2Completable(ps.toCompletable()).test();
+        io.reactivex.observers.TestObserver<Void> ts = toV2Completable(ps.toCompletable()).test();
         
         assertTrue("1.x PublishSubject has no observers!", ps.hasObservers());
         
@@ -478,7 +478,7 @@ public class RxJavaInteropTest {
     @Test
     public void s2s1Cancel() {
         io.reactivex.subjects.PublishSubject<Integer> ps = io.reactivex.subjects.PublishSubject.create();
-        rx.observers.TestSubscriber<Integer> ts = test1(toV1Single(ps.toSingle()));
+        rx.observers.TestSubscriber<Integer> ts = test1(toV1Single(ps.single(-99)));
         
         assertTrue("2.x PublishSubject has no observers!", ps.hasObservers());
         
@@ -520,7 +520,7 @@ public class RxJavaInteropTest {
     @Test
     public void c2c1Cancel() {
         io.reactivex.subjects.PublishSubject<Integer> ps = io.reactivex.subjects.PublishSubject.create();
-        rx.observers.TestSubscriber<Integer> ts = test1(toV1Completable(ps.toCompletable()));
+        rx.observers.TestSubscriber<Integer> ts = test1(toV1Completable(ps.ignoreElements()));
         
         assertTrue("2.x PublishSubject has no observers!", ps.hasObservers());
         
