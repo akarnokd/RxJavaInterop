@@ -62,8 +62,18 @@ public class RxJavaInteropTest {
     }
 
     @Test(expected = NullPointerException.class)
+    public void s1m2Null() {
+        toV2Maybe((rx.Single)null);
+    }
+
+    @Test(expected = NullPointerException.class)
     public void c1c2Null() {
         toV2Completable(null);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void c1m2Null() {
+        toV2Maybe((rx.Completable)null);
     }
 
     @Test(expected = NullPointerException.class)
@@ -293,6 +303,68 @@ public class RxJavaInteropTest {
         });
     }
 
+
+    // ----------------------------------------------------------
+    // 1.x Single -> 2.x Maybe
+    // ----------------------------------------------------------
+
+    @Test
+    public void s1m2Normal() {
+        toV2Maybe(rx.Single.just(1)).test()
+            .assertResult(1);
+    }
+
+    @Test
+    public void s1m2Cancel() {
+        rx.subjects.PublishSubject<Integer> ps = rx.subjects.PublishSubject.create();
+        io.reactivex.observers.TestObserver<Integer> ts = toV2Maybe(ps.toSingle()).test();
+
+        assertTrue("1.x PublishSubject has no observers!", ps.hasObservers());
+
+        ts.cancel();
+
+        assertFalse("1.x PublishSubject has observers!", ps.hasObservers());
+
+    }
+
+    @Test
+    public void s1m2Error() {
+        toV2Maybe(rx.Single.error(new RuntimeException("Forced failure"))).test()
+            .assertFailureAndMessage(RuntimeException.class, "Forced failure");
+    }
+
+    @Test
+    public void s1m2ErrorNull() {
+        toV2Maybe(rx.Single.just(null)).test()
+            .assertFailure(NullPointerException.class);
+    }
+
+    @Test
+    public void s1m2IsDisposed() {
+        toV2Maybe(rx.Single.just(1))
+            .subscribe(new io.reactivex.MaybeObserver<Integer>() {
+                @Override
+                public void onSubscribe(io.reactivex.disposables.Disposable d) {
+                    assertFalse(d.isDisposed());
+                }
+
+                @Override
+                public void onSuccess(Integer v) {
+
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+            });
+    }
+
     // ----------------------------------------------------------
     // 1.x Completable -> 2.x Completable
     // ----------------------------------------------------------
@@ -341,6 +413,61 @@ public class RxJavaInteropTest {
                 
             }
         });
+    }
+
+    // ----------------------------------------------------------
+    // 1.x Completable -> 2.x Maybe
+    // ----------------------------------------------------------
+
+    @Test
+    public void c1m2Normal() {
+        toV2Maybe(rx.Completable.complete()).test()
+            .assertResult();
+    }
+
+    @Test
+    public void c1m2Cancel() {
+        rx.subjects.PublishSubject<Integer> ps = rx.subjects.PublishSubject.create();
+        io.reactivex.observers.TestObserver<Void> ts = RxJavaInterop.<Void>toV2Maybe(ps.toCompletable()).test();
+
+        assertTrue("1.x PublishSubject has no observers!", ps.hasObservers());
+
+        ts.cancel();
+
+        assertFalse("1.x PublishSubject has observers!", ps.hasObservers());
+    }
+
+    @Test
+    public void c1m2Error() {
+        toV2Maybe(rx.Completable.error(new RuntimeException("Forced failure"))).test()
+            .assertFailureAndMessage(RuntimeException.class, "Forced failure");
+    }
+
+
+    @Test
+    public void c1m2IsDisposed() {
+        RxJavaInterop.<Void>toV2Maybe(rx.Completable.complete())
+            .subscribe(new io.reactivex.MaybeObserver<Void>() {
+                @Override
+                public void onSubscribe(io.reactivex.disposables.Disposable d) {
+                    assertFalse(d.isDisposed());
+                }
+
+                @Override
+                public void onSuccess(Void value) {
+
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+            });
     }
     
     // ----------------------------------------------------------
