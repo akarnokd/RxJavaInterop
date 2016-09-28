@@ -71,7 +71,39 @@ public final class RxJavaInterop {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return new ObservableV1ToObservableV2<T>(source);
     }
-    
+
+    /**
+     * Converts an 1.x Completable into a 2.x Maybe, composing cancellation (unsubscription) through.
+     * <dl>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the value type
+     * @param source the source 1.x Completable instance, not null
+     * @return the new 2.x Maybe instance
+     * @throws NullPointerException if {@code source} is null
+     */
+    public static <T> io.reactivex.Maybe<T> toV2Maybe(rx.Completable source) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
+        return new CompletableV1ToMaybeV2<T>(source);
+    }
+
+    /**
+     * Converts an 1.x Single into a 2.x Maybe, composing cancellation (unsubscription) through.
+     * <dl>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the value type
+     * @param source the source 1.x Single instance, not null
+     * @return the new 2.x Maybe instance
+     * @throws NullPointerException if {@code source} is null
+     */
+    public static <T> io.reactivex.Maybe<T> toV2Maybe(rx.Single<T> source) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
+        return new SingleV1ToMaybeV2<T>(source);
+    }
+
     /**
      * Converts an 1.x Single into a 2.x Single, composing cancellation (unsubscription) through.
      * <dl>
