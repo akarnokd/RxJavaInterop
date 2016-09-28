@@ -25,30 +25,30 @@ final class ObservableV1ToFlowableV2<T> extends io.reactivex.Flowable<T> {
 
     final rx.Observable<T> source;
 
-    public ObservableV1ToFlowableV2(rx.Observable<T> source) {
+    ObservableV1ToFlowableV2(rx.Observable<T> source) {
         this.source = source;
     }
-    
+
     @Override
     protected void subscribeActual(org.reactivestreams.Subscriber<? super T> s) {
         ObservableSubscriber<T> parent = new ObservableSubscriber<T>(s);
         ObservableSubscriberSubscription parentSubscription = new ObservableSubscriberSubscription(parent);
         s.onSubscribe(parentSubscription);
-        
+
         source.unsafeSubscribe(parent);
     }
-    
+
     static final class ObservableSubscriber<T> extends rx.Subscriber<T> {
-        
+
         final org.reactivestreams.Subscriber<? super T> actual;
 
         boolean done;
-        
-        public ObservableSubscriber(org.reactivestreams.Subscriber<? super T> actual) {
+
+        ObservableSubscriber(org.reactivestreams.Subscriber<? super T> actual) {
             this.actual = actual;
             this.request(0L); // suppress starting out with Long.MAX_VALUE
         }
-        
+
         @Override
         public void onNext(T t) {
             if (done) {
@@ -62,7 +62,7 @@ final class ObservableV1ToFlowableV2<T> extends io.reactivex.Flowable<T> {
                 actual.onNext(t);
             }
         }
-        
+
         @Override
         public void onError(Throwable e) {
             if (done) {
@@ -72,7 +72,7 @@ final class ObservableV1ToFlowableV2<T> extends io.reactivex.Flowable<T> {
             done = true;
             actual.onError(e);
         }
-        
+
         @Override
         public void onCompleted() {
             if (done) {
@@ -81,29 +81,29 @@ final class ObservableV1ToFlowableV2<T> extends io.reactivex.Flowable<T> {
             done = true;
             actual.onComplete();
         }
-        
+
         void requestMore(long n) {
             request(n);
         }
     }
-    
+
     static final class ObservableSubscriberSubscription implements org.reactivestreams.Subscription {
 
         final ObservableSubscriber<?> parent;
 
-        public ObservableSubscriberSubscription(ObservableSubscriber<?> parent) {
+        ObservableSubscriberSubscription(ObservableSubscriber<?> parent) {
             this.parent = parent;
         }
-        
+
         @Override
         public void request(long n) {
             parent.requestMore(n);
         }
-        
+
         @Override
         public void cancel() {
             parent.unsubscribe();
         }
     }
-    
+
 }

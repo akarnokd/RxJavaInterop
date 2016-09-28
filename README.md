@@ -12,7 +12,7 @@ Library to convert between RxJava 1.x and 2.x reactive types.
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-interop:0.3.0"
+    compile "com.github.akarnokd:rxjava2-interop:0.4.0"
 }
 ```
 
@@ -36,6 +36,10 @@ io.reactive.Single       s2 = RxJavaInterop.toV2Single(rx.Single);
 
 io.reactivex.Completable c2 = RxJavaInterop.toV2Completable(rx.Completable);
 
+io.reactivex.Maybe m2s = RxJavaInterop.toV2Maybe(rx.Single);
+
+io.reactivex.Maybe m2c = RxJavaInterop.toV2Maybe(rx.Completable);
+
 // convert from 2.x to 1.x
 
 rx.Observable  o1 = RxJavaInterop.toV1Observable(Publisher);
@@ -45,4 +49,9 @@ rx.Observable  q1 = RxJavaInterop.toV1Observable(ObservableSource, BackpressureS
 rx.Single      s1 = RxJavaInterop.toV1Single(SingleSource);
 
 rx.Completable c1 = RxJavaInterop.toV1Completable(CompletableSource);
+
+rx.Single      s1m = RxJavaInterop.toV1Single(MaybeSource);
+
+rx.Completable c1m = RxJavaInterop.toV1Completable(MaybeSource);
+
 ```

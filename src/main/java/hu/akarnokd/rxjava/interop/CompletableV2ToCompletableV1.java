@@ -22,38 +22,38 @@ package hu.akarnokd.rxjava.interop;
 final class CompletableV2ToCompletableV1 implements rx.Completable.OnSubscribe {
 
     final io.reactivex.CompletableSource source;
-    
-    public CompletableV2ToCompletableV1(io.reactivex.CompletableSource source) {
+
+    CompletableV2ToCompletableV1(io.reactivex.CompletableSource source) {
         this.source = source;
     }
-    
+
     @Override
     public void call(rx.CompletableSubscriber observer) {
         source.subscribe(new SourceCompletableSubscriber(observer));
     }
-    
+
     static final class SourceCompletableSubscriber
     implements io.reactivex.CompletableObserver, rx.Subscription {
-        
+
         final rx.CompletableSubscriber observer;
-        
-        io.reactivex.disposables.Disposable d; 
-        
-        public SourceCompletableSubscriber(rx.CompletableSubscriber observer) {
+
+        io.reactivex.disposables.Disposable d;
+
+        SourceCompletableSubscriber(rx.CompletableSubscriber observer) {
             this.observer = observer;
         }
-        
+
         @Override
         public void onSubscribe(io.reactivex.disposables.Disposable d) {
             this.d = d;
             observer.onSubscribe(this);
         }
-        
+
         @Override
         public void onComplete() {
             observer.onCompleted();
         }
-        
+
         @Override
         public void onError(Throwable error) {
             observer.onError(error);
@@ -63,7 +63,7 @@ final class CompletableV2ToCompletableV1 implements rx.Completable.OnSubscribe {
         public void unsubscribe() {
             d.dispose();
         }
-        
+
         @Override
         public boolean isUnsubscribed() {
             return d.isDisposed();

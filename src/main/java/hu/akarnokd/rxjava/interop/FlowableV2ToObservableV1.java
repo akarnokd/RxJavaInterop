@@ -25,33 +25,32 @@ import java.util.concurrent.atomic.*;
 final class FlowableV2ToObservableV1<T> implements rx.Observable.OnSubscribe<T> {
 
     final org.reactivestreams.Publisher<T> source;
-    
-    public FlowableV2ToObservableV1(org.reactivestreams.Publisher<T> source) {
+
+    FlowableV2ToObservableV1(org.reactivestreams.Publisher<T> source) {
         this.source = source;
     }
-    
+
     @Override
     public void call(rx.Subscriber<? super T> t) {
         SourceSubscriber<T> parent = new SourceSubscriber<T>(t);
-        
+
         t.add(parent);
         t.setProducer(parent);
-        
+
         source.subscribe(parent);
     }
-    
-    static final class SourceSubscriber<T> 
+
+    static final class SourceSubscriber<T>
     extends AtomicReference<org.reactivestreams.Subscription>
     implements org.reactivestreams.Subscriber<T>, rx.Subscription, rx.Producer {
-        
-        /** */
+
         private static final long serialVersionUID = -6567012932544037069L;
 
         final rx.Subscriber<? super T> actual;
-        
+
         final AtomicLong requested;
-        
-        public SourceSubscriber(rx.Subscriber<? super T> actual) {
+
+        SourceSubscriber(rx.Subscriber<? super T> actual) {
             this.actual = actual;
             this.requested = new AtomicLong();
         }

@@ -19,34 +19,34 @@ package hu.akarnokd.rxjava.interop;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Convert a V2 Single into a V1 Single, composing cancellation.
+ * Converts a V2 Maybe into a V1 Complete where an onSuccess value triggers onCompleted.
  *
  * @param <T> the value type
  */
-final class SingleV2ToSingleV1<T> implements rx.Single.OnSubscribe<T> {
+final class MaybeV2ToCompletableV1<T> implements rx.Completable.OnSubscribe {
 
-    final io.reactivex.SingleSource<T> source;
+    final io.reactivex.MaybeSource<T> source;
 
-    SingleV2ToSingleV1(io.reactivex.SingleSource<T> source) {
+    MaybeV2ToCompletableV1(io.reactivex.MaybeSource<T> source) {
         this.source = source;
     }
 
     @Override
-    public void call(rx.SingleSubscriber<? super T> t) {
-        SourceSingleObserver<T> parent = new SourceSingleObserver<T>(t);
-        t.add(parent);
+    public void call(rx.CompletableSubscriber t) {
+        MaybeV2Observer<T> parent = new MaybeV2Observer<T>(t);
+        t.onSubscribe(parent);
         source.subscribe(parent);
     }
 
-    static final class SourceSingleObserver<T>
+    static final class MaybeV2Observer<T>
     extends AtomicReference<io.reactivex.disposables.Disposable>
-    implements io.reactivex.SingleObserver<T>, rx.Subscription {
+    implements io.reactivex.MaybeObserver<T>, rx.Subscription {
 
-        private static final long serialVersionUID = 4758098209431016997L;
+        private static final long serialVersionUID = 5045507662443540605L;
 
-        final rx.SingleSubscriber<? super T> actual;
+        final rx.CompletableSubscriber actual;
 
-        SourceSingleObserver(rx.SingleSubscriber<? super T> actual) {
+        MaybeV2Observer(rx.CompletableSubscriber actual) {
             this.actual = actual;
         }
 
@@ -67,12 +67,17 @@ final class SingleV2ToSingleV1<T> implements rx.Single.OnSubscribe<T> {
 
         @Override
         public void onSuccess(T value) {
-            actual.onSuccess(value);
+            actual.onCompleted();
         }
 
         @Override
         public void onError(Throwable e) {
             actual.onError(e);
+        }
+
+        @Override
+        public void onComplete() {
+            actual.onCompleted();
         }
     }
 }

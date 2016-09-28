@@ -27,7 +27,7 @@ final class SingleV1ToMaybeV2<T> extends io.reactivex.Maybe<T> {
 
     final rx.Single<T> source;
 
-    public SingleV1ToMaybeV2(rx.Single<T> source) {
+    SingleV1ToMaybeV2(rx.Single<T> source) {
         this.source = source;
     }
 
@@ -40,13 +40,13 @@ final class SingleV1ToMaybeV2<T> extends io.reactivex.Maybe<T> {
 
     static final class SourceSingleSubscriber<T> extends rx.SingleSubscriber<T>
     implements io.reactivex.disposables.Disposable {
-        
+
         final io.reactivex.MaybeObserver<? super T> observer;
-        
-        public SourceSingleSubscriber(io.reactivex.MaybeObserver<? super T> observer) {
+
+        SourceSingleSubscriber(io.reactivex.MaybeObserver<? super T> observer) {
             this.observer = observer;
         }
-        
+
         @Override
         public void onSuccess(T value) {
             if (value == null) {
@@ -56,7 +56,7 @@ final class SingleV1ToMaybeV2<T> extends io.reactivex.Maybe<T> {
                 observer.onSuccess(value);
             }
         }
-        
+
         @Override
         public void onError(Throwable error) {
             observer.onError(error);
@@ -66,7 +66,7 @@ final class SingleV1ToMaybeV2<T> extends io.reactivex.Maybe<T> {
         public void dispose() {
             unsubscribe();
         }
-        
+
         @Override
         public boolean isDisposed() {
             return isUnsubscribed();

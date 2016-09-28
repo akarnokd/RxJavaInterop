@@ -25,29 +25,29 @@ final class ObservableV1ToObservableV2<T> extends io.reactivex.Observable<T> {
 
     final rx.Observable<T> source;
 
-    public ObservableV1ToObservableV2(rx.Observable<T> source) {
+    ObservableV1ToObservableV2(rx.Observable<T> source) {
         this.source = source;
     }
-    
+
     @Override
     protected void subscribeActual(io.reactivex.Observer<? super T> s) {
         ObservableSubscriber<T> parent = new ObservableSubscriber<T>(s);
         s.onSubscribe(parent);
-        
+
         source.unsafeSubscribe(parent);
     }
-    
+
     static final class ObservableSubscriber<T> extends rx.Subscriber<T>
     implements io.reactivex.disposables.Disposable {
-        
+
         final io.reactivex.Observer<? super T> actual;
 
         boolean done;
 
-        public ObservableSubscriber(io.reactivex.Observer<? super T> actual) {
+        ObservableSubscriber(io.reactivex.Observer<? super T> actual) {
             this.actual = actual;
         }
-        
+
         @Override
         public void onNext(T t) {
             if (done) {
@@ -61,7 +61,7 @@ final class ObservableV1ToObservableV2<T> extends io.reactivex.Observable<T> {
                 actual.onNext(t);
             }
         }
-        
+
         @Override
         public void onError(Throwable e) {
             if (done) {
@@ -71,7 +71,7 @@ final class ObservableV1ToObservableV2<T> extends io.reactivex.Observable<T> {
             done = true;
             actual.onError(e);
         }
-        
+
         @Override
         public void onCompleted() {
             if (done) {
@@ -80,12 +80,12 @@ final class ObservableV1ToObservableV2<T> extends io.reactivex.Observable<T> {
             done = true;
             actual.onComplete();
         }
-        
+
         @Override
         public void dispose() {
             unsubscribe();
         }
-        
+
         @Override
         public boolean isDisposed() {
             return isUnsubscribed();
