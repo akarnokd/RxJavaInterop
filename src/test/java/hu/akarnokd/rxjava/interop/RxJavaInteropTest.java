@@ -27,6 +27,7 @@ import org.junit.Test;
 import io.reactivex.*;
 import rx.Observable.OnSubscribe;
 import rx.Subscriber;
+import rx.functions.Func1;
 
 public class RxJavaInteropTest {
 
@@ -772,4 +773,16 @@ public class RxJavaInteropTest {
         assertFalse("2.x PublishSubject has observers!", ps.hasObservers());
     }
 
+    @Test
+    public void v1RequestZero() {
+        toV1Observable(Flowable.range(1, 5))
+        .filter(new Func1<Integer, Boolean>() {
+            @Override
+            public Boolean call(Integer v) {
+                return v % 2 == 0;
+            }
+        })
+        .test()
+        .assertResult(2, 4);
+    }
 }
