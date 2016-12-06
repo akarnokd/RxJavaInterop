@@ -25,8 +25,11 @@ import java.util.NoSuchElementException;
 import org.junit.Test;
 
 import io.reactivex.*;
+import io.reactivex.subjects.BehaviorSubject;
 import rx.Observable.OnSubscribe;
 import rx.Subscriber;
+import rx.functions.Func1;
+import rx.observers.TestSubscriber;
 
 public class RxJavaInteropTest {
 
@@ -595,6 +598,25 @@ public class RxJavaInteropTest {
         assertEquals("Forced failure", ts.getOnErrorEvents().get(0).getMessage());
     }
 
+    @Test
+    public void observableShouldOnlyRequestWhenItsMoreThanOneItem() {
+        BehaviorSubject<String> subject = BehaviorSubject.create();
+
+        rx.Observable<String> v1Observable = toV1Observable(subject, BackpressureStrategy.BUFFER)
+                .filter(new Func1<String, Boolean>() {
+                    @Override
+                    public Boolean call(String s) {
+                        return s.length() > 0;
+                    }
+                });
+
+        TestSubscriber<String> testSubscriber = new TestSubscriber<String>();
+        v1Observable.subscribe(testSubscriber);
+        subject.onNext("1");
+        subject.onNext("2");
+        assertEquals(2, testSubscriber.getOnNextEvents().size());
+    }
+
     // ----------------------------------------------------------
     // 2.x Single -> 1.x Single
     // ----------------------------------------------------------
@@ -771,5 +793,4 @@ public class RxJavaInteropTest {
 
         assertFalse("2.x PublishSubject has observers!", ps.hasObservers());
     }
-
 }
