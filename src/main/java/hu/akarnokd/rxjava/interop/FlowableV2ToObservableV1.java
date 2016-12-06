@@ -57,7 +57,9 @@ final class FlowableV2ToObservableV1<T> implements rx.Observable.OnSubscribe<T> 
 
         @Override
         public void request(long n) {
-            io.reactivex.internal.subscriptions.SubscriptionHelper.deferredRequest(this, requested, n);
+            if (n > 0) {
+                io.reactivex.internal.subscriptions.SubscriptionHelper.deferredRequest(this, requested, n);
+            }
         }
 
         @Override
