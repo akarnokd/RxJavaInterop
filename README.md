@@ -7,12 +7,15 @@ Library to convert between RxJava 1.x and 2.x reactive types.
 [![codecov.io](http://codecov.io/github/akarnokd/RxJava2Interop/coverage.svg?branch=master)](http://codecov.io/github/akarnokd/RxJava2Interop?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava2-interop/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava2-interop)
 
+[![RxJava 1.x](https://maven-badges.herokuapp.com/maven-central/io.reactivex/rxjava/badge.svg)](https://maven-badges.herokuapp.com/maven-central/maven-central/io.reactivex/rxjava)
+[![RxJava 2.x](https://maven-badges.herokuapp.com/maven-central/maven-central/io.reactivex.rxjava2/rxjava/badge.svg)](https://maven-badges.herokuapp.com/maven-central/maven-central/io.reactivex.rxjava2/rxjava)
+
 
 **gradle**
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-interop:0.7.2"
+    compile "com.github.akarnokd:rxjava2-interop:0.8.0"
 }
 ```
 
