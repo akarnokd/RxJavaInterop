@@ -17,7 +17,7 @@ Library to convert between RxJava 1.x and 2.x reactive types.
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-interop:0.8.1"
+    compile "com.github.akarnokd:rxjava2-interop:0.8.2"
 }
 ```
 
