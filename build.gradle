@@ -107,7 +107,7 @@ publishing {
 }
 
 jmh {
-    jmhVersion = '1.11.3'
+    jmhVersion = '1.16'
     humanOutputFile = null
     if (project.hasProperty('jmh')) {
         include = ".*" + project.jmh + ".*"
