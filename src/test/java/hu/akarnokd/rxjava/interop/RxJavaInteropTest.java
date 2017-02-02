@@ -19,12 +19,14 @@ package hu.akarnokd.rxjava.interop;
 import static hu.akarnokd.rxjava.interop.RxJavaInterop.*;
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.NoSuchElementException;
 
 import org.junit.Test;
 
 import io.reactivex.*;
+import io.reactivex.disposables.*;
 import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 import rx.functions.Func1;
@@ -784,5 +786,308 @@ public class RxJavaInteropTest {
         })
         .test()
         .assertResult(2, 4);
+    }
+
+    // ----------------------------------------------------------
+    // 1.x Subject -> 2.x Subject
+    // ----------------------------------------------------------
+
+    @Test
+    public void sj1ToSj2Normal() {
+        rx.subjects.PublishSubject<Integer> ps1 = rx.subjects.PublishSubject.create();
+        io.reactivex.subjects.Subject<Integer> sj2 = toV2Subject(ps1);
+
+        io.reactivex.observers.TestObserver<Integer> to = sj2.test();
+
+        assertTrue(sj2.hasObservers());
+        assertTrue(ps1.hasObservers());
+        assertFalse(sj2.hasComplete());
+        assertFalse(sj2.hasThrowable());
+        assertNull(sj2.getThrowable());
+
+        sj2.onNext(1);
+        sj2.onNext(2);
+        sj2.onComplete();
+
+        assertFalse(sj2.hasObservers());
+        assertFalse(ps1.hasObservers());
+
+        assertTrue(sj2.hasComplete());
+        assertFalse(sj2.hasThrowable());
+        assertNull(sj2.getThrowable());
+
+        to.assertResult(1, 2);
+    }
+
+    @Test
+    public void sj1ToSj2Error() {
+        rx.subjects.PublishSubject<Integer> ps1 = rx.subjects.PublishSubject.create();
+        io.reactivex.subjects.Subject<Integer> sj2 = toV2Subject(ps1);
+
+        io.reactivex.observers.TestObserver<Integer> to = sj2.test();
+
+        assertTrue(sj2.hasObservers());
+        assertTrue(ps1.hasObservers());
+        assertFalse(sj2.hasComplete());
+        assertFalse(sj2.hasThrowable());
+        assertNull(sj2.getThrowable());
+
+        sj2.onError(new IOException());
+
+        assertFalse(sj2.hasObservers());
+        assertFalse(ps1.hasObservers());
+
+        assertFalse(sj2.hasComplete());
+        assertTrue(sj2.hasThrowable());
+        assertNotNull(sj2.getThrowable());
+        assertTrue(sj2.getThrowable() instanceof IOException);
+
+        to.assertFailure(IOException.class);
+    }
+
+    @Test
+    public void sj1ToSj2Lifecycle() {
+        rx.subjects.PublishSubject<Integer> ps1 = rx.subjects.PublishSubject.create();
+        io.reactivex.subjects.Subject<Integer> sj2 = toV2Subject(ps1);
+
+        io.reactivex.observers.TestObserver<Integer> to = sj2.test();
+
+        assertTrue(sj2.hasObservers());
+        assertTrue(ps1.hasObservers());
+        assertFalse(sj2.hasComplete());
+        assertFalse(sj2.hasThrowable());
+        assertNull(sj2.getThrowable());
+
+        Disposable d1 = Disposables.empty();
+        sj2.onSubscribe(d1);
+
+        assertFalse(d1.isDisposed());
+
+        sj2.onNext(1);
+        sj2.onNext(2);
+        sj2.onComplete();
+        sj2.onComplete();
+        sj2.onError(new IOException());
+        sj2.onNext(3);
+
+        Disposable d2 = Disposables.empty();
+        sj2.onSubscribe(d2);
+
+        assertFalse(d1.isDisposed());
+        assertTrue(d2.isDisposed());
+
+        assertFalse(sj2.hasObservers());
+        assertFalse(ps1.hasObservers());
+
+        assertTrue(sj2.hasComplete());
+        assertFalse(sj2.hasThrowable());
+        assertNull(sj2.getThrowable());
+
+        to.assertResult(1, 2);
+    }
+
+    @Test
+    public void sj1ToSj2NullValue() {
+        rx.subjects.PublishSubject<Integer> ps1 = rx.subjects.PublishSubject.create();
+        io.reactivex.subjects.Subject<Integer> sj2 = toV2Subject(ps1);
+
+        io.reactivex.observers.TestObserver<Integer> to = sj2.test();
+
+        sj2.onNext(null);
+
+        assertFalse(sj2.hasObservers());
+        assertFalse(ps1.hasObservers());
+
+        to.assertFailure(NullPointerException.class);
+    }
+
+    @Test
+    public void sj1ToSj2NullException() {
+        rx.subjects.PublishSubject<Integer> ps1 = rx.subjects.PublishSubject.create();
+        io.reactivex.subjects.Subject<Integer> sj2 = toV2Subject(ps1);
+
+        io.reactivex.observers.TestObserver<Integer> to = sj2.test();
+
+        sj2.onError(null);
+
+        assertFalse(sj2.hasObservers());
+        assertFalse(ps1.hasObservers());
+
+        to.assertFailure(NullPointerException.class);
+    }
+
+    // ----------------------------------------------------------
+    // 2.x Subject -> 1.x Subject
+    // ----------------------------------------------------------
+
+    @Test
+    public void sj2ToSj1Normal() {
+        io.reactivex.subjects.PublishSubject<Integer> ps2 = io.reactivex.subjects.PublishSubject.create();
+        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(ps2);
+
+        rx.observers.AssertableSubscriber<Integer> to = sj1.test();
+
+        assertTrue(sj1.hasObservers());
+        assertTrue(ps2.hasObservers());
+
+        sj1.onNext(1);
+        sj1.onNext(2);
+        sj1.onCompleted();
+
+        assertFalse(sj1.hasObservers());
+        assertFalse(ps2.hasObservers());
+
+        to.assertResult(1, 2);
+    }
+
+    @Test
+    public void sj2ToSj1Error() {
+        io.reactivex.subjects.PublishSubject<Integer> ps2 = io.reactivex.subjects.PublishSubject.create();
+        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(ps2);
+
+        rx.observers.AssertableSubscriber<Integer> to = sj1.test();
+
+        assertTrue(sj1.hasObservers());
+        assertTrue(ps2.hasObservers());
+
+        sj1.onError(new IOException());
+
+        assertFalse(sj1.hasObservers());
+        assertFalse(ps2.hasObservers());
+
+        to.assertFailure(IOException.class);
+    }
+
+    @Test
+    public void sj2ToSj1Backpressured() {
+        io.reactivex.subjects.PublishSubject<Integer> pp2 = io.reactivex.subjects.PublishSubject.create();
+        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp2);
+
+        rx.observers.AssertableSubscriber<Integer> to = sj1.test(0L);
+
+        assertTrue(sj1.hasObservers());
+        assertTrue(pp2.hasObservers());
+
+        sj1.onNext(1);
+
+        assertFalse(sj1.hasObservers());
+        assertFalse(pp2.hasObservers());
+
+        assertFalse(pp2.hasComplete());
+        assertFalse(pp2.hasThrowable());
+        assertNull(pp2.getThrowable());
+
+        to.assertFailure(rx.exceptions.MissingBackpressureException.class);
+    }
+
+    @Test
+    public void sj2ToSj1Lifecycle() {
+        io.reactivex.subjects.PublishSubject<Integer> pp2 = io.reactivex.subjects.PublishSubject.create();
+        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp2);
+
+        rx.observers.AssertableSubscriber<Integer> to = sj1.test(0L);
+
+        assertTrue(sj1.hasObservers());
+        assertTrue(pp2.hasObservers());
+
+        sj1.onNext(1);
+        sj1.onError(new IOException());
+
+        assertFalse(sj1.hasObservers());
+        assertFalse(pp2.hasObservers());
+
+        assertFalse(pp2.hasComplete());
+        assertTrue(pp2.hasThrowable());
+        assertNotNull(pp2.getThrowable());
+
+        to.assertFailure(rx.exceptions.MissingBackpressureException.class);
+    }
+
+    // ----------------------------------------------------------
+    // 2.x FlowableProcessor -> 1.x Subject
+    // ----------------------------------------------------------
+
+    @Test
+    public void fp2ToSj1Normal() {
+        io.reactivex.processors.FlowableProcessor<Integer> pp2 = io.reactivex.processors.PublishProcessor.create();
+        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp2);
+
+        rx.observers.AssertableSubscriber<Integer> to = sj1.test();
+
+        assertTrue(sj1.hasObservers());
+        assertTrue(pp2.hasSubscribers());
+
+        sj1.onNext(1);
+        sj1.onNext(2);
+        sj1.onCompleted();
+
+        assertFalse(sj1.hasObservers());
+        assertFalse(pp2.hasSubscribers());
+
+        assertTrue(pp2.hasComplete());
+        assertFalse(pp2.hasThrowable());
+        assertNull(pp2.getThrowable());
+
+        to.assertResult(1, 2);
+    }
+
+    @Test
+    public void fp2ToSj1Error() {
+        io.reactivex.processors.FlowableProcessor<Integer> pp2 = io.reactivex.processors.PublishProcessor.create();
+        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp2);
+
+        rx.observers.AssertableSubscriber<Integer> to = sj1.test();
+
+        assertTrue(sj1.hasObservers());
+        assertTrue(pp2.hasSubscribers());
+
+        sj1.onError(new IOException());
+
+        assertFalse(sj1.hasObservers());
+        assertFalse(pp2.hasSubscribers());
+
+        assertFalse(pp2.hasComplete());
+        assertTrue(pp2.hasThrowable());
+        assertNotNull(pp2.getThrowable());
+        assertTrue(pp2.getThrowable() instanceof IOException);
+
+        to.assertFailure(IOException.class);
+    }
+
+    @Test
+    public void fp2ToSj1Backpressured() {
+        io.reactivex.processors.FlowableProcessor<Integer> pp2 = io.reactivex.processors.ReplayProcessor.create();
+        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp2);
+
+        rx.observers.AssertableSubscriber<Integer> to = sj1.test(0L);
+
+        assertTrue(sj1.hasObservers());
+        assertTrue(pp2.hasSubscribers());
+
+        sj1.onNext(1);
+        sj1.onNext(2);
+        sj1.onNext(3);
+        sj1.onNext(4);
+
+        to.assertNoValues().assertNoErrors().assertNotCompleted();
+
+        to.requestMore(1).assertValue(1).assertNoErrors().assertNotCompleted();
+
+        to.requestMore(2).assertValues(1, 2, 3).assertNoErrors().assertNotCompleted();
+
+        sj1.onCompleted();
+
+        to.assertValues(1, 2, 3).assertNoErrors().assertNotCompleted();
+
+        assertFalse(sj1.hasObservers());
+        assertFalse(pp2.hasSubscribers());
+
+        assertTrue(pp2.hasComplete());
+        assertFalse(pp2.hasThrowable());
+        assertNull(pp2.getThrowable());
+
+        to
+        .requestMore(1)
+        .assertResult(1, 2, 3, 4);
     }
 }

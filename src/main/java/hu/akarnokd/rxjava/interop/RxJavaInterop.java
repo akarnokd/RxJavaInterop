@@ -48,6 +48,7 @@ public final class RxJavaInterop {
      * @return the new 2.x Flowable instance
      * @throws NullPointerException if {@code source} is null
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T> io.reactivex.Flowable<T> toV2Flowable(rx.Observable<T> source) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return new ObservableV1ToFlowableV2<T>(source);
@@ -67,6 +68,7 @@ public final class RxJavaInterop {
      * @return the new 2.x Observable instance
      * @throws NullPointerException if {@code source} is null
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T> io.reactivex.Observable<T> toV2Observable(rx.Observable<T> source) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return new ObservableV1ToObservableV2<T>(source);
@@ -83,6 +85,7 @@ public final class RxJavaInterop {
      * @return the new 2.x Maybe instance
      * @throws NullPointerException if {@code source} is null
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T> io.reactivex.Maybe<T> toV2Maybe(rx.Completable source) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return new CompletableV1ToMaybeV2<T>(source);
@@ -99,6 +102,7 @@ public final class RxJavaInterop {
      * @return the new 2.x Maybe instance
      * @throws NullPointerException if {@code source} is null
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T> io.reactivex.Maybe<T> toV2Maybe(rx.Single<T> source) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return new SingleV1ToMaybeV2<T>(source);
@@ -115,6 +119,7 @@ public final class RxJavaInterop {
      * @return the new 2.x Single instance
      * @throws NullPointerException if {@code source} is null
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T> io.reactivex.Single<T> toV2Single(rx.Single<T> source) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return new SingleV1ToSingleV2<T>(source);
@@ -130,9 +135,27 @@ public final class RxJavaInterop {
      * @return the new 2.x Completable instance
      * @throws NullPointerException if {@code source} is null
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static io.reactivex.Completable toV2Completable(rx.Completable source) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return new CompletableV1ToCompletableV2(source);
+    }
+
+    /**
+     * Wraps a 1.x Subject into a 2.x Subject.
+     * <dl>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the input and output value type of the Subjects
+     * @param subject the subject to wrap with the same input and output type;
+     * 2.x Subject supports only the same input and output type
+     * @return the new 2.x Subject instance
+     * @throws NullPointerException if {@code source} is null
+     */
+    public static <T> io.reactivex.subjects.Subject<T> toV2Subject(rx.subjects.Subject<T, T> subject) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(subject, "subject is null");
+        return new SubjectV1ToSubjectV2<T>(subject);
     }
 
     // -----------------------------------------------------------------------------------------
@@ -252,5 +275,44 @@ public final class RxJavaInterop {
     public static <T> rx.Completable toV1Completable(io.reactivex.MaybeSource<T> source) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return rx.Completable.create(new MaybeV2ToCompletableV1<T>(source));
+    }
+
+    /**
+     * Wraps a 2.x Subject into a 1.x Subject.
+     * <dl>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the input and output value type of the Subjects
+     * @param subject the subject to wrap with the same input and output type;
+     * 2.x Subject supports only the same input and output type
+     * @return the new 1.x Subject instance
+     * @throws NullPointerException if {@code source} is null
+     * @since 0.9.0
+     */
+    public static <T> rx.subjects.Subject<T, T> toV1Subject(io.reactivex.subjects.Subject<T> subject) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(subject, "subject is null");
+        return SubjectV2ToSubjectV1.<T>createWith(subject);
+    }
+
+    /**
+     * Wraps a 2.x FlowableProcessor into a 1.x Subject.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator doesn't interfere with backpressure which is determined by the
+     *  source {@code FlowableProcessor}'s backpressure behavior.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the input and output value type of the Subjects
+     * @param processor the flowable-processor to wrap with the same input and output type;
+     * 2.x FlowableProcessor supports only the same input and output type
+     * @return the new 1.x Subject instance
+     * @throws NullPointerException if {@code source} is null
+     * @since 0.9.0
+     */
+    public static <T> rx.subjects.Subject<T, T> toV1Subject(io.reactivex.processors.FlowableProcessor<T> processor) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(processor, "processor is null");
+        return ProcessorV2ToSubjectV1.<T>createWith(processor);
     }
 }

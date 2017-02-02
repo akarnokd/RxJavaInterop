@@ -17,7 +17,7 @@ Library to convert between RxJava 1.x and 2.x reactive types.
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-interop:0.8.4"
+    compile "com.github.akarnokd:rxjava2-interop:0.9.0"
 }
 ```
 
@@ -29,7 +29,7 @@ Maven search:
 # Usage
 
 ```java
-import static hu.akarnokd.rxjava.interop.RxJavaInterop.*;
+import static hu.akarnokd.rxjava.interop.RxJavaInterop;
 
 // convert from 1.x to 2.x
 
@@ -58,5 +58,20 @@ rx.Completable c1 = RxJavaInterop.toV1Completable(CompletableSource);
 rx.Single      s1m = RxJavaInterop.toV1Single(MaybeSource);
 
 rx.Completable c1m = RxJavaInterop.toV1Completable(MaybeSource);
+```
 
+Converting between Subjects and Processors. Note that 2.x `Subject`s and `FlowableProcessor`s support only the same input and output types.
+
+```java
+import static hu.akarnokd.rxjava.interop.RxJavaInterop;
+
+// convert from 1.x to 2.x
+
+io.reactivex.subjects.Subject sj2 = RxJavaInterop.toV2Subject(rx.subjects.Subject);
+
+// convert from 2.x to 1.x
+
+rx.subjects.Subject sj1 = RxJavaInterop.toV1Subject(io.reactivex.subjects.Subject);
+
+rx.subjects.Subject sj1b = RxJavaInterop.toV1Subject(io.reactivex.processors.FlowableProcessor);
 ```
