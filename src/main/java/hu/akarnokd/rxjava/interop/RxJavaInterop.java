@@ -152,10 +152,104 @@ public final class RxJavaInterop {
      * 2.x Subject supports only the same input and output type
      * @return the new 2.x Subject instance
      * @throws NullPointerException if {@code source} is null
+     * @since 0.9.0
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T> io.reactivex.subjects.Subject<T> toV2Subject(rx.subjects.Subject<T, T> subject) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(subject, "subject is null");
         return new SubjectV1ToSubjectV2<T>(subject);
+    }
+
+    /**
+     * Wraps a 1.x Subject into a 2.x FlowableProcessor.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator doesn't interfere with backpressure which is determined by the
+     *  source 1.x {@code Subject}'s backpressure behavior.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the input and output value type of the Subjects
+     * @param subject the subject to wrap with the same input and output type;
+     * 2.x FlowableProcessor supports only the same input and output type
+     * @return the new 2.x FlowableProcessor instance
+     * @throws NullPointerException if {@code source} is null
+     * @since 0.9.0
+     */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
+    public static <T> io.reactivex.processors.FlowableProcessor<T> toV2Processor(rx.subjects.Subject<T, T> subject) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(subject, "subject is null");
+        return new SubjectV1ToProcessorV2<T>(subject);
+    }
+
+    /**
+     * Convert the 1.x Observable.Transformer into a 2.x FlowableTransformer.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator doesn't interfere with backpressure which is determined by the
+     *  1.x Observable returned by the 1.x Transformer.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the input value type
+     * @param <R> the output value type
+     * @param transformer the 1.x Observable.Transformer to convert
+     * @return the new FlowableTransformer instance
+     * @since 0.9.0
+     */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
+    public static <T, R> io.reactivex.FlowableTransformer<T, R> toV2Transformer(final rx.Observable.Transformer<T, R> transformer) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        return new io.reactivex.FlowableTransformer<T, R>() {
+            @Override
+            public org.reactivestreams.Publisher<R> apply(io.reactivex.Flowable<T> f) {
+                return toV2Flowable(transformer.call(toV1Observable(f)));
+            }
+        };
+    }
+
+    /**
+     * Convert the 1.x Single.Transformer into a 2.x SingleTransformer.
+     * <dl>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the input value type
+     * @param <R> the output value type
+     * @param transformer the 1.x Single.Transformer to convert
+     * @return the new SingleTransformer instance
+     * @since 0.9.0
+     */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
+    public static <T, R> io.reactivex.SingleTransformer<T, R> toV2Transformer(final rx.Single.Transformer<T, R> transformer) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        return new io.reactivex.SingleTransformer<T, R>() {
+            @Override
+            public io.reactivex.Single<R> apply(io.reactivex.Single<T> f) {
+                return toV2Single(transformer.call(toV1Single(f)));
+            }
+        };
+    }
+
+    /**
+     * Convert the 1.x Completable.Transformer into a 2.x CompletableTransformer.
+     * <dl>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param transformer the 1.x Completable.Transformer to convert
+     * @return the new CompletableTransformer instance
+     * @since 0.9.0
+     */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
+    public static io.reactivex.CompletableTransformer toV2Transformer(final rx.Completable.Transformer transformer) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        return new io.reactivex.CompletableTransformer() {
+            @Override
+            public io.reactivex.Completable apply(io.reactivex.Completable f) {
+                return toV2Completable(transformer.call(toV1Completable(f)));
+            }
+        };
     }
 
     // -----------------------------------------------------------------------------------------
@@ -181,6 +275,7 @@ public final class RxJavaInterop {
      * @return the new 1.x Observable instance
      * @throws NullPointerException if {@code source} is null
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T> rx.Observable<T> toV1Observable(org.reactivestreams.Publisher<T> source) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return rx.Observable.create(new FlowableV2ToObservableV1<T>(source));
@@ -202,6 +297,7 @@ public final class RxJavaInterop {
      * @return the new 1.x Observable instance
      * @throws NullPointerException if {@code source} is null
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T> rx.Observable<T> toV1Observable(io.reactivex.ObservableSource<T> source, io.reactivex.BackpressureStrategy strategy) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(strategy, "strategy is null");
@@ -220,6 +316,7 @@ public final class RxJavaInterop {
      * @return the new 1.x Single instance
      * @throws NullPointerException if {@code source} is null
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T> rx.Single<T> toV1Single(io.reactivex.SingleSource<T> source) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return rx.Single.create(new SingleV2ToSingleV1<T>(source));
@@ -236,6 +333,7 @@ public final class RxJavaInterop {
      * @return the new 1.x Completable instance
      * @throws NullPointerException if {@code source} is null
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static rx.Completable toV1Completable(io.reactivex.CompletableSource source) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return rx.Completable.create(new CompletableV2ToCompletableV1(source));
@@ -254,6 +352,7 @@ public final class RxJavaInterop {
      * @return the new 1.x Single instance
      * @throws NullPointerException if {@code source} is null
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T> rx.Single<T> toV1Single(io.reactivex.MaybeSource<T> source) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return rx.Single.create(new MaybeV2ToSingleV1<T>(source));
@@ -272,6 +371,7 @@ public final class RxJavaInterop {
      * @return the new 1.x Completable instance
      * @throws NullPointerException if {@code source} is null
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T> rx.Completable toV1Completable(io.reactivex.MaybeSource<T> source) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
         return rx.Completable.create(new MaybeV2ToCompletableV1<T>(source));
@@ -290,6 +390,7 @@ public final class RxJavaInterop {
      * @throws NullPointerException if {@code source} is null
      * @since 0.9.0
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T> rx.subjects.Subject<T, T> toV1Subject(io.reactivex.subjects.Subject<T> subject) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(subject, "subject is null");
         return SubjectV2ToSubjectV1.<T>createWith(subject);
@@ -311,8 +412,79 @@ public final class RxJavaInterop {
      * @throws NullPointerException if {@code source} is null
      * @since 0.9.0
      */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T> rx.subjects.Subject<T, T> toV1Subject(io.reactivex.processors.FlowableProcessor<T> processor) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(processor, "processor is null");
         return ProcessorV2ToSubjectV1.<T>createWith(processor);
+    }
+
+    /**
+     * Convert the 2.x FlowableTransformer into a 1.x Observable.Transformer.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator doesn't interfere with backpressure which is determined by the
+     *  2.x Flowable returned by the 2.x FlowableTransformer.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the input value type
+     * @param <R> the output value type
+     * @param transformer the 2.x FlowableTransformer to convert
+     * @return the new Observable.Transformer instance
+     * @since 0.9.0
+     */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
+    public static <T, R> rx.Observable.Transformer<T, R> toV1Transformer(final io.reactivex.FlowableTransformer<T, R> transformer) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        return new rx.Observable.Transformer<T, R>() {
+            @Override
+            public rx.Observable<R> call(rx.Observable<T> f) {
+                return toV1Observable(transformer.apply(toV2Flowable(f)));
+            }
+        };
+    }
+
+    /**
+     * Convert the 2.x SingleTransformer into a 1.x Single.Transformer.
+     * <dl>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the input value type
+     * @param <R> the output value type
+     * @param transformer the 2.x SingleTransformer to convert
+     * @return the new Single.Transformer instance
+     * @since 0.9.0
+     */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
+    public static <T, R> rx.Single.Transformer<T, R> toV1Transformer(final io.reactivex.SingleTransformer<T, R> transformer) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        return new rx.Single.Transformer<T, R>() {
+            @Override
+            public rx.Single<R> call(rx.Single<T> f) {
+                return toV1Single(transformer.apply(toV2Single(f)));
+            }
+        };
+    }
+
+    /**
+     * Convert the 2.x CompletableTransformer into a 1.x Completable.Transformer.
+     * <dl>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param transformer the 2.x CompletableTransformer to convert
+     * @return the new Completable.Transformer instance
+     * @since 0.9.0
+     */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
+    public static rx.Completable.Transformer toV1Transformer(final io.reactivex.CompletableTransformer transformer) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        return new rx.Completable.Transformer() {
+            @Override
+            public rx.Completable call(rx.Completable f) {
+                return toV1Completable(transformer.apply(toV2Completable(f)));
+            }
+        };
     }
 }

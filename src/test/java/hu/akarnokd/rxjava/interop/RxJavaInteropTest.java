@@ -27,9 +27,12 @@ import org.junit.Test;
 
 import io.reactivex.*;
 import io.reactivex.disposables.*;
-import rx.Observable.OnSubscribe;
+import io.reactivex.functions.Function;
+import io.reactivex.internal.subscriptions.BooleanSubscription;
+import rx.Observable;
+import rx.Observable.*;
 import rx.Subscriber;
-import rx.functions.Func1;
+import rx.functions.*;
 
 public class RxJavaInteropTest {
 
@@ -1089,5 +1092,318 @@ public class RxJavaInteropTest {
         to
         .requestMore(1)
         .assertResult(1, 2, 3, 4);
+    }
+
+    // ----------------------------------------------------------
+    // 1.x Subject -> 2.x FlowableProcessor
+    // ----------------------------------------------------------
+
+    @Test
+    public void sj1ToFp2Normal() {
+        rx.subjects.Subject<Integer, Integer> sj1 = rx.subjects.PublishSubject.create();
+        io.reactivex.processors.FlowableProcessor<Integer> pp2 = toV2Processor(sj1);
+
+        io.reactivex.subscribers.TestSubscriber<Integer> to = pp2.test();
+
+        assertTrue(sj1.hasObservers());
+        assertTrue(pp2.hasSubscribers());
+
+        pp2.onNext(1);
+        pp2.onNext(2);
+        pp2.onComplete();
+
+        assertFalse(sj1.hasObservers());
+        assertFalse(pp2.hasSubscribers());
+
+        assertTrue(pp2.hasComplete());
+        assertFalse(pp2.hasThrowable());
+        assertNull(pp2.getThrowable());
+
+        to.assertResult(1, 2);
+    }
+
+    @Test
+    public void sj1ToFp2Error() {
+        rx.subjects.Subject<Integer, Integer> sj1 = rx.subjects.PublishSubject.create();
+        io.reactivex.processors.FlowableProcessor<Integer> pp2 = toV2Processor(sj1);
+
+        io.reactivex.subscribers.TestSubscriber<Integer> to = pp2.test();
+
+        assertTrue(sj1.hasObservers());
+        assertTrue(pp2.hasSubscribers());
+
+        pp2.onError(new IOException());
+
+        assertFalse(sj1.hasObservers());
+        assertFalse(pp2.hasSubscribers());
+
+        assertFalse(pp2.hasComplete());
+        assertTrue(pp2.hasThrowable());
+        assertNotNull(pp2.getThrowable());
+        assertTrue(pp2.getThrowable() instanceof IOException);
+
+        to.assertFailure(IOException.class);
+    }
+
+    @Test
+    public void sj1ToFp2Backpressured() {
+        rx.subjects.Subject<Integer, Integer> sj1 = rx.subjects.ReplaySubject.create();
+        io.reactivex.processors.FlowableProcessor<Integer> pp2 = toV2Processor(sj1);
+
+        io.reactivex.subscribers.TestSubscriber<Integer> to = pp2.test(0L);
+
+        assertTrue(sj1.hasObservers());
+        assertTrue(pp2.hasSubscribers());
+
+        pp2.onNext(1);
+        pp2.onNext(2);
+        pp2.onNext(3);
+        pp2.onNext(4);
+
+        to.assertNoValues().assertNoErrors().assertNotComplete();
+
+        to.requestMore(1).assertValue(1).assertNoErrors().assertNotComplete();
+
+        to.requestMore(2).assertValues(1, 2, 3).assertNoErrors().assertNotComplete();
+
+        pp2.onComplete();
+
+        to.assertValues(1, 2, 3).assertNoErrors().assertNotComplete();
+
+        assertFalse(sj1.hasObservers());
+        assertFalse(pp2.hasSubscribers());
+
+        assertTrue(pp2.hasComplete());
+        assertFalse(pp2.hasThrowable());
+        assertNull(pp2.getThrowable());
+
+        to
+        .requestMore(1)
+        .assertResult(1, 2, 3, 4);
+    }
+
+
+    @Test
+    public void sj1ToFp2Lifecycle() {
+        rx.subjects.Subject<Integer, Integer> sj1 = rx.subjects.PublishSubject.create();
+        io.reactivex.processors.FlowableProcessor<Integer> pp2 = toV2Processor(sj1);
+
+        io.reactivex.subscribers.TestSubscriber<Integer> to = pp2.test(0L);
+
+        assertTrue(sj1.hasObservers());
+        assertTrue(pp2.hasSubscribers());
+
+        pp2.onNext(1);
+        pp2.onError(new IOException());
+
+        assertFalse(sj1.hasObservers());
+        assertFalse(pp2.hasSubscribers());
+
+        assertFalse(pp2.hasComplete());
+        assertTrue(pp2.hasThrowable());
+        assertNotNull(pp2.getThrowable());
+
+        to.assertFailure(rx.exceptions.MissingBackpressureException.class);
+    }
+
+    @Test
+    public void sj1ToFp2Lifecycle2() {
+        rx.subjects.Subject<Integer, Integer> sj1 = rx.subjects.PublishSubject.create();
+        io.reactivex.processors.FlowableProcessor<Integer> pp2 = toV2Processor(sj1);
+
+        io.reactivex.subscribers.TestSubscriber<Integer> to = pp2.test();
+
+        assertTrue(pp2.hasSubscribers());
+        assertTrue(sj1.hasObservers());
+        assertFalse(pp2.hasComplete());
+        assertFalse(pp2.hasThrowable());
+        assertNull(pp2.getThrowable());
+
+        BooleanSubscription d1 = new BooleanSubscription();
+        pp2.onSubscribe(d1);
+
+        assertFalse(d1.isCancelled());
+
+        pp2.onNext(1);
+        pp2.onNext(2);
+        pp2.onComplete();
+        pp2.onComplete();
+        pp2.onError(new IOException());
+        pp2.onNext(3);
+
+        BooleanSubscription d2 = new BooleanSubscription();
+        pp2.onSubscribe(d2);
+
+        assertFalse(d1.isCancelled());
+        assertTrue(d2.isCancelled());
+
+        assertFalse(pp2.hasSubscribers());
+        assertFalse(sj1.hasObservers());
+
+        assertTrue(pp2.hasComplete());
+        assertFalse(pp2.hasThrowable());
+        assertNull(pp2.getThrowable());
+
+        to.assertResult(1, 2);
+    }
+
+    @Test
+    public void sj1ToFp2NullValue() {
+        rx.subjects.Subject<Integer, Integer> sj1 = rx.subjects.PublishSubject.create();
+        io.reactivex.processors.FlowableProcessor<Integer> pp2 = toV2Processor(sj1);
+
+        io.reactivex.subscribers.TestSubscriber<Integer> to = pp2.test();
+
+        pp2.onNext(null);
+
+        assertFalse(pp2.hasSubscribers());
+        assertFalse(sj1.hasObservers());
+
+        to.assertFailure(NullPointerException.class);
+    }
+
+    @Test
+    public void sj1ToFp2NullException() {
+        rx.subjects.Subject<Integer, Integer> sj1 = rx.subjects.PublishSubject.create();
+        io.reactivex.processors.FlowableProcessor<Integer> pp2 = toV2Processor(sj1);
+
+        io.reactivex.subscribers.TestSubscriber<Integer> to = pp2.test();
+
+        pp2.onError(null);
+
+        assertFalse(pp2.hasSubscribers());
+        assertFalse(sj1.hasObservers());
+
+        to.assertFailure(NullPointerException.class);
+    }
+
+    @Test
+    public void ft1ToFt2() {
+        rx.Observable.Transformer<Integer, Integer> transformer = new Transformer<Integer, Integer>() {
+            @Override
+            public Observable<Integer> call(Observable<Integer> o) {
+                return o.map(new Func1<Integer, Integer>() {
+                    @Override
+                    public Integer call(Integer v) {
+                        return v + 1;
+                    }
+                });
+            }
+        };
+
+        Flowable.just(1)
+        .compose(toV2Transformer(transformer))
+        .test()
+        .assertResult(2);
+    }
+
+    @Test
+    public void ft2ToFt1() {
+        FlowableTransformer<Integer, Integer> transformer = new FlowableTransformer<Integer, Integer>() {
+            @Override
+            public Flowable<Integer> apply(Flowable<Integer> o) {
+                return o.map(new Function<Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer v) {
+                        return v + 1;
+                    }
+                });
+            }
+        };
+
+        rx.Observable.just(1)
+        .compose(toV1Transformer(transformer))
+        .test()
+        .assertResult(2);
+    }
+
+    @Test
+    public void st1ToSt2() {
+        rx.Single.Transformer<Integer, Integer> transformer = new rx.Single.Transformer<Integer, Integer>() {
+            @Override
+            public rx.Single<Integer> call(rx.Single<Integer> o) {
+                return o.map(new Func1<Integer, Integer>() {
+                    @Override
+                    public Integer call(Integer v) {
+                        return v + 1;
+                    }
+                });
+            }
+        };
+
+        Single.just(1)
+        .compose(toV2Transformer(transformer))
+        .test()
+        .assertResult(2);
+    }
+
+    @Test
+    public void st2ToSt1() {
+        SingleTransformer<Integer, Integer> transformer = new SingleTransformer<Integer, Integer>() {
+            @Override
+            public Single<Integer> apply(Single<Integer> o) {
+                return o.map(new Function<Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer v) {
+                        return v + 1;
+                    }
+                });
+            }
+        };
+
+        rx.Single.just(1)
+        .compose(toV1Transformer(transformer))
+        .test()
+        .assertResult(2);
+    }
+
+    @Test
+    public void ct1ToCt2() {
+
+        final int[] calls = { 0 };
+
+        rx.Completable.Transformer transformer = new rx.Completable.Transformer() {
+            @Override
+            public rx.Completable call(rx.Completable o) {
+                return o.doOnCompleted(new Action0() {
+                    @Override
+                    public void call() {
+                        calls[0]++;
+                    }
+                });
+            }
+        };
+
+        Completable.complete()
+        .compose(toV2Transformer(transformer))
+        .test()
+        .assertResult();
+
+        assertEquals(1, calls[0]);
+    }
+
+    @Test
+    public void ct2ToCt1() {
+
+        final int[] calls = { 0 };
+
+        CompletableTransformer transformer = new CompletableTransformer() {
+            @Override
+            public Completable apply(Completable o) {
+                return o.doOnComplete(new io.reactivex.functions.Action() {
+                    @Override
+                    public void run() {
+                        calls[0]++;
+                    }
+                });
+            }
+        };
+
+        rx.Completable.complete()
+        .compose(toV1Transformer(transformer))
+        .test()
+        .assertResult();
+
+        assertEquals(1, calls[0]);
     }
 }

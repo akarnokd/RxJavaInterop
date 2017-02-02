@@ -17,25 +17,27 @@
 package hu.akarnokd.rxjava.interop;
 
 /**
- * Wrap a V1 Subject and expose it as a V2 Subject.
+ * Wrap a V1 Subject and expose it as a V2 FlowableProcessor.
  * @param <T> the input/output value type
  * @since 0.9.0
  */
-final class SubjectV1ToSubjectV2<T> extends io.reactivex.subjects.Subject<T> {
+final class SubjectV1ToProcessorV2<T> extends io.reactivex.processors.FlowableProcessor<T> {
 
     final rx.subjects.Subject<T, T> source;
 
     volatile boolean terminated;
     Throwable error;
 
-    SubjectV1ToSubjectV2(rx.subjects.Subject<T, T> source) {
+    SubjectV1ToProcessorV2(rx.subjects.Subject<T, T> source) {
         this.source = source;
     }
 
     @Override
-    public void onSubscribe(io.reactivex.disposables.Disposable d) {
+    public void onSubscribe(org.reactivestreams.Subscription s) {
         if (terminated) {
-            d.dispose();
+            s.cancel();
+        } else {
+            s.request(Long.MAX_VALUE);
         }
     }
 
@@ -73,16 +75,18 @@ final class SubjectV1ToSubjectV2<T> extends io.reactivex.subjects.Subject<T> {
     }
 
     @Override
-    protected void subscribeActual(io.reactivex.Observer<? super T> observer) {
-        hu.akarnokd.rxjava.interop.ObservableV1ToObservableV2.ObservableSubscriber<T> parent =
-                new hu.akarnokd.rxjava.interop.ObservableV1ToObservableV2.ObservableSubscriber<T>(observer);
-        observer.onSubscribe(parent);
+    protected void subscribeActual(org.reactivestreams.Subscriber<? super T> s) {
+        hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriber<T> parent =
+                new hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriber<T>(s);
+        hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriberSubscription parentSubscription =
+                new hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriberSubscription(parent);
+        s.onSubscribe(parentSubscription);
 
         source.unsafeSubscribe(parent);
     }
 
     @Override
-    public boolean hasObservers() {
+    public boolean hasSubscribers() {
         return source.hasObservers();
     }
 

@@ -28,8 +28,10 @@ Maven search:
 
 # Usage
 
+### Converting between the reactive base types
+
 ```java
-import static hu.akarnokd.rxjava.interop.RxJavaInterop;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
 // convert from 1.x to 2.x
 
@@ -60,18 +62,60 @@ rx.Single      s1m = RxJavaInterop.toV1Single(MaybeSource);
 rx.Completable c1m = RxJavaInterop.toV1Completable(MaybeSource);
 ```
 
-Converting between Subjects and Processors. Note that 2.x `Subject`s and `FlowableProcessor`s support only the same input and output types.
+### Converting between Subjects and Processors. 
+
+Note that 2.x `Subject`s and `FlowableProcessor`s support only the same input and output types.
 
 ```java
-import static hu.akarnokd.rxjava.interop.RxJavaInterop;
-
 // convert from 1.x to 2.x
 
 io.reactivex.subjects.Subject sj2 = RxJavaInterop.toV2Subject(rx.subjects.Subject);
+
+io.reactivex.processors.FlowableProcessor fp2 = RxJavaInterop.toV2Processor(rx.subjects.Subject);
 
 // convert from 2.x to 1.x
 
 rx.subjects.Subject sj1 = RxJavaInterop.toV1Subject(io.reactivex.subjects.Subject);
 
 rx.subjects.Subject sj1b = RxJavaInterop.toV1Subject(io.reactivex.processors.FlowableProcessor);
+```
+
+### Converting between 1.x `X.Transformer`s and 2.x `XTransformer`s.
+
+```java
+// convert from 1.x to 2.x
+
+io.reactivex.FlowableTransformer ft2 = RxJavaInterop.toV2Transformer(rx.Observable.Transformer);
+
+io.reactivex.SingleTransformer st2 = RxJavaInterop.toV2Transformer(rx.Single.Transformer);
+
+io.reactivex.CompletableTransformer ct2 = RxJavaInterop.toV2Transformer(rx.Completable.Transformer);
+
+// convert from 2.x to 1.x
+
+rx.Observable.Transformer ft1 = RxJavaInterop.toV1Transformer(io.reactivex.FlowableTransformer);
+
+rx.Single.Transformer st1 = RxJavaInterop.toV1Transformer(io.reactivex.SingleTransformer);
+
+rx.Completable.Transformer ct1 = RxJavaInterop.toV1Transformer(io.reactivex.CompletableTransformer);
+```
+
+### Convert between 1.x `X.Operator` and 2.x `XOperator`
+
+```java
+// convert from 1.x to 2.x
+
+io.reactivex.FlowableOperator fo2 = RxJavaInterop.toV2Operator(rx.Observable.Operator);
+
+io.reactivex.SingleOperator so2 = RxJavaInterop.toV2Operator(rx.Single.Operator);
+
+io.reactivex.CompletableOperator co2 = RxJavaInterop.toV2Operator(rx.Completable.Operator);
+
+// convert from 2.x to 1.x
+
+rx.Observable.Operator fo1 = RxJavaInterop.toV1Transformer(io.reactivex.FlowableOperator);
+
+rx.Single.Operator so1 = RxJavaInterop.toV1Transformer(io.reactivex.SingleOperator);
+
+rx.Completable.Operator co1 = RxJavaInterop.toV1Transformer(io.reactivex.CompletableOperator);
 ```
