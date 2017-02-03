@@ -277,11 +277,21 @@ public final class RxJavaInterop {
                 hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriberSubscription parentSubscription = new hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriberSubscription(parent);
                 s.onSubscribe(parentSubscription);
 
-                rx.Subscriber<? super T> t = operator.call(parent);
+                rx.Subscriber<? super T> t;
+                
+                try {
+                    t = io.reactivex.internal.functions.ObjectHelper.requireNonNull(operator.call(parent), "The operator returned a null rx.Subscriber");
+                } catch (Throwable ex) {
+                    io.reactivex.exceptions.Exceptions.throwIfFatal(ex);
+                    rx.exceptions.Exceptions.throwIfFatal(ex);
+                    s.onError(ex);
+                    t = rx.observers.Subscribers.empty();
+                    t.unsubscribe();
+                }
 
                 hu.akarnokd.rxjava.interop.FlowableV2ToObservableV1.SourceSubscriber<T> z = new hu.akarnokd.rxjava.interop.FlowableV2ToObservableV1.SourceSubscriber<T>(t);
 
-                t.add(parent);
+                t.add(z);
                 t.setProducer(z);
 
                 return z;
@@ -554,9 +564,10 @@ public final class RxJavaInterop {
                 org.reactivestreams.Subscriber<? super T> s;
 
                 try {
-                    s = operator.apply(z);
+                    s = io.reactivex.internal.functions.ObjectHelper.requireNonNull(operator.apply(z), "The operator returned a null Subscriber");
                 } catch (Throwable ex) {
                     io.reactivex.exceptions.Exceptions.throwIfFatal(ex);
+                    rx.exceptions.Exceptions.throwIfFatal(ex);
                     t.onError(ex);
                     rx.Subscriber<? super T> r = rx.observers.Subscribers.empty();
                     r.unsubscribe();

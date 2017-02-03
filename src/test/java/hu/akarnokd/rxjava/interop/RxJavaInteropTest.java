@@ -1488,4 +1488,19 @@ public class RxJavaInteropTest {
         .test()
         .assertFailure(IllegalArgumentException.class);
     }
+
+    @Test
+    public void fo1ToFo2Crash() {
+        rx.Observable.Operator<Integer, Integer> transformer = new rx.Observable.Operator<Integer, Integer>() {
+            @Override
+            public rx.Subscriber<? super Integer> call(final rx.Subscriber<? super Integer> o) {
+                throw new IllegalArgumentException();
+            }
+        };
+
+        Flowable.just(1)
+        .lift(toV2Operator(transformer))
+        .test()
+        .assertFailure(IllegalArgumentException.class);
+    }
 }
