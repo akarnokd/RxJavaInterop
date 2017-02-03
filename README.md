@@ -100,22 +100,14 @@ rx.Single.Transformer st1 = RxJavaInterop.toV1Transformer(io.reactivex.SingleTra
 rx.Completable.Transformer ct1 = RxJavaInterop.toV1Transformer(io.reactivex.CompletableTransformer);
 ```
 
-### Convert between 1.x `X.Operator` and 2.x `XOperator`
+### Convert between 1.x `Flowable.Operator` and 2.x `FlowableOperator`
 
 ```java
 // convert from 1.x to 2.x
 
 io.reactivex.FlowableOperator fo2 = RxJavaInterop.toV2Operator(rx.Observable.Operator);
 
-io.reactivex.SingleOperator so2 = RxJavaInterop.toV2Operator(rx.Single.Operator);
-
-io.reactivex.CompletableOperator co2 = RxJavaInterop.toV2Operator(rx.Completable.Operator);
-
 // convert from 2.x to 1.x
 
 rx.Observable.Operator fo1 = RxJavaInterop.toV1Operator(io.reactivex.FlowableOperator);
-
-rx.Single.Operator so1 = RxJavaInterop.toV1Operator(io.reactivex.SingleOperator);
-
-rx.Completable.Operator co1 = RxJavaInterop.toV1Operator(io.reactivex.CompletableOperator);
 ```
