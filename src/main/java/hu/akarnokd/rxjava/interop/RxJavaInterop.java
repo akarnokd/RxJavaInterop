@@ -252,6 +252,43 @@ public final class RxJavaInterop {
         };
     }
 
+    /**
+     * Convert the 1.x Observable.Operator into a 2.x FlowableOperator.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator doesn't interfere with backpressure which is determined by the
+     *  1.x Subscriber returned by the 1.x Operator.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the input value type
+     * @param <R> the output value type
+     * @param operator the 1.x Observable.Operator to convert
+     * @return the new FlowableOperator instance
+     * @since 0.9.0
+     */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
+    public static <T, R> io.reactivex.FlowableOperator<R, T> toV2Operator(final rx.Observable.Operator<R, T> operator) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(operator, "operator is null");
+        return new io.reactivex.FlowableOperator<R, T>() {
+            @Override
+            public org.reactivestreams.Subscriber<? super T> apply(org.reactivestreams.Subscriber<? super R> s) throws Exception {
+                hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriber<R> parent = new hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriber<R>(s);
+                hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriberSubscription parentSubscription = new hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriberSubscription(parent);
+                s.onSubscribe(parentSubscription);
+
+                rx.Subscriber<? super T> t = operator.call(parent);
+
+                hu.akarnokd.rxjava.interop.FlowableV2ToObservableV1.SourceSubscriber<T> z = new hu.akarnokd.rxjava.interop.FlowableV2ToObservableV1.SourceSubscriber<T>(t);
+
+                t.add(parent);
+                t.setProducer(z);
+
+                return z;
+            }
+        };
+    }
+
     // -----------------------------------------------------------------------------------------
     // Conversions to 1.x
     // -----------------------------------------------------------------------------------------
@@ -484,6 +521,53 @@ public final class RxJavaInterop {
             @Override
             public rx.Completable call(rx.Completable f) {
                 return toV1Completable(transformer.apply(toV2Completable(f)));
+            }
+        };
+    }
+
+    /**
+     * Convert the 2.x FlowableOperator into a 1.x Observable.Operator.
+     * <dl>
+     *  <dt><b>Backpressure:</b></dt>
+     *  <dd>The operator doesn't interfere with backpressure which is determined by the
+     *  2.x Subscriber returned by the 2.x FlowableOperator.</dd>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the input value type
+     * @param <R> the output value type
+     * @param operator the 2.x FlowableOperator to convert
+     * @return the new Observable.Operator instance
+     * @since 0.9.0
+     */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
+    public static <T, R> rx.Observable.Operator<R, T> toV1Operator(final io.reactivex.FlowableOperator<R, T> operator) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(operator, "operator is null");
+        return new rx.Observable.Operator<R, T>() {
+            @Override
+            public rx.Subscriber<? super T> call(rx.Subscriber<? super R> t) {
+                hu.akarnokd.rxjava.interop.FlowableV2ToObservableV1.SourceSubscriber<R> z = new hu.akarnokd.rxjava.interop.FlowableV2ToObservableV1.SourceSubscriber<R>(t);
+
+                t.add(z);
+                t.setProducer(z);
+
+                org.reactivestreams.Subscriber<? super T> s;
+
+                try {
+                    s = operator.apply(z);
+                } catch (Throwable ex) {
+                    io.reactivex.exceptions.Exceptions.throwIfFatal(ex);
+                    t.onError(ex);
+                    rx.Subscriber<? super T> r = rx.observers.Subscribers.empty();
+                    r.unsubscribe();
+                    return r;
+                }
+
+                hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriber<T> parent = new hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriber<T>(s);
+                hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriberSubscription parentSubscription = new hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriberSubscription(parent);
+                s.onSubscribe(parentSubscription);
+
+                return parent;
             }
         };
     }

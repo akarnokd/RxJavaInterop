@@ -24,6 +24,7 @@ import java.lang.reflect.*;
 import java.util.NoSuchElementException;
 
 import org.junit.Test;
+import org.reactivestreams.Subscription;
 
 import io.reactivex.*;
 import io.reactivex.disposables.*;
@@ -1405,5 +1406,86 @@ public class RxJavaInteropTest {
         .assertResult();
 
         assertEquals(1, calls[0]);
+    }
+
+    @Test
+    public void fo1ToFo2() {
+        rx.Observable.Operator<Integer, Integer> transformer = new rx.Observable.Operator<Integer, Integer>() {
+            @Override
+            public rx.Subscriber<? super Integer> call(final rx.Subscriber<? super Integer> o) {
+                return new rx.Subscriber<Integer>(o) {
+                    @Override
+                    public void onNext(Integer t) {
+                        o.onNext(t + 1);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        o.onError(e);
+                    }
+
+                    @Override
+                    public void onCompleted() {
+                        o.onCompleted();
+                    }
+                };
+            }
+        };
+
+        Flowable.just(1)
+        .lift(toV2Operator(transformer))
+        .test()
+        .assertResult(2);
+    }
+
+    @Test
+    public void fo2ToFo1() {
+        FlowableOperator<Integer, Integer> transformer = new FlowableOperator<Integer, Integer>() {
+            @Override
+            public org.reactivestreams.Subscriber<? super Integer> apply(final org.reactivestreams.Subscriber<? super Integer> o) {
+                return new org.reactivestreams.Subscriber<Integer>() {
+
+                    @Override
+                    public void onSubscribe(Subscription s) {
+                        o.onSubscribe(s);
+                    }
+
+                    @Override
+                    public void onNext(Integer t) {
+                        o.onNext(t + 1);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        o.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        o.onComplete();
+                    }
+                };
+            }
+        };
+
+        Observable.just(1)
+        .lift(toV1Operator(transformer))
+        .test()
+        .assertResult(2);
+    }
+
+    @Test
+    public void fo2ToFo1Crash() {
+        FlowableOperator<Integer, Integer> transformer = new FlowableOperator<Integer, Integer>() {
+            @Override
+            public org.reactivestreams.Subscriber<? super Integer> apply(final org.reactivestreams.Subscriber<? super Integer> o) {
+                throw new IllegalArgumentException();
+            }
+        };
+
+        Observable.just(1)
+        .lift(toV1Operator(transformer))
+        .test()
+        .assertFailure(IllegalArgumentException.class);
     }
 }

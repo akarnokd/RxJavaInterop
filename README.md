@@ -113,9 +113,9 @@ io.reactivex.CompletableOperator co2 = RxJavaInterop.toV2Operator(rx.Completable
 
 // convert from 2.x to 1.x
 
-rx.Observable.Operator fo1 = RxJavaInterop.toV1Transformer(io.reactivex.FlowableOperator);
+rx.Observable.Operator fo1 = RxJavaInterop.toV1Operator(io.reactivex.FlowableOperator);
 
-rx.Single.Operator so1 = RxJavaInterop.toV1Transformer(io.reactivex.SingleOperator);
+rx.Single.Operator so1 = RxJavaInterop.toV1Operator(io.reactivex.SingleOperator);
 
-rx.Completable.Operator co1 = RxJavaInterop.toV1Transformer(io.reactivex.CompletableOperator);
+rx.Completable.Operator co1 = RxJavaInterop.toV1Operator(io.reactivex.CompletableOperator);
 ```
