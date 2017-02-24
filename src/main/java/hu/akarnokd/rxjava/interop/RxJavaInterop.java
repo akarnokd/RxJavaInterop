@@ -325,7 +325,7 @@ public final class RxJavaInterop {
     @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T> rx.Observable<T> toV1Observable(org.reactivestreams.Publisher<T> source) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
-        return rx.Observable.create(new FlowableV2ToObservableV1<T>(source));
+        return rx.Observable.unsafeCreate(new FlowableV2ToObservableV1<T>(source));
     }
 
     /**

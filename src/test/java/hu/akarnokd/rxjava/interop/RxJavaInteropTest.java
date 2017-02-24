@@ -171,7 +171,7 @@ public class RxJavaInteropTest {
 
     @Test
     public void o1f2IgnoreCancel() {
-        toV2Flowable(rx.Observable.create(new OnSubscribe<Object>() {
+        toV2Flowable(rx.Observable.unsafeCreate(new OnSubscribe<Object>() {
             @Override
             public void call(Subscriber<? super Object> s) {
                 s.onNext(null);
@@ -226,7 +226,7 @@ public class RxJavaInteropTest {
 
     @Test
     public void o1fo2IgnoreCancel() {
-        toV2Observable(rx.Observable.create(new OnSubscribe<Object>() {
+        toV2Observable(rx.Observable.unsafeCreate(new OnSubscribe<Object>() {
             @Override
             public void call(Subscriber<? super Object> s) {
                 s.onNext(null);
