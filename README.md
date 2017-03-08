@@ -37,7 +37,7 @@ import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
 io.reactivex.Flowable    f2 = RxJavaInterop.toV2Flowable(rx.Observable);
 
-io.reactivex.Observable  o2 = RxJavaInterop.toV2Observabe(rx.Observable);
+io.reactivex.Observable  o2 = RxJavaInterop.toV2Observable(rx.Observable);
 
 io.reactive.Single       s2 = RxJavaInterop.toV2Single(rx.Single);
 
