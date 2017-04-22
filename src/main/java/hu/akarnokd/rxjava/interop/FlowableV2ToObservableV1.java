@@ -42,7 +42,7 @@ final class FlowableV2ToObservableV1<T> implements rx.Observable.OnSubscribe<T> 
 
     static final class SourceSubscriber<T>
     extends AtomicReference<org.reactivestreams.Subscription>
-    implements org.reactivestreams.Subscriber<T>, rx.Subscription, rx.Producer {
+    implements io.reactivex.FlowableSubscriber<T>, rx.Subscription, rx.Producer {
 
         private static final long serialVersionUID = -6567012932544037069L;
 
