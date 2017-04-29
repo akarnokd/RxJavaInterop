@@ -278,7 +278,7 @@ public final class RxJavaInterop {
                 s.onSubscribe(parentSubscription);
 
                 rx.Subscriber<? super T> t;
-                
+
                 try {
                     t = io.reactivex.internal.functions.ObjectHelper.requireNonNull(operator.call(parent), "The operator returned a null rx.Subscriber");
                 } catch (Throwable ex) {
