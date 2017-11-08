@@ -299,6 +299,17 @@ public final class RxJavaInterop {
         };
     }
 
+    /**
+     * Convert the 1.x {@link rx.Subscription} into a 2.x {@link io.reactivex.disposables.Disposable}.
+     * @param subscription the 1.x Subscription to convert
+     * @return the new Disposable instance
+     * @since 0.11.0
+     */
+    public static io.reactivex.disposables.Disposable toV2Disposable(final rx.Subscription subscription) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(subscription, "subscription is null");
+        return new SubscriptionV1ToDisposableV2(subscription);
+    }
+
     // -----------------------------------------------------------------------------------------
     // Conversions to 1.x
     // -----------------------------------------------------------------------------------------
@@ -582,4 +593,16 @@ public final class RxJavaInterop {
             }
         };
     }
+
+    /**
+     * Convert the 2.x {@link io.reactivex.disposables.Disposable} into a 1.x {@link rx.Subscription}.
+     * @param disposable the 2.x Disposable to convert
+     * @return the new Subscription instance
+     * @since 0.11.0
+     */
+    public static rx.Subscription toV1Subscription(final io.reactivex.disposables.Disposable disposable) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(disposable, "disposable is null");
+        return new DisposableV2ToSubscriptionV1(disposable);
+    }
+
 }
