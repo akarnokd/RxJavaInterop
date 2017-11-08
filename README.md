@@ -111,3 +111,15 @@ io.reactivex.FlowableOperator fo2 = RxJavaInterop.toV2Operator(rx.Observable.Ope
 
 rx.Observable.Operator fo1 = RxJavaInterop.toV1Operator(io.reactivex.FlowableOperator);
 ```
+
+### Convert between 1.x `Subscription` and 2.x `Disposable`
+
+```java
+// convert from 1.x to 2.x
+
+io.reactivex.disposables.Disposable d2 = RxJavaInterop.toV2Disposable(rx.Subscription);
+
+// convert from 2.x to 1.x
+
+rx.Subscription s1 = RxJavaInterop.toV1Subscription(io.reactivex.disposables.Disposable);
+```
