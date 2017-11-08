@@ -18,6 +18,9 @@ package hu.akarnokd.rxjava.interop;
 
 import static hu.akarnokd.rxjava.interop.RxJavaInterop.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.io.IOException;
 import java.lang.reflect.*;
@@ -34,6 +37,7 @@ import rx.Observable;
 import rx.Observable.*;
 import rx.Subscriber;
 import rx.functions.*;
+import rx.subscriptions.Subscriptions;
 
 public class RxJavaInteropTest {
 
@@ -1502,5 +1506,57 @@ public class RxJavaInteropTest {
         .lift(toV2Operator(transformer))
         .test()
         .assertFailure(IllegalArgumentException.class);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void toV2DisposableNullSubscription() {
+        RxJavaInterop.toV2Disposable(null);
+    }
+
+    @Test
+    public void toV2DisposableIsDisposedTrue() {
+        assertTrue(RxJavaInterop.toV2Disposable(Subscriptions.unsubscribed()).isDisposed());
+    }
+
+    @Test
+    public void toV2DisposableIsDisposedFalse() {
+        assertFalse(RxJavaInterop.toV2Disposable(Subscriptions.empty()).isDisposed());
+    }
+
+    @Test
+    public void toV2DisposableCallsUnsubscribe() {
+        rx.Subscription subscription = mock(rx.Subscription.class);
+
+        Disposable disposable = RxJavaInterop.toV2Disposable(subscription);
+        verifyZeroInteractions(subscription);
+
+        disposable.dispose();
+        verify(subscription).unsubscribe();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void toV1SubscriptionNullDisposable() {
+        RxJavaInterop.toV1Subscription(null);
+    }
+
+    @Test
+    public void toV1SubscriptionIsUnsubscribedTrue() {
+        assertTrue(RxJavaInterop.toV1Subscription(Disposables.disposed()).isUnsubscribed());
+    }
+
+    @Test
+    public void toV1SubscriptionIsUnsubscribedFalse() {
+        assertFalse(RxJavaInterop.toV1Subscription(Disposables.empty()).isUnsubscribed());
+    }
+
+    @Test
+    public void toV1SubscriptionCallsDispose() {
+        Disposable disposable = mock(Disposable.class);
+
+        rx.Subscription subscription = RxJavaInterop.toV1Subscription(disposable);
+        verifyZeroInteractions(disposable);
+
+        subscription.unsubscribe();
+        verify(disposable).dispose();
     }
 }
