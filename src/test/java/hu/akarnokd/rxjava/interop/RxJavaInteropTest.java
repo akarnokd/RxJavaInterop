@@ -1323,6 +1323,26 @@ public class RxJavaInteropTest {
     }
 
     @Test
+    public void ot2ToOt1() {
+        ObservableTransformer<Integer, Integer> transformer = new ObservableTransformer<Integer, Integer>() {
+            @Override
+            public io.reactivex.Observable<Integer> apply(io.reactivex.Observable<Integer> o) {
+                return o.map(new Function<Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer v) {
+                        return v + 1;
+                    }
+                });
+            }
+        };
+
+        rx.Observable.just(1)
+            .compose(toV1Transformer(transformer, BackpressureStrategy.BUFFER))
+            .test()
+            .assertResult(2);
+    }
+
+    @Test
     public void st1ToSt2() {
         rx.Single.Transformer<Integer, Integer> transformer = new rx.Single.Transformer<Integer, Integer>() {
             @Override
