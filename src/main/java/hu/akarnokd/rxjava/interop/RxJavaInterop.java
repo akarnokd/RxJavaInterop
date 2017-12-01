@@ -17,6 +17,7 @@
 package hu.akarnokd.rxjava.interop;
 
 import io.reactivex.BackpressureStrategy;
+import io.reactivex.ObservableSource;
 
 /**
  * Conversion methods for converting between 1.x and 2.x reactive types, composing backpressure
@@ -206,6 +207,30 @@ public final class RxJavaInterop {
             @Override
             public org.reactivestreams.Publisher<R> apply(io.reactivex.Flowable<T> f) {
                 return toV2Flowable(transformer.call(toV1Observable(f)));
+            }
+        };
+    }
+
+    /**
+     * Convert the 1.x Observable.Transformer into a 2.x ObservableTransformer.
+     * <dl>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the input value type
+     * @param <R> the output value type
+     * @param strategy the backpressure strategy to apply: BUFFER, DROP or LATEST.
+     * @param transformer the 1.x Observable.Transformer to convert
+     * @return the new ObservableTransformer instance
+     */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
+    public static <T, R> io.reactivex.ObservableTransformer<T, R> toV2Transformer(final rx.Observable.Transformer<T, R> transformer,
+        final BackpressureStrategy strategy) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        return new io.reactivex.ObservableTransformer<T, R>() {
+            @Override
+            public ObservableSource<R> apply(io.reactivex.Observable<T> obs) {
+                return toV2Observable(transformer.call(toV1Observable(obs, strategy)));
             }
         };
     }
