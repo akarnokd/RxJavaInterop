@@ -1322,6 +1322,46 @@ public class RxJavaInteropTest {
         .assertResult(2);
     }
 
+  @Test
+  public void ot1ToOt2() {
+    rx.Observable.Transformer<Integer, Integer> transformer = new rx.Observable.Transformer<Integer, Integer>() {
+      @Override
+      public Observable<Integer> call(Observable<Integer> o) {
+        return o.map(new Func1<Integer, Integer>() {
+          @Override
+          public Integer call(Integer v) {
+            return v + 1;
+          }
+        });
+      }
+    };
+
+    io.reactivex.Observable.just(1)
+        .compose(toV2Transformer(transformer, BackpressureStrategy.BUFFER))
+        .test()
+        .assertResult(2);
+  }
+
+    @Test
+    public void ot2ToOt1() {
+        ObservableTransformer<Integer, Integer> transformer = new ObservableTransformer<Integer, Integer>() {
+            @Override
+            public io.reactivex.Observable<Integer> apply(io.reactivex.Observable<Integer> o) {
+                return o.map(new Function<Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer v) {
+                        return v + 1;
+                    }
+                });
+            }
+        };
+
+        rx.Observable.just(1)
+            .compose(toV1Transformer(transformer, BackpressureStrategy.BUFFER))
+            .test()
+            .assertResult(2);
+    }
+
     @Test
     public void st1ToSt2() {
         rx.Single.Transformer<Integer, Integer> transformer = new rx.Single.Transformer<Integer, Integer>() {

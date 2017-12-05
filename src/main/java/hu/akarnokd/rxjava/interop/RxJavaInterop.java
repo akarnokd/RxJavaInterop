@@ -209,6 +209,31 @@ public final class RxJavaInterop {
     }
 
     /**
+     * Convert the 1.x Observable.Transformer into a 2.x ObservableTransformer.
+     * <dl>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the input value type
+     * @param <R> the output value type
+     * @param strategy the backpressure strategy to apply: BUFFER, DROP or LATEST.
+     * @param transformer the 1.x Observable.Transformer to convert
+     * @return the new ObservableTransformer instance
+     * @since 0.12.0
+     */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
+    public static <T, R> io.reactivex.ObservableTransformer<T, R> toV2Transformer(final rx.Observable.Transformer<T, R> transformer,
+        final io.reactivex.BackpressureStrategy strategy) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        return new io.reactivex.ObservableTransformer<T, R>() {
+            @Override
+            public io.reactivex.ObservableSource<R> apply(io.reactivex.Observable<T> obs) {
+                return toV2Observable(transformer.call(toV1Observable(obs, strategy)));
+            }
+        };
+    }
+
+    /**
      * Convert the 1.x Single.Transformer into a 2.x SingleTransformer.
      * <dl>
      *  <dt><b>Scheduler:</b></dt>
@@ -498,6 +523,31 @@ public final class RxJavaInterop {
             @Override
             public rx.Observable<R> call(rx.Observable<T> f) {
                 return toV1Observable(transformer.apply(toV2Flowable(f)));
+            }
+        };
+    }
+
+    /**
+     * Convert the 2.x ObservableTransformer into a 1.x Observable.Transformer.
+     * <dl>
+     *  <dt><b>Scheduler:</b></dt>
+     *  <dd>The method does not operate by default on a particular {@code Scheduler}.</dd>
+     * </dl>
+     * @param <T> the input value type
+     * @param <R> the output value type
+     * @param transformer the 2.x ObservableTransformer to convert
+     * @param strategy the backpressure strategy to apply: BUFFER, DROP or LATEST.
+     * @return the new Observable.Transformer instance
+     * @since 0.12.0
+     */
+    @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
+    public static <T, R> rx.Observable.Transformer<T, R> toV1Transformer(final io.reactivex.ObservableTransformer<T, R> transformer,
+        final io.reactivex.BackpressureStrategy strategy) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        return new rx.Observable.Transformer<T, R>() {
+            @Override
+            public rx.Observable<R> call(rx.Observable<T> obs) {
+                return toV1Observable(transformer.apply(toV2Observable(obs)), strategy);
             }
         };
     }
