@@ -87,6 +87,8 @@ rx.subjects.Subject sj1b = RxJavaInterop.toV1Subject(io.reactivex.processors.Flo
 
 io.reactivex.FlowableTransformer ft2 = RxJavaInterop.toV2Transformer(rx.Observable.Transformer);
 
+io.reactivex.ObservableTransformer ot2 = RxJavaInterop.toV2Transformer(rx.Observable.Transformer, io.reactivex.BackpressureStrategy);
+
 io.reactivex.SingleTransformer st2 = RxJavaInterop.toV2Transformer(rx.Single.Transformer);
 
 io.reactivex.CompletableTransformer ct2 = RxJavaInterop.toV2Transformer(rx.Completable.Transformer);
@@ -94,6 +96,8 @@ io.reactivex.CompletableTransformer ct2 = RxJavaInterop.toV2Transformer(rx.Compl
 // convert from 2.x to 1.x
 
 rx.Observable.Transformer ft1 = RxJavaInterop.toV1Transformer(io.reactivex.FlowableTransformer);
+
+rx.Observable.Transformer ot1 = RxJavaInterop.toV1Transformer(io.reactivex.ObservableTransformer, io.reactivex.BackpressureStrategy);
 
 rx.Single.Transformer st1 = RxJavaInterop.toV1Transformer(io.reactivex.SingleTransformer);
 
