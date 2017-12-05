@@ -16,9 +16,6 @@
 
 package hu.akarnokd.rxjava.interop;
 
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.ObservableSource;
-
 /**
  * Conversion methods for converting between 1.x and 2.x reactive types, composing backpressure
  * and cancellation through.
@@ -222,14 +219,15 @@ public final class RxJavaInterop {
      * @param strategy the backpressure strategy to apply: BUFFER, DROP or LATEST.
      * @param transformer the 1.x Observable.Transformer to convert
      * @return the new ObservableTransformer instance
+     * @since 0.12.0
      */
     @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T, R> io.reactivex.ObservableTransformer<T, R> toV2Transformer(final rx.Observable.Transformer<T, R> transformer,
-        final BackpressureStrategy strategy) {
+        final io.reactivex.BackpressureStrategy strategy) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
         return new io.reactivex.ObservableTransformer<T, R>() {
             @Override
-            public ObservableSource<R> apply(io.reactivex.Observable<T> obs) {
+            public io.reactivex.ObservableSource<R> apply(io.reactivex.Observable<T> obs) {
                 return toV2Observable(transformer.call(toV1Observable(obs, strategy)));
             }
         };
@@ -540,10 +538,11 @@ public final class RxJavaInterop {
      * @param transformer the 2.x ObservableTransformer to convert
      * @param strategy the backpressure strategy to apply: BUFFER, DROP or LATEST.
      * @return the new Observable.Transformer instance
+     * @since 0.12.0
      */
     @io.reactivex.annotations.SchedulerSupport(io.reactivex.annotations.SchedulerSupport.NONE)
     public static <T, R> rx.Observable.Transformer<T, R> toV1Transformer(final io.reactivex.ObservableTransformer<T, R> transformer,
-        final BackpressureStrategy strategy) {
+        final io.reactivex.BackpressureStrategy strategy) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
         return new rx.Observable.Transformer<T, R>() {
             @Override
