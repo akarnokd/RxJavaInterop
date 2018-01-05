@@ -71,6 +71,7 @@ final class ObservableV1ToFlowableV2<T> extends io.reactivex.Flowable<T> {
             }
             done = true;
             actual.onError(e);
+            unsubscribe(); // v1 expects an unsubscribe  call when terminated
         }
 
         @Override
@@ -80,6 +81,7 @@ final class ObservableV1ToFlowableV2<T> extends io.reactivex.Flowable<T> {
             }
             done = true;
             actual.onComplete();
+            unsubscribe(); // v1 expects an unsubscribe  call when terminated
         }
 
         void requestMore(long n) {

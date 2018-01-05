@@ -70,6 +70,7 @@ final class ObservableV1ToObservableV2<T> extends io.reactivex.Observable<T> {
             }
             done = true;
             actual.onError(e);
+            unsubscribe(); // v1 expects an unsubscribe call when terminated
         }
 
         @Override
@@ -79,6 +80,7 @@ final class ObservableV1ToObservableV2<T> extends io.reactivex.Observable<T> {
             }
             done = true;
             actual.onComplete();
+            unsubscribe(); // v1 expects an unsubscribe call when terminated
         }
 
         @Override

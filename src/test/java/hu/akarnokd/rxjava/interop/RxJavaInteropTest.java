@@ -1599,4 +1599,53 @@ public class RxJavaInteropTest {
         subscription.unsubscribe();
         verify(disposable).dispose();
     }
+
+    @Test
+    public void v1ObservableIsUnsubscribedOnError() {
+        Action0 onUnsubscribe = mock(Action0.class);
+
+        RxJavaInterop.toV2Observable(rx.Observable.error(new IOException())
+        .doOnUnsubscribe(onUnsubscribe))
+        .test()
+        .assertFailure(IOException.class);
+
+        verify(onUnsubscribe).call();
+    }
+
+
+    @Test
+    public void v1ObservableIsUnsubscribedOnCompletion() {
+        Action0 onUnsubscribe = mock(Action0.class);
+
+        RxJavaInterop.toV2Observable(rx.Observable.just(1)
+        .doOnUnsubscribe(onUnsubscribe))
+        .test()
+        .assertResult(1);
+
+        verify(onUnsubscribe).call();
+    }
+
+    @Test
+    public void v1ObservableIsUnsubscribedOnError2() {
+        Action0 onUnsubscribe = mock(Action0.class);
+
+        RxJavaInterop.toV2Flowable(rx.Observable.error(new IOException())
+        .doOnUnsubscribe(onUnsubscribe))
+        .test()
+        .assertFailure(IOException.class);
+
+        verify(onUnsubscribe).call();
+    }
+
+    @Test
+    public void v1ObservableIsUnsubscribedOnCompletion2() {
+        Action0 onUnsubscribe = mock(Action0.class);
+
+        RxJavaInterop.toV2Flowable(rx.Observable.just(1)
+        .doOnUnsubscribe(onUnsubscribe))
+        .test()
+        .assertResult(1);
+
+        verify(onUnsubscribe).call();
+    }
 }
