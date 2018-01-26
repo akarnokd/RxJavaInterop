@@ -68,10 +68,7 @@ final class SchedulerV2ToSchedulerV1 extends rx.Scheduler {
         private final Action0 source;
 
         Action0V1ToRunnable(Action0 source) {
-            if (source == null) {
-                io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "Source 1.x Action0 is null");
-            }
-
+            io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "Source 1.x Action0 is null");
             this.source = source;
         }
 
