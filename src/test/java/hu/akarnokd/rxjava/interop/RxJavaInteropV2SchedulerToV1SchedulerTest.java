@@ -7,8 +7,7 @@ import rx.functions.Action0;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class RxJavaInteropV2SchedulerToV1SchedulerTest {
@@ -66,7 +65,7 @@ public class RxJavaInteropV2SchedulerToV1SchedulerTest {
         v2Scheduler.advanceTimeBy(1L, MINUTES);
         verify(action0).call();
 
-        v2Scheduler.advanceTimeBy(125, MINUTES); // Check that it's not periodic.
+        v2Scheduler.advanceTimeBy(125L, MINUTES); // Check that it's not periodic.
         verifyNoMoreInteractions(action0);
     }
 
@@ -148,7 +147,7 @@ public class RxJavaInteropV2SchedulerToV1SchedulerTest {
         when(v2Scheduler.createWorker()).thenReturn(v2Worker);
 
         rx.Scheduler.Worker v1Worker = v1Scheduler.createWorker();
-        verify(v2Worker, times(0)).dispose();
+        verify(v2Worker, never()).dispose();
 
         v1Worker.unsubscribe();
         verify(v2Worker).dispose();
@@ -165,9 +164,9 @@ public class RxJavaInteropV2SchedulerToV1SchedulerTest {
         rx.Scheduler.Worker v1Worker = v1Scheduler.createWorker();
 
         when(v2Worker.isDisposed()).thenReturn(true);
-        assertEquals(true, v1Worker.isUnsubscribed());
+        assertTrue(v1Worker.isUnsubscribed());
 
         when(v2Worker.isDisposed()).thenReturn(false);
-        assertEquals(false, v1Worker.isUnsubscribed());
+        assertFalse(v1Worker.isUnsubscribed());
     }
 }
