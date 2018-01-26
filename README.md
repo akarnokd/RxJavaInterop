@@ -129,3 +129,11 @@ io.reactivex.disposables.Disposable d2 = RxJavaInterop.toV2Disposable(rx.Subscri
 
 rx.Subscription s1 = RxJavaInterop.toV1Subscription(io.reactivex.disposables.Disposable);
 ```
+
+### Convert between 2.x `Scheduler` and 1.x `Scheduler`
+
+```java
+// convert from 2.x to 1.x
+
+rx.Scheduler s1 = RxJavaInterop.toV1Scheduler(io.reactivex.Scheduler);
+```
