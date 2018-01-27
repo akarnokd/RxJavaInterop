@@ -4,6 +4,7 @@ import io.reactivex.Scheduler;
 import io.reactivex.schedulers.TestScheduler;
 import org.junit.Test;
 import rx.functions.Action0;
+import rx.internal.schedulers.SchedulerLifecycle;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -168,5 +169,21 @@ public class RxJavaInteropV2SchedulerToV1SchedulerTest {
 
         when(v2Worker.isDisposed()).thenReturn(false);
         assertFalse(v1Worker.isUnsubscribed());
+    }
+
+    @Test
+    public void startStopSupport() {
+        Scheduler v2Scheduler = mock(Scheduler.class);
+        rx.Scheduler v1Scheduler = RxJavaInterop.toV1Scheduler(v2Scheduler);
+
+        SchedulerLifecycle lc = (SchedulerLifecycle)v1Scheduler;
+
+        lc.start();
+
+        verify(v2Scheduler).start();
+
+        lc.shutdown();
+
+        verify(v2Scheduler).shutdown();
     }
 }

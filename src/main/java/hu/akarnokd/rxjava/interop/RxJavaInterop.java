@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 David Karnok
+ * Copyright 2016-2018 David Karnok
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 
 package hu.akarnokd.rxjava.interop;
-
-import io.reactivex.Scheduler;
 
 /**
  * Conversion methods for converting between 1.x and 2.x reactive types, composing backpressure
@@ -663,8 +661,19 @@ public final class RxJavaInterop {
      * @return the new 1.x Scheduler instance
      * @since 0.12.0
      */
-    public static rx.Scheduler toV1Scheduler(Scheduler scheduler) {
+    public static rx.Scheduler toV1Scheduler(io.reactivex.Scheduler scheduler) {
         io.reactivex.internal.functions.ObjectHelper.requireNonNull(scheduler, "scheduler is null");
         return new SchedulerV2ToSchedulerV1(scheduler);
+    }
+
+    /**
+     * Convert the 2.x {@link io.reactivex.Scheduler} into a 1.x {@link rx.Scheduler}.
+     * @param scheduler the 2.x Scheduler to convert
+     * @return the new 1.x Scheduler instance
+     * @since 0.12.0
+     */
+    public static io.reactivex.Scheduler toV2Scheduler(rx.Scheduler scheduler) {
+        io.reactivex.internal.functions.ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        return new SchedulerV1ToSchedulerV2(scheduler);
     }
 }

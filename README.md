@@ -17,7 +17,7 @@ Library to convert between RxJava 1.x and 2.x reactive types.
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-interop:0.11.5"
+    compile "com.github.akarnokd:rxjava2-interop:0.12.0"
 }
 ```
 
@@ -28,7 +28,7 @@ Maven search:
 
 # Usage
 
-### Converting between the reactive base types
+### Convert between the reactive base types
 
 ```java
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
@@ -62,7 +62,7 @@ rx.Single      s1m = RxJavaInterop.toV1Single(MaybeSource);
 rx.Completable c1m = RxJavaInterop.toV1Completable(MaybeSource);
 ```
 
-### Converting between Subjects and Processors. 
+### Convert between Subjects and Processors. 
 
 Note that 2.x `Subject`s and `FlowableProcessor`s support only the same input and output types.
 
@@ -80,7 +80,7 @@ rx.subjects.Subject sj1 = RxJavaInterop.toV1Subject(io.reactivex.subjects.Subjec
 rx.subjects.Subject sj1b = RxJavaInterop.toV1Subject(io.reactivex.processors.FlowableProcessor);
 ```
 
-### Converting between 1.x `X.Transformer`s and 2.x `XTransformer`s.
+### Convert between 1.x `X.Transformer`s and 2.x `XTransformer`s.
 
 ```java
 // convert from 1.x to 2.x
@@ -130,9 +130,14 @@ io.reactivex.disposables.Disposable d2 = RxJavaInterop.toV2Disposable(rx.Subscri
 rx.Subscription s1 = RxJavaInterop.toV1Subscription(io.reactivex.disposables.Disposable);
 ```
 
-### Convert between 2.x `Scheduler` and 1.x `Scheduler`
+
+### Convert between 1.x `Scheduler`s and 2.x `Scheduler`s
 
 ```java
+// convert from 1.x to 2.x
+
+io.reactivex.Scheduler s2 = RxJavaInterop.toV2Scheduler(rx.Scheduler);
+
 // convert from 2.x to 1.x
 
 rx.Scheduler s1 = RxJavaInterop.toV1Scheduler(io.reactivex.Scheduler);
