@@ -667,9 +667,9 @@ public final class RxJavaInterop {
     }
 
     /**
-     * Convert the 2.x {@link io.reactivex.Scheduler} into a 1.x {@link rx.Scheduler}.
-     * @param scheduler the 2.x Scheduler to convert
-     * @return the new 1.x Scheduler instance
+     * Convert the 1.x {@link io.reactivex.Scheduler} into a 2.x {@link rx.Scheduler}.
+     * @param scheduler the 1.x Scheduler to convert
+     * @return the new 2.x Scheduler instance
      * @since 0.12.0
      */
     public static io.reactivex.Scheduler toV2Scheduler(rx.Scheduler scheduler) {
