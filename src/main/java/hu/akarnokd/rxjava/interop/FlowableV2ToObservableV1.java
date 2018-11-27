@@ -69,7 +69,7 @@ final class FlowableV2ToObservableV1<T> implements rx.Observable.OnSubscribe<T> 
 
         @Override
         public boolean isUnsubscribed() {
-            return io.reactivex.internal.subscriptions.SubscriptionHelper.isCancelled(get());
+            return io.reactivex.internal.subscriptions.SubscriptionHelper.CANCELLED == get();
         }
 
         @Override
