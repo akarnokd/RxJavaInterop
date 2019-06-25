@@ -1,14 +1,14 @@
 # RxJavaInterop
 
 
-<a href='https://travis-ci.org/akarnokd/RxJavaInterop/builds'><img src='https://travis-ci.org/akarnokd/RxJavaInterop.svg?branch=master'></a>
-[![codecov.io](http://codecov.io/github/akarnokd/RxJavaInterop/coverage.svg?branch=master)](http://codecov.io/github/akarnokd/RxJavaInterop?branch=master)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava2-interop/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava2-interop)
+<a href='https://travis-ci.org/akarnokd/RxJavaInterop/builds'><img src='https://travis-ci.org/akarnokd/RxJavaInterop.svg?branch=3.x'></a>
+[![codecov.io](http://codecov.io/github/akarnokd/RxJavaInterop/coverage.svg?branch=3.x)](http://codecov.io/github/akarnokd/RxJavaInterop?branch=3.x)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-interop/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-interop)
 
 RxJava 1.x: [![RxJava 1.x](https://maven-badges.herokuapp.com/maven-central/io.reactivex/rxjava/badge.svg)](https://maven-badges.herokuapp.com/maven-central/maven-central/io.reactivex/rxjava)
-RxJava 2.x: [![RxJava 2.x](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava2/rxjava/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava2/rxjava)
+RxJava 2.x: [![RxJava 3.x](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava3/rxjava/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.reactivex.rxjava3/rxjava)
 
-Library to convert between RxJava 1.x and 2.x reactive types.
+Library to convert between RxJava 1.x and 3.x reactive types.
 
 # Releases
 
@@ -17,7 +17,7 @@ Library to convert between RxJava 1.x and 2.x reactive types.
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava2-interop:0.13.7"
+    compile "com.github.akarnokd:rxjava3-interop:3.0.0-RC0"
 }
 ```
 

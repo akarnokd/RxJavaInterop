@@ -25,7 +25,7 @@ sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
 
 group = "com.github.akarnokd" 
-ext.githubProjectName = 'rxjava2-interop'
+ext.githubProjectName = 'rxjava3-interop'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -50,7 +50,7 @@ dependencies {
 
     compile "org.reactivestreams:reactive-streams:1.0.2"
     compile "io.reactivex:rxjava:1.3.8"
-    compile "io.reactivex.rxjava2:rxjava:2.2.10"
+    compile "io.reactivex.rxjava3:rxjava:3.0.0-RC0"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile 'org.mockito:mockito-core:2.28.2'
@@ -86,7 +86,7 @@ artifacts {
 
 jar {
     manifest {
-        name = 'rxjava2-interop'
+        name = 'rxjava3-interop'
         instruction 'Bundle-Vendor', 'akarnokd'
         instruction 'Bundle-DocURL', 'https://github.com/akarnokd/RxJavaInterop'
         instruction 'Import-Package', '!org.junit,!junit.framework,!org.mockito.*,*'
@@ -124,9 +124,11 @@ plugins.withType(EclipsePlugin) {
 javadoc {
     failOnError = false
     
-    options.links("http://docs.oracle.com/javase/7/docs/api/")
-    options.links("http://reactivex.io/RxJava/1.x/javadoc")
-    options.links("http://reactivex.io/RxJava/2.x/javadoc")
+    options.links(
+        "http://docs.oracle.com/javase/7/docs/api/",
+        "http://reactivex.io/RxJava/1.x/javadoc", 
+        "http://reactivex.io/RxJava/3.x/javadoc"
+    )
 }
 
 test {

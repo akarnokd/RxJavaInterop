@@ -18,9 +18,7 @@ package hu.akarnokd.rxjava.interop;
 
 import static hu.akarnokd.rxjava.interop.RxJavaInterop.*;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.lang.reflect.*;
@@ -30,9 +28,13 @@ import org.junit.Test;
 import org.reactivestreams.Subscription;
 
 import io.reactivex.*;
+import io.reactivex.Completable;
+import io.reactivex.Single;
 import io.reactivex.disposables.*;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.internal.subscriptions.BooleanSubscription;
+import io.reactivex.observers.BaseTestConsumer;
 import rx.Observable;
 import rx.Observable.*;
 import rx.Subscriber;
@@ -159,11 +161,23 @@ public class RxJavaInteropTest {
         .assertResult();
     }
 
+    @SuppressWarnings("unchecked")
+    static void assertFailureAndMessage(BaseTestConsumer<?, ?> testConsumer, Class<? extends Throwable> errorClass, final String message) {
+        testConsumer
+        .assertFailure(errorClass)
+        .assertError(new Predicate<Throwable>() {
+            @Override
+            public boolean test(Throwable error) throws Throwable {
+                return error.getMessage().equals(message);
+            }
+        });
+    }
+    
     @Test
     public void o1f2Error() {
-        toV2Flowable(rx.Observable.error(new RuntimeException("Forced failure")))
-        .test()
-        .assertFailureAndMessage(RuntimeException.class, "Forced failure");
+        assertFailureAndMessage(toV2Flowable(rx.Observable.error(new RuntimeException("Forced failure")))
+        .test(),
+        RuntimeException.class, "Forced failure");
     }
 
     @Test
@@ -216,9 +230,9 @@ public class RxJavaInteropTest {
 
     @Test
     public void o1o2Error() {
-        toV2Observable(rx.Observable.error(new RuntimeException("Forced failure")))
-        .test()
-        .assertFailureAndMessage(RuntimeException.class, "Forced failure");
+        assertFailureAndMessage(toV2Observable(rx.Observable.error(new RuntimeException("Forced failure")))
+        .test(),
+        RuntimeException.class, "Forced failure");
     }
 
     @Test
@@ -283,11 +297,11 @@ public class RxJavaInteropTest {
     @Test
     public void s1s2Cancel() {
         rx.subjects.PublishSubject<Integer> ps = rx.subjects.PublishSubject.create();
-        io.reactivex.observers.TestObserver<Integer> ts = toV2Single(ps.toSingle()).test();
+        io.reactivex.observers.TestObserver<Integer> to = toV2Single(ps.toSingle()).test();
 
         assertTrue("1.x PublishSubject has no observers!", ps.hasObservers());
 
-        ts.cancel();
+        to.dispose();
 
         assertFalse("1.x PublishSubject has observers!", ps.hasObservers());
 
@@ -295,8 +309,8 @@ public class RxJavaInteropTest {
 
     @Test
     public void s1s2Error() {
-        toV2Single(rx.Single.error(new RuntimeException("Forced failure"))).test()
-        .assertFailureAndMessage(RuntimeException.class, "Forced failure");
+        assertFailureAndMessage(toV2Single(rx.Single.error(new RuntimeException("Forced failure"))).test()
+        , RuntimeException.class, "Forced failure");
     }
 
     @Test
@@ -340,11 +354,11 @@ public class RxJavaInteropTest {
     @Test
     public void s1m2Cancel() {
         rx.subjects.PublishSubject<Integer> ps = rx.subjects.PublishSubject.create();
-        io.reactivex.observers.TestObserver<Integer> ts = toV2Maybe(ps.toSingle()).test();
+        io.reactivex.observers.TestObserver<Integer> to = toV2Maybe(ps.toSingle()).test();
 
         assertTrue("1.x PublishSubject has no observers!", ps.hasObservers());
 
-        ts.cancel();
+        to.dispose();
 
         assertFalse("1.x PublishSubject has observers!", ps.hasObservers());
 
@@ -352,8 +366,8 @@ public class RxJavaInteropTest {
 
     @Test
     public void s1m2Error() {
-        toV2Maybe(rx.Single.error(new RuntimeException("Forced failure"))).test()
-            .assertFailureAndMessage(RuntimeException.class, "Forced failure");
+        assertFailureAndMessage(toV2Maybe(rx.Single.error(new RuntimeException("Forced failure"))).test()
+            , RuntimeException.class, "Forced failure");
     }
 
     @Test
@@ -401,19 +415,19 @@ public class RxJavaInteropTest {
     @Test
     public void c1c2Cancel() {
         rx.subjects.PublishSubject<Integer> ps = rx.subjects.PublishSubject.create();
-        io.reactivex.observers.TestObserver<Void> ts = toV2Completable(ps.toCompletable()).test();
+        io.reactivex.observers.TestObserver<Void> to = toV2Completable(ps.toCompletable()).test();
 
         assertTrue("1.x PublishSubject has no observers!", ps.hasObservers());
 
-        ts.cancel();
+        to.dispose();
 
         assertFalse("1.x PublishSubject has observers!", ps.hasObservers());
     }
 
     @Test
     public void c1c2Error() {
-        toV2Completable(rx.Completable.error(new RuntimeException("Forced failure"))).test()
-        .assertFailureAndMessage(RuntimeException.class, "Forced failure");
+        assertFailureAndMessage(toV2Completable(rx.Completable.error(new RuntimeException("Forced failure"))).test()
+        , RuntimeException.class, "Forced failure");
     }
 
     @Test
@@ -454,15 +468,15 @@ public class RxJavaInteropTest {
 
         assertTrue("1.x PublishSubject has no observers!", ps.hasObservers());
 
-        ts.cancel();
+        ts.dispose();
 
         assertFalse("1.x PublishSubject has observers!", ps.hasObservers());
     }
 
     @Test
     public void c1m2Error() {
-        toV2Maybe(rx.Completable.error(new RuntimeException("Forced failure"))).test()
-            .assertFailureAndMessage(RuntimeException.class, "Forced failure");
+        assertFailureAndMessage(toV2Maybe(rx.Completable.error(new RuntimeException("Forced failure"))).test()
+            , RuntimeException.class, "Forced failure");
     }
 
 
