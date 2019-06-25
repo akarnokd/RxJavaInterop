@@ -1,8 +1,8 @@
-# RxJava2Interop
+# RxJavaInterop
 
 
-<a href='https://travis-ci.org/akarnokd/RxJava2Interop/builds'><img src='https://travis-ci.org/akarnokd/RxJava2Interop.svg?branch=master'></a>
-[![codecov.io](http://codecov.io/github/akarnokd/RxJava2Interop/coverage.svg?branch=master)](http://codecov.io/github/akarnokd/RxJava2Interop?branch=master)
+<a href='https://travis-ci.org/akarnokd/RxJavaInterop/builds'><img src='https://travis-ci.org/akarnokd/RxJavaInterop.svg?branch=master'></a>
+[![codecov.io](http://codecov.io/github/akarnokd/RxJavaInterop/coverage.svg?branch=master)](http://codecov.io/github/akarnokd/RxJavaInterop?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava2-interop/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava2-interop)
 
 RxJava 1.x: [![RxJava 1.x](https://maven-badges.herokuapp.com/maven-central/io.reactivex/rxjava/badge.svg)](https://maven-badges.herokuapp.com/maven-central/maven-central/io.reactivex/rxjava)
