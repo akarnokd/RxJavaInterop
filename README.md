@@ -33,7 +33,7 @@ Maven search:
 ```java
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 
-// convert from 1.x to 2.x
+// convert from 1.x to 3.x
 
 io.reactivex.Flowable    f2 = RxJavaInterop.toV2Flowable(rx.Observable);
 
@@ -47,7 +47,7 @@ io.reactivex.Maybe m2s = RxJavaInterop.toV2Maybe(rx.Single);
 
 io.reactivex.Maybe m2c = RxJavaInterop.toV2Maybe(rx.Completable);
 
-// convert from 2.x to 1.x
+// convert from 3.x to 1.x
 
 rx.Observable  o1 = RxJavaInterop.toV1Observable(Publisher);
 
@@ -64,26 +64,26 @@ rx.Completable c1m = RxJavaInterop.toV1Completable(MaybeSource);
 
 ### Convert between Subjects and Processors. 
 
-Note that 2.x `Subject`s and `FlowableProcessor`s support only the same input and output types.
+Note that 3.x `Subject`s and `FlowableProcessor`s support only the same input and output types.
 
 ```java
-// convert from 1.x to 2.x
+// convert from 1.x to 3.x
 
 io.reactivex.subjects.Subject sj2 = RxJavaInterop.toV2Subject(rx.subjects.Subject);
 
 io.reactivex.processors.FlowableProcessor fp2 = RxJavaInterop.toV2Processor(rx.subjects.Subject);
 
-// convert from 2.x to 1.x
+// convert from 3.x to 1.x
 
 rx.subjects.Subject sj1 = RxJavaInterop.toV1Subject(io.reactivex.subjects.Subject);
 
 rx.subjects.Subject sj1b = RxJavaInterop.toV1Subject(io.reactivex.processors.FlowableProcessor);
 ```
 
-### Convert between 1.x `X.Transformer`s and 2.x `XTransformer`s.
+### Convert between 1.x `X.Transformer`s and 3.x `XTransformer`s.
 
 ```java
-// convert from 1.x to 2.x
+// convert from 1.x to 3.x
 
 io.reactivex.FlowableTransformer ft2 = RxJavaInterop.toV2Transformer(rx.Observable.Transformer);
 
@@ -94,7 +94,7 @@ io.reactivex.SingleTransformer st2 = RxJavaInterop.toV2Transformer(rx.Single.Tra
 
 io.reactivex.CompletableTransformer ct2 = RxJavaInterop.toV2Transformer(rx.Completable.Transformer);
 
-// convert from 2.x to 1.x
+// convert from 3.x to 1.x
 
 rx.Observable.Transformer ft1 = RxJavaInterop.toV1Transformer(io.reactivex.FlowableTransformer);
 
@@ -106,39 +106,39 @@ rx.Single.Transformer st1 = RxJavaInterop.toV1Transformer(io.reactivex.SingleTra
 rx.Completable.Transformer ct1 = RxJavaInterop.toV1Transformer(io.reactivex.CompletableTransformer);
 ```
 
-### Convert between 1.x `Flowable.Operator` and 2.x `FlowableOperator`
+### Convert between 1.x `Flowable.Operator` and 3.x `FlowableOperator`
 
 ```java
-// convert from 1.x to 2.x
+// convert from 1.x to 3.x
 
 io.reactivex.FlowableOperator fo2 = RxJavaInterop.toV2Operator(rx.Observable.Operator);
 
-// convert from 2.x to 1.x
+// convert from 3.x to 1.x
 
 rx.Observable.Operator fo1 = RxJavaInterop.toV1Operator(io.reactivex.FlowableOperator);
 ```
 
-### Convert between 1.x `Subscription` and 2.x `Disposable`
+### Convert between 1.x `Subscription` and 3.x `Disposable`
 
 ```java
-// convert from 1.x to 2.x
+// convert from 1.x to 3.x
 
 io.reactivex.disposables.Disposable d2 = RxJavaInterop.toV2Disposable(rx.Subscription);
 
-// convert from 2.x to 1.x
+// convert from 3.x to 1.x
 
 rx.Subscription s1 = RxJavaInterop.toV1Subscription(io.reactivex.disposables.Disposable);
 ```
 
 
-### Convert between 1.x `Scheduler`s and 2.x `Scheduler`s
+### Convert between 1.x `Scheduler`s and 3.x `Scheduler`s
 
 ```java
-// convert from 1.x to 2.x
+// convert from 1.x to 3.x
 
 io.reactivex.Scheduler s2 = RxJavaInterop.toV2Scheduler(rx.Scheduler);
 
-// convert from 2.x to 1.x
+// convert from 3.x to 1.x
 
 rx.Scheduler s1 = RxJavaInterop.toV1Scheduler(io.reactivex.Scheduler);
 ```
