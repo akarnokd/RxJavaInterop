@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
 import java.util.concurrent.atomic.*;
 
 /**
- * Convert a V2 Flowable into a V1 Observable, composing backpressure and cancellation.
+ * Convert a V3 Flowable into a V1 Observable, composing backpressure and cancellation.
  *
  * @param <T> the value type
  */
-final class FlowableV2ToObservableV1<T> implements rx.Observable.OnSubscribe<T> {
+final class FlowableV3ToObservableV1<T> implements rx.Observable.OnSubscribe<T> {
 
     final org.reactivestreams.Publisher<T> source;
 
-    FlowableV2ToObservableV1(org.reactivestreams.Publisher<T> source) {
+    FlowableV3ToObservableV1(org.reactivestreams.Publisher<T> source) {
         this.source = source;
     }
 
@@ -42,7 +42,7 @@ final class FlowableV2ToObservableV1<T> implements rx.Observable.OnSubscribe<T> 
 
     static final class SourceSubscriber<T>
     extends AtomicReference<org.reactivestreams.Subscription>
-    implements io.reactivex.FlowableSubscriber<T>, rx.Subscription, rx.Producer {
+    implements io.reactivex.rxjava3.core.FlowableSubscriber<T>, rx.Subscription, rx.Producer {
 
         private static final long serialVersionUID = -6567012932544037069L;
 
@@ -58,23 +58,23 @@ final class FlowableV2ToObservableV1<T> implements rx.Observable.OnSubscribe<T> 
         @Override
         public void request(long n) {
             if (n != 0L) {
-                io.reactivex.internal.subscriptions.SubscriptionHelper.deferredRequest(this, requested, n);
+                io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper.deferredRequest(this, requested, n);
             }
         }
 
         @Override
         public void unsubscribe() {
-            io.reactivex.internal.subscriptions.SubscriptionHelper.cancel(this);
+            io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper.cancel(this);
         }
 
         @Override
         public boolean isUnsubscribed() {
-            return io.reactivex.internal.subscriptions.SubscriptionHelper.CANCELLED == get();
+            return io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper.CANCELLED == get();
         }
 
         @Override
         public void onSubscribe(org.reactivestreams.Subscription s) {
-            io.reactivex.internal.subscriptions.SubscriptionHelper.deferredSetOnce(this, requested, s);
+            io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper.deferredSetOnce(this, requested, s);
         }
 
         @Override

@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
 import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
- * Wraps a 2.x {@link io.reactivex.Scheduler} and exposes it as a
+ * Wraps a 3.x {@link io.reactivex.rxjava3.core.Scheduler} and exposes it as a
  * 1.x {@link rx.Scheduler}.
  * @author Artem Zinnatulin
  * @since 0.12.0
  */
-final class SchedulerV2ToSchedulerV1 extends rx.Scheduler implements rx.internal.schedulers.SchedulerLifecycle {
+final class SchedulerV3ToSchedulerV1 extends rx.Scheduler implements rx.internal.schedulers.SchedulerLifecycle {
 
-    final io.reactivex.Scheduler source;
+    final io.reactivex.rxjava3.core.Scheduler source;
 
-    SchedulerV2ToSchedulerV1(io.reactivex.Scheduler source) {
+    SchedulerV3ToSchedulerV1(io.reactivex.rxjava3.core.Scheduler source) {
         this.source = source;
     }
 
@@ -51,48 +51,48 @@ final class SchedulerV2ToSchedulerV1 extends rx.Scheduler implements rx.internal
 
     @Override
     public Worker createWorker() {
-        return new WorkerV2ToWorkerV1(source.createWorker());
+        return new WorkerV3ToWorkerV1(source.createWorker());
     }
 
-    static final class WorkerV2ToWorkerV1 extends rx.Scheduler.Worker {
+    static final class WorkerV3ToWorkerV1 extends rx.Scheduler.Worker {
 
-        final io.reactivex.Scheduler.Worker v2Worker;
+        final io.reactivex.rxjava3.core.Scheduler.Worker v3Worker;
 
-        WorkerV2ToWorkerV1(io.reactivex.Scheduler.Worker v2Worker) {
-            this.v2Worker = v2Worker;
+        WorkerV3ToWorkerV1(io.reactivex.rxjava3.core.Scheduler.Worker v3Worker) {
+            this.v3Worker = v3Worker;
         }
 
         @Override
         public rx.Subscription schedule(rx.functions.Action0 action) {
             final Action0V1ToRunnable runnable = new Action0V1ToRunnable(action);
-            return RxJavaInterop.toV1Subscription(v2Worker.schedule(runnable));
+            return RxJavaInterop.toV1Subscription(v3Worker.schedule(runnable));
         }
 
         @Override
         public rx.Subscription schedule(rx.functions.Action0 action, long delayTime, TimeUnit unit) {
             final Action0V1ToRunnable runnable = new Action0V1ToRunnable(action);
-            return RxJavaInterop.toV1Subscription(v2Worker.schedule(runnable, delayTime, unit));
+            return RxJavaInterop.toV1Subscription(v3Worker.schedule(runnable, delayTime, unit));
         }
 
         @Override
         public rx.Subscription schedulePeriodically(rx.functions.Action0 action, long initialDelay, long period, TimeUnit unit) {
             final Action0V1ToRunnable runnable = new Action0V1ToRunnable(action);
-            return RxJavaInterop.toV1Subscription(v2Worker.schedulePeriodically(runnable, initialDelay, period, unit));
+            return RxJavaInterop.toV1Subscription(v3Worker.schedulePeriodically(runnable, initialDelay, period, unit));
         }
 
         @Override
         public long now() {
-            return v2Worker.now(MILLISECONDS);
+            return v3Worker.now(MILLISECONDS);
         }
 
         @Override
         public void unsubscribe() {
-            v2Worker.dispose();
+            v3Worker.dispose();
         }
 
         @Override
         public boolean isUnsubscribed() {
-            return v2Worker.isDisposed();
+            return v3Worker.isDisposed();
         }
     }
 
@@ -101,7 +101,7 @@ final class SchedulerV2ToSchedulerV1 extends rx.Scheduler implements rx.internal
         final rx.functions.Action0 source;
 
         Action0V1ToRunnable(rx.functions.Action0 source) {
-            io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "Source 1.x Action0 is null");
+            io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "Source 1.x Action0 is null");
             this.source = source;
         }
 

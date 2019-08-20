@@ -14,39 +14,38 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
 /**
- * Convert a V1 Observable into a V2 Flowable, composing backpressure and cancellation.
+ * Convert a V1 Observable into a V3 Observable, composing cancellation.
  *
  * @param <T> the value type
  */
-final class ObservableV1ToFlowableV2<T> extends io.reactivex.Flowable<T> {
+final class ObservableV1ToObservableV3<T> extends io.reactivex.rxjava3.core.Observable<T> {
 
     final rx.Observable<T> source;
 
-    ObservableV1ToFlowableV2(rx.Observable<T> source) {
+    ObservableV1ToObservableV3(rx.Observable<T> source) {
         this.source = source;
     }
 
     @Override
-    protected void subscribeActual(org.reactivestreams.Subscriber<? super T> s) {
+    protected void subscribeActual(io.reactivex.rxjava3.core.Observer<? super T> s) {
         ObservableSubscriber<T> parent = new ObservableSubscriber<T>(s);
-        ObservableSubscriberSubscription parentSubscription = new ObservableSubscriberSubscription(parent);
-        s.onSubscribe(parentSubscription);
+        s.onSubscribe(parent);
 
         source.unsafeSubscribe(parent);
     }
 
-    static final class ObservableSubscriber<T> extends rx.Subscriber<T> {
+    static final class ObservableSubscriber<T> extends rx.Subscriber<T>
+    implements io.reactivex.rxjava3.disposables.Disposable {
 
-        final org.reactivestreams.Subscriber<? super T> actual;
+        final io.reactivex.rxjava3.core.Observer<? super T> actual;
 
         boolean done;
 
-        ObservableSubscriber(org.reactivestreams.Subscriber<? super T> actual) {
+        ObservableSubscriber(io.reactivex.rxjava3.core.Observer<? super T> actual) {
             this.actual = actual;
-            this.request(0L); // suppress starting out with Long.MAX_VALUE
         }
 
         @Override
@@ -57,7 +56,7 @@ final class ObservableV1ToFlowableV2<T> extends io.reactivex.Flowable<T> {
             if (t == null) {
                 unsubscribe();
                 onError(new NullPointerException(
-                    "The upstream 1.x Observable signalled a null value which is not supported in 2.x"));
+                    "The upstream 1.x Observable signalled a null value which is not supported in 3.x"));
             } else {
                 actual.onNext(t);
             }
@@ -66,12 +65,12 @@ final class ObservableV1ToFlowableV2<T> extends io.reactivex.Flowable<T> {
         @Override
         public void onError(Throwable e) {
             if (done) {
-                io.reactivex.plugins.RxJavaPlugins.onError(e);
+                io.reactivex.rxjava3.plugins.RxJavaPlugins.onError(e);
                 return;
             }
             done = true;
             actual.onError(e);
-            unsubscribe(); // v1 expects an unsubscribe  call when terminated
+            unsubscribe(); // v1 expects an unsubscribe call when terminated
         }
 
         @Override
@@ -81,31 +80,17 @@ final class ObservableV1ToFlowableV2<T> extends io.reactivex.Flowable<T> {
             }
             done = true;
             actual.onComplete();
-            unsubscribe(); // v1 expects an unsubscribe  call when terminated
-        }
-
-        void requestMore(long n) {
-            request(n);
-        }
-    }
-
-    static final class ObservableSubscriberSubscription implements org.reactivestreams.Subscription {
-
-        final ObservableSubscriber<?> parent;
-
-        ObservableSubscriberSubscription(ObservableSubscriber<?> parent) {
-            this.parent = parent;
+            unsubscribe(); // v1 expects an unsubscribe call when terminated
         }
 
         @Override
-        public void request(long n) {
-            parent.requestMore(n);
+        public void dispose() {
+            unsubscribe();
         }
 
         @Override
-        public void cancel() {
-            parent.unsubscribe();
+        public boolean isDisposed() {
+            return isUnsubscribed();
         }
     }
-
 }

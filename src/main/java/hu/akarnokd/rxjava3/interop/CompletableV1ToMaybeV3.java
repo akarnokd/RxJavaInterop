@@ -14,32 +14,32 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
 /**
- * Convert a V1 Completable into a V2 Completable, composing cancellation.
+ * Convert a V1 Completable into a V+ Completable, composing cancellation.
  */
-final class CompletableV1ToMaybeV2<T> extends io.reactivex.Maybe<T> {
+final class CompletableV1ToMaybeV3<T> extends io.reactivex.rxjava3.core.Maybe<T> {
 
     final rx.Completable source;
 
-    CompletableV1ToMaybeV2(rx.Completable source) {
+    CompletableV1ToMaybeV3(rx.Completable source) {
         this.source = source;
     }
 
     @Override
-    protected void subscribeActual(io.reactivex.MaybeObserver<? super T> observer) {
+    protected void subscribeActual(io.reactivex.rxjava3.core.MaybeObserver<? super T> observer) {
         source.subscribe(new SourceCompletableSubscriber<T>(observer));
     }
 
     static final class SourceCompletableSubscriber<T>
-    implements rx.CompletableSubscriber, io.reactivex.disposables.Disposable {
+    implements rx.CompletableSubscriber, io.reactivex.rxjava3.disposables.Disposable {
 
-        final io.reactivex.MaybeObserver<? super T> observer;
+        final io.reactivex.rxjava3.core.MaybeObserver<? super T> observer;
 
         rx.Subscription s;
 
-        SourceCompletableSubscriber(io.reactivex.MaybeObserver<? super T> observer) {
+        SourceCompletableSubscriber(io.reactivex.rxjava3.core.MaybeObserver<? super T> observer) {
             this.observer = observer;
         }
 

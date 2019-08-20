@@ -14,34 +14,34 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
 /**
- * Convert a V1 Single into a V2 Single, composing cancellation.
+ * Convert a V1 Single into a V3 Single, composing cancellation.
  *
  * @param <T> the value type
  */
-final class SingleV1ToSingleV2<T> extends io.reactivex.Single<T> {
+final class SingleV1ToSingleV3<T> extends io.reactivex.rxjava3.core.Single<T> {
 
     final rx.Single<T> source;
 
-    SingleV1ToSingleV2(rx.Single<T> source) {
+    SingleV1ToSingleV3(rx.Single<T> source) {
         this.source = source;
     }
 
     @Override
-    protected void subscribeActual(io.reactivex.SingleObserver<? super T> observer) {
+    protected void subscribeActual(io.reactivex.rxjava3.core.SingleObserver<? super T> observer) {
         SourceSingleSubscriber<T> parent = new SourceSingleSubscriber<T>(observer);
         observer.onSubscribe(parent);
         source.subscribe(parent);
     }
 
     static final class SourceSingleSubscriber<T> extends rx.SingleSubscriber<T>
-    implements io.reactivex.disposables.Disposable {
+    implements io.reactivex.rxjava3.disposables.Disposable {
 
-        final io.reactivex.SingleObserver<? super T> observer;
+        final io.reactivex.rxjava3.core.SingleObserver<? super T> observer;
 
-        SourceSingleSubscriber(io.reactivex.SingleObserver<? super T> observer) {
+        SourceSingleSubscriber(io.reactivex.rxjava3.core.SingleObserver<? super T> observer) {
             this.observer = observer;
         }
 
@@ -49,7 +49,7 @@ final class SingleV1ToSingleV2<T> extends io.reactivex.Single<T> {
         public void onSuccess(T value) {
             if (value == null) {
                 observer.onError(new NullPointerException(
-                        "The upstream 1.x Single signalled a null value which is not supported in 2.x"));
+                        "The upstream 1.x Single signalled a null value which is not supported in 3.x"));
             } else {
                 observer.onSuccess(value);
             }

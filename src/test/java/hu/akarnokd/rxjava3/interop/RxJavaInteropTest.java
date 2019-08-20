@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
-import static hu.akarnokd.rxjava.interop.RxJavaInterop.*;
+import static hu.akarnokd.rxjava3.interop.RxJavaInterop.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -27,14 +27,15 @@ import java.util.NoSuchElementException;
 import org.junit.Test;
 import org.reactivestreams.Subscription;
 
-import io.reactivex.*;
-import io.reactivex.Completable;
-import io.reactivex.Single;
-import io.reactivex.disposables.*;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
-import io.reactivex.internal.subscriptions.BooleanSubscription;
-import io.reactivex.observers.BaseTestConsumer;
+import hu.akarnokd.rxjava3.interop.RxJavaInterop;
+import io.reactivex.rxjava3.core.*;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.functions.Predicate;
+import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
+import io.reactivex.rxjava3.observers.BaseTestConsumer;
 import rx.Observable;
 import rx.Observable.*;
 import rx.Subscriber;
@@ -46,7 +47,7 @@ public class RxJavaInteropTest {
     @Test
     public void privateConstructor() {
         try {
-            Constructor<?> c = hu.akarnokd.rxjava.interop.RxJavaInterop.class.getDeclaredConstructor();
+            Constructor<?> c = hu.akarnokd.rxjava3.interop.RxJavaInterop.class.getDeclaredConstructor();
             c.setAccessible(true);
             c.newInstance();
         } catch (InvocationTargetException ex) {
@@ -62,92 +63,92 @@ public class RxJavaInteropTest {
     // ----------------------------------------------------------
 
     @Test(expected = NullPointerException.class)
-    public void o1f2Null() {
-        toV2Flowable(null);
+    public void o1f3Null() {
+        toV3Flowable(null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void o1o2Null() {
-        toV2Observable(null);
+    public void o1o3Null() {
+        toV3Observable(null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void s1s2Null() {
-        toV2Single(null);
+    public void s1s3Null() {
+        toV3Single(null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void s1m2Null() {
-        toV2Maybe((rx.Single<?>)null);
+    public void s1m3Null() {
+        toV3Maybe((rx.Single<?>)null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void c1c2Null() {
-        toV2Completable(null);
+    public void c1c3Null() {
+        toV3Completable(null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void c1m2Null() {
-        toV2Maybe((rx.Completable)null);
+    public void c1m3Null() {
+        toV3Maybe((rx.Completable)null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void f2o1Null() {
+    public void f3o1Null() {
         toV1Observable(null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void o2o1Null() {
-        toV1Observable(null, io.reactivex.BackpressureStrategy.BUFFER);
+    public void o3o1Null() {
+        toV1Observable(null, io.reactivex.rxjava3.core.BackpressureStrategy.BUFFER);
     }
 
     @Test(expected = NullPointerException.class)
-    public void o2o1NullStrategy() {
-        toV1Observable(io.reactivex.Observable.empty(), null);
+    public void o3o1NullStrategy() {
+        toV1Observable(io.reactivex.rxjava3.core.Observable.empty(), null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void s2s1Null() {
+    public void s3s1Null() {
         toV1Single((SingleSource<?>)null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void m2s1Null() {
+    public void m3s1Null() {
         toV1Single((MaybeSource<?>)null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void c2c1Null() {
-        toV1Completable((io.reactivex.CompletableSource)null);
+    public void c3c1Null() {
+        toV1Completable((io.reactivex.rxjava3.core.CompletableSource)null);
     }
 
     @Test(expected = NullPointerException.class)
-    public void m2c1Null() {
+    public void m3c1Null() {
         toV1Completable((MaybeSource<?>)null);
     }
 
     // ----------------------------------------------------------
-    // 1.x Observable -> 2.x Flowable
+    // 1.x Observable -> 3.x Flowable
     // ----------------------------------------------------------
 
     @Test
-    public void o1f2Normal() {
-        toV2Flowable(rx.Observable.range(1, 5))
+    public void o1f3Normal() {
+        toV3Flowable(rx.Observable.range(1, 5))
         .test()
         .assertResult(1, 2, 3, 4, 5);
     }
 
     @Test
-    public void o1f2NormalTake() {
-        toV2Flowable(rx.Observable.range(1, 5))
+    public void o1f3NormalTake() {
+        toV3Flowable(rx.Observable.range(1, 5))
         .take(2)
         .test()
         .assertResult(1, 2);
     }
 
     @Test
-    public void o1f2NormalBackpressured() {
-        toV2Flowable(rx.Observable.range(1, 5))
+    public void o1f3NormalBackpressured() {
+        toV3Flowable(rx.Observable.range(1, 5))
         .test(1)
         .assertValue(1)
         .assertNoErrors()
@@ -155,8 +156,8 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void o1f2Empty() {
-        toV2Flowable(rx.Observable.empty())
+    public void o1f3Empty() {
+        toV3Flowable(rx.Observable.empty())
         .test()
         .assertResult();
     }
@@ -174,22 +175,22 @@ public class RxJavaInteropTest {
     }
     
     @Test
-    public void o1f2Error() {
-        assertFailureAndMessage(toV2Flowable(rx.Observable.error(new RuntimeException("Forced failure")))
+    public void o1f3Error() {
+        assertFailureAndMessage(toV3Flowable(rx.Observable.error(new RuntimeException("Forced failure")))
         .test(),
         RuntimeException.class, "Forced failure");
     }
 
     @Test
-    public void o1f2ErrorNull() {
-        toV2Flowable(rx.Observable.just(null))
+    public void o1f3ErrorNull() {
+        toV3Flowable(rx.Observable.just(null))
         .test()
         .assertFailure(NullPointerException.class);
     }
 
     @Test
-    public void o1f2IgnoreCancel() {
-        toV2Flowable(rx.Observable.unsafeCreate(new OnSubscribe<Object>() {
+    public void o1f3IgnoreCancel() {
+        toV3Flowable(rx.Observable.unsafeCreate(new OnSubscribe<Object>() {
             @Override
             public void call(Subscriber<? super Object> s) {
                 s.onNext(null);
@@ -203,48 +204,48 @@ public class RxJavaInteropTest {
     }
 
     // ----------------------------------------------------------
-    // 1.x Observable -> 2.x Observable
+    // 1.x Observable -> 3.x Observable
     // ----------------------------------------------------------
 
     @Test
-    public void o1o2Normal() {
-        toV2Observable(rx.Observable.range(1, 5))
+    public void o1o3Normal() {
+        toV3Observable(rx.Observable.range(1, 5))
         .test()
         .assertResult(1, 2, 3, 4, 5);
     }
 
     @Test
-    public void o1o2NormalTake() {
-        toV2Observable(rx.Observable.range(1, 5))
+    public void o1o3NormalTake() {
+        toV3Observable(rx.Observable.range(1, 5))
         .take(2)
         .test()
         .assertResult(1, 2);
     }
 
     @Test
-    public void o1o2Empty() {
-        toV2Observable(rx.Observable.empty())
+    public void o1o3Empty() {
+        toV3Observable(rx.Observable.empty())
         .test()
         .assertResult();
     }
 
     @Test
-    public void o1o2Error() {
-        assertFailureAndMessage(toV2Observable(rx.Observable.error(new RuntimeException("Forced failure")))
+    public void o1o3Error() {
+        assertFailureAndMessage(toV3Observable(rx.Observable.error(new RuntimeException("Forced failure")))
         .test(),
         RuntimeException.class, "Forced failure");
     }
 
     @Test
-    public void o1o2ErrorNull() {
-        toV2Observable(rx.Observable.just(null))
+    public void o1o3ErrorNull() {
+        toV3Observable(rx.Observable.just(null))
         .test()
         .assertFailure(NullPointerException.class);
     }
 
     @Test
-    public void o1fo2IgnoreCancel() {
-        toV2Observable(rx.Observable.unsafeCreate(new OnSubscribe<Object>() {
+    public void o1fo3IgnoreCancel() {
+        toV3Observable(rx.Observable.unsafeCreate(new OnSubscribe<Object>() {
             @Override
             public void call(Subscriber<? super Object> s) {
                 s.onNext(null);
@@ -258,11 +259,11 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void o1o2IsDisposed() {
-        toV2Observable(rx.Observable.just(1))
-        .subscribe(new io.reactivex.Observer<Integer>() {
+    public void o1o3IsDisposed() {
+        toV3Observable(rx.Observable.just(1))
+        .subscribe(new io.reactivex.rxjava3.core.Observer<Integer>() {
             @Override
-            public void onSubscribe(io.reactivex.disposables.Disposable d) {
+            public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable d) {
                 assertFalse(d.isDisposed());
             }
 
@@ -285,19 +286,19 @@ public class RxJavaInteropTest {
 
 
     // ----------------------------------------------------------
-    // 1.x Single -> 2.x Single
+    // 1.x Single -> 3.x Single
     // ----------------------------------------------------------
 
     @Test
-    public void s1s2Normal() {
-        toV2Single(rx.Single.just(1)).test()
+    public void s1s3Normal() {
+        toV3Single(rx.Single.just(1)).test()
         .assertResult(1);
     }
 
     @Test
-    public void s1s2Cancel() {
+    public void s1s3Cancel() {
         rx.subjects.PublishSubject<Integer> ps = rx.subjects.PublishSubject.create();
-        io.reactivex.observers.TestObserver<Integer> to = toV2Single(ps.toSingle()).test();
+        io.reactivex.rxjava3.observers.TestObserver<Integer> to = toV3Single(ps.toSingle()).test();
 
         assertTrue("1.x PublishSubject has no observers!", ps.hasObservers());
 
@@ -308,23 +309,23 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void s1s2Error() {
-        assertFailureAndMessage(toV2Single(rx.Single.error(new RuntimeException("Forced failure"))).test()
+    public void s1s3Error() {
+        assertFailureAndMessage(toV3Single(rx.Single.error(new RuntimeException("Forced failure"))).test()
         , RuntimeException.class, "Forced failure");
     }
 
     @Test
-    public void s1s2ErrorNull() {
-        toV2Single(rx.Single.just(null)).test()
+    public void s1s3ErrorNull() {
+        toV3Single(rx.Single.just(null)).test()
         .assertFailure(NullPointerException.class);
     }
 
     @Test
-    public void s1s2IsDisposed() {
-        toV2Single(rx.Single.just(1))
-        .subscribe(new io.reactivex.SingleObserver<Integer>() {
+    public void s1s3IsDisposed() {
+        toV3Single(rx.Single.just(1))
+        .subscribe(new io.reactivex.rxjava3.core.SingleObserver<Integer>() {
             @Override
-            public void onSubscribe(io.reactivex.disposables.Disposable d) {
+            public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable d) {
                 assertFalse(d.isDisposed());
             }
 
@@ -342,19 +343,19 @@ public class RxJavaInteropTest {
 
 
     // ----------------------------------------------------------
-    // 1.x Single -> 2.x Maybe
+    // 1.x Single -> 3.x Maybe
     // ----------------------------------------------------------
 
     @Test
-    public void s1m2Normal() {
-        toV2Maybe(rx.Single.just(1)).test()
+    public void s1m3Normal() {
+        toV3Maybe(rx.Single.just(1)).test()
             .assertResult(1);
     }
 
     @Test
-    public void s1m2Cancel() {
+    public void s1m3Cancel() {
         rx.subjects.PublishSubject<Integer> ps = rx.subjects.PublishSubject.create();
-        io.reactivex.observers.TestObserver<Integer> to = toV2Maybe(ps.toSingle()).test();
+        io.reactivex.rxjava3.observers.TestObserver<Integer> to = toV3Maybe(ps.toSingle()).test();
 
         assertTrue("1.x PublishSubject has no observers!", ps.hasObservers());
 
@@ -365,23 +366,23 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void s1m2Error() {
-        assertFailureAndMessage(toV2Maybe(rx.Single.error(new RuntimeException("Forced failure"))).test()
+    public void s1m3Error() {
+        assertFailureAndMessage(toV3Maybe(rx.Single.error(new RuntimeException("Forced failure"))).test()
             , RuntimeException.class, "Forced failure");
     }
 
     @Test
-    public void s1m2ErrorNull() {
-        toV2Maybe(rx.Single.just(null)).test()
+    public void s1m3ErrorNull() {
+        toV3Maybe(rx.Single.just(null)).test()
             .assertFailure(NullPointerException.class);
     }
 
     @Test
-    public void s1m2IsDisposed() {
-        toV2Maybe(rx.Single.just(1))
-            .subscribe(new io.reactivex.MaybeObserver<Integer>() {
+    public void s1m3IsDisposed() {
+        toV3Maybe(rx.Single.just(1))
+            .subscribe(new io.reactivex.rxjava3.core.MaybeObserver<Integer>() {
                 @Override
-                public void onSubscribe(io.reactivex.disposables.Disposable d) {
+                public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable d) {
                     assertFalse(d.isDisposed());
                 }
 
@@ -403,19 +404,19 @@ public class RxJavaInteropTest {
     }
 
     // ----------------------------------------------------------
-    // 1.x Completable -> 2.x Completable
+    // 1.x Completable -> 3.x Completable
     // ----------------------------------------------------------
 
     @Test
-    public void c1c2Normal() {
-        toV2Completable(rx.Completable.complete()).test()
+    public void c1c3Normal() {
+        toV3Completable(rx.Completable.complete()).test()
         .assertResult();
     }
 
     @Test
-    public void c1c2Cancel() {
+    public void c1c3Cancel() {
         rx.subjects.PublishSubject<Integer> ps = rx.subjects.PublishSubject.create();
-        io.reactivex.observers.TestObserver<Void> to = toV2Completable(ps.toCompletable()).test();
+        io.reactivex.rxjava3.observers.TestObserver<Void> to = toV3Completable(ps.toCompletable()).test();
 
         assertTrue("1.x PublishSubject has no observers!", ps.hasObservers());
 
@@ -425,17 +426,17 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void c1c2Error() {
-        assertFailureAndMessage(toV2Completable(rx.Completable.error(new RuntimeException("Forced failure"))).test()
+    public void c1c3Error() {
+        assertFailureAndMessage(toV3Completable(rx.Completable.error(new RuntimeException("Forced failure"))).test()
         , RuntimeException.class, "Forced failure");
     }
 
     @Test
-    public void c1c2IsDisposed() {
-        toV2Completable(rx.Completable.complete())
-        .subscribe(new io.reactivex.CompletableObserver() {
+    public void c1c3IsDisposed() {
+        toV3Completable(rx.Completable.complete())
+        .subscribe(new io.reactivex.rxjava3.core.CompletableObserver() {
             @Override
-            public void onSubscribe(io.reactivex.disposables.Disposable d) {
+            public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable d) {
                 assertFalse(d.isDisposed());
             }
 
@@ -452,19 +453,19 @@ public class RxJavaInteropTest {
     }
 
     // ----------------------------------------------------------
-    // 1.x Completable -> 2.x Maybe
+    // 1.x Completable -> 3.x Maybe
     // ----------------------------------------------------------
 
     @Test
-    public void c1m2Normal() {
-        toV2Maybe(rx.Completable.complete()).test()
+    public void c1m3Normal() {
+        toV3Maybe(rx.Completable.complete()).test()
             .assertResult();
     }
 
     @Test
-    public void c1m2Cancel() {
+    public void c1m3Cancel() {
         rx.subjects.PublishSubject<Integer> ps = rx.subjects.PublishSubject.create();
-        io.reactivex.observers.TestObserver<Void> ts = RxJavaInterop.<Void>toV2Maybe(ps.toCompletable()).test();
+        io.reactivex.rxjava3.observers.TestObserver<Void> ts = RxJavaInterop.<Void>toV3Maybe(ps.toCompletable()).test();
 
         assertTrue("1.x PublishSubject has no observers!", ps.hasObservers());
 
@@ -474,18 +475,18 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void c1m2Error() {
-        assertFailureAndMessage(toV2Maybe(rx.Completable.error(new RuntimeException("Forced failure"))).test()
+    public void c1m3Error() {
+        assertFailureAndMessage(toV3Maybe(rx.Completable.error(new RuntimeException("Forced failure"))).test()
             , RuntimeException.class, "Forced failure");
     }
 
 
     @Test
-    public void c1m2IsDisposed() {
-        RxJavaInterop.<Void>toV2Maybe(rx.Completable.complete())
-            .subscribe(new io.reactivex.MaybeObserver<Void>() {
+    public void c1m3IsDisposed() {
+        RxJavaInterop.<Void>toV3Maybe(rx.Completable.complete())
+            .subscribe(new io.reactivex.rxjava3.core.MaybeObserver<Void>() {
                 @Override
-                public void onSubscribe(io.reactivex.disposables.Disposable d) {
+                public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable d) {
                     assertFalse(d.isDisposed());
                 }
 
@@ -507,7 +508,7 @@ public class RxJavaInteropTest {
     }
 
     // ----------------------------------------------------------
-    // 2.x Flowable -> 1.x Observable
+    // 3.x Flowable -> 1.x Observable
     // ----------------------------------------------------------
 
     static <T> rx.observers.TestSubscriber<T> test1(rx.Observable<T> s) {
@@ -523,9 +524,9 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void f2o1Normal() {
+    public void f3o1Normal() {
         rx.observers.TestSubscriber<Integer> ts = test1(toV1Observable(
-                io.reactivex.Flowable.range(1, 5)));
+                io.reactivex.rxjava3.core.Flowable.range(1, 5)));
 
         ts.assertValues(1, 2, 3, 4, 5);
         ts.assertNoErrors();
@@ -533,9 +534,9 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void f2o1NormalTake() {
+    public void f3o1NormalTake() {
         rx.observers.TestSubscriber<Integer> ts = test1(toV1Observable(
-                io.reactivex.Flowable.range(1, 5)).take(2));
+                io.reactivex.rxjava3.core.Flowable.range(1, 5)).take(2));
 
         ts.assertValues(1, 2);
         ts.assertNoErrors();
@@ -543,40 +544,40 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void f2o1NormalBackpressured() {
+    public void f3o1NormalBackpressured() {
         rx.observers.TestSubscriber<Integer> ts = test1(toV1Observable(
-                io.reactivex.Flowable.range(1, 5)), 1);
+                io.reactivex.rxjava3.core.Flowable.range(1, 5)), 1);
         ts.assertValue(1);
         ts.assertNoErrors();
         ts.assertNotCompleted();
     }
 
     @Test
-    public void f2o1Empty() {
+    public void f3o1Empty() {
         rx.observers.TestSubscriber<Object> ts = test1(toV1Observable(
-                io.reactivex.Flowable.empty()));
+                io.reactivex.rxjava3.core.Flowable.empty()));
         ts.assertNoValues();
         ts.assertNoErrors();
         ts.assertCompleted();
     }
 
     @Test
-    public void f2o1Error() {
+    public void f3o1Error() {
         rx.observers.TestSubscriber<Object> ts = test1(toV1Observable(
-                io.reactivex.Flowable.error(new RuntimeException("Forced failure"))));
+                io.reactivex.rxjava3.core.Flowable.error(new RuntimeException("Forced failure"))));
         ts.assertNoValues();
         ts.assertError(RuntimeException.class);
         assertEquals("Forced failure", ts.getOnErrorEvents().get(0).getMessage());
     }
 
     // ----------------------------------------------------------
-    // 2.x Observable -> 1.x Observable
+    // 3.x Observable -> 1.x Observable
     // ----------------------------------------------------------
 
     @Test
-    public void o2o1Normal() {
+    public void o3o1Normal() {
         rx.observers.TestSubscriber<Integer> ts = test1(toV1Observable(
-                io.reactivex.Observable.range(1, 5), io.reactivex.BackpressureStrategy.BUFFER));
+                io.reactivex.rxjava3.core.Observable.range(1, 5), io.reactivex.rxjava3.core.BackpressureStrategy.BUFFER));
 
         ts.assertValues(1, 2, 3, 4, 5);
         ts.assertNoErrors();
@@ -584,9 +585,9 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void o2o1NormalTake() {
+    public void o3o1NormalTake() {
         rx.observers.TestSubscriber<Integer> ts = test1(toV1Observable(
-                io.reactivex.Observable.range(1, 5), io.reactivex.BackpressureStrategy.BUFFER).take(2));
+                io.reactivex.rxjava3.core.Observable.range(1, 5), io.reactivex.rxjava3.core.BackpressureStrategy.BUFFER).take(2));
 
         ts.assertValues(1, 2);
         ts.assertNoErrors();
@@ -594,34 +595,34 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void o2o1NormalBackpressured() {
+    public void o3o1NormalBackpressured() {
         rx.observers.TestSubscriber<Integer> ts = test1(toV1Observable(
-                io.reactivex.Observable.range(1, 5), io.reactivex.BackpressureStrategy.BUFFER), 1);
+                io.reactivex.rxjava3.core.Observable.range(1, 5), io.reactivex.rxjava3.core.BackpressureStrategy.BUFFER), 1);
         ts.assertValue(1);
         ts.assertNoErrors();
         ts.assertNotCompleted();
     }
 
     @Test
-    public void o2o1Empty() {
+    public void o3o1Empty() {
         rx.observers.TestSubscriber<Object> ts = test1(toV1Observable(
-                io.reactivex.Observable.empty(), io.reactivex.BackpressureStrategy.BUFFER));
+                io.reactivex.rxjava3.core.Observable.empty(), io.reactivex.rxjava3.core.BackpressureStrategy.BUFFER));
         ts.assertNoValues();
         ts.assertNoErrors();
         ts.assertCompleted();
     }
 
     @Test
-    public void o2o1Error() {
+    public void o3o1Error() {
         rx.observers.TestSubscriber<Object> ts = test1(toV1Observable(
-                io.reactivex.Observable.error(new RuntimeException("Forced failure")), io.reactivex.BackpressureStrategy.BUFFER));
+                io.reactivex.rxjava3.core.Observable.error(new RuntimeException("Forced failure")), io.reactivex.rxjava3.core.BackpressureStrategy.BUFFER));
         ts.assertNoValues();
         ts.assertError(RuntimeException.class);
         assertEquals("Forced failure", ts.getOnErrorEvents().get(0).getMessage());
     }
 
     // ----------------------------------------------------------
-    // 2.x Single -> 1.x Single
+    // 3.x Single -> 1.x Single
     // ----------------------------------------------------------
 
     static <T> rx.observers.TestSubscriber<T> test1(rx.Single<T> s) {
@@ -631,30 +632,30 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void s2s1Normal() {
-        rx.observers.TestSubscriber<Integer> ts = test1(toV1Single(io.reactivex.Single.just(1)));
+    public void s3s1Normal() {
+        rx.observers.TestSubscriber<Integer> ts = test1(toV1Single(io.reactivex.rxjava3.core.Single.just(1)));
         ts.assertValue(1);
         ts.assertNoErrors();
         ts.assertCompleted();
     }
 
     @Test
-    public void s2s1Cancel() {
-        io.reactivex.subjects.PublishSubject<Integer> ps = io.reactivex.subjects.PublishSubject.create();
+    public void s3s1Cancel() {
+        io.reactivex.rxjava3.subjects.PublishSubject<Integer> ps = io.reactivex.rxjava3.subjects.PublishSubject.create();
         rx.observers.TestSubscriber<Integer> ts = test1(toV1Single(ps.single(-99)));
 
-        assertTrue("2.x PublishSubject has no observers!", ps.hasObservers());
+        assertTrue("3.x PublishSubject has no observers!", ps.hasObservers());
 
         ts.unsubscribe();
 
-        assertFalse("2.x PublishSubject has observers!", ps.hasObservers());
+        assertFalse("3.x PublishSubject has observers!", ps.hasObservers());
 
     }
 
     @Test
-    public void s2s1Error() {
+    public void s3s1Error() {
         rx.observers.TestSubscriber<Object> ts = test1(toV1Single(
-                io.reactivex.Single.error(new RuntimeException("Forced failure"))));
+                io.reactivex.rxjava3.core.Single.error(new RuntimeException("Forced failure"))));
 
         ts.assertNoValues();
         ts.assertError(RuntimeException.class);
@@ -662,7 +663,7 @@ public class RxJavaInteropTest {
     }
 
     // ----------------------------------------------------------
-    // 2.x Completable -> 1.x Completable
+    // 3.x Completable -> 1.x Completable
     // ----------------------------------------------------------
 
     static <T> rx.observers.TestSubscriber<T> test1(rx.Completable s) {
@@ -672,31 +673,31 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void c2c1Normal() {
+    public void c3c1Normal() {
         rx.observers.TestSubscriber<Integer> ts = test1(toV1Completable(
-                io.reactivex.Completable.complete()));
+                io.reactivex.rxjava3.core.Completable.complete()));
         ts.assertNoValues();
         ts.assertNoErrors();
         ts.assertCompleted();
     }
 
     @Test
-    public void c2c1Cancel() {
-        io.reactivex.subjects.PublishSubject<Integer> ps = io.reactivex.subjects.PublishSubject.create();
+    public void c3c1Cancel() {
+        io.reactivex.rxjava3.subjects.PublishSubject<Integer> ps = io.reactivex.rxjava3.subjects.PublishSubject.create();
         rx.observers.TestSubscriber<Integer> ts = test1(toV1Completable(ps.ignoreElements()));
 
-        assertTrue("2.x PublishSubject has no observers!", ps.hasObservers());
+        assertTrue("3.x PublishSubject has no observers!", ps.hasObservers());
 
         ts.unsubscribe();
 
-        assertFalse("2.x PublishSubject has observers!", ps.hasObservers());
+        assertFalse("3.x PublishSubject has observers!", ps.hasObservers());
 
     }
 
     @Test
-    public void c2c1Error() {
+    public void c3c1Error() {
         rx.observers.TestSubscriber<Object> ts = test1(toV1Completable(
-                io.reactivex.Completable.error(new RuntimeException("Forced failure"))));
+                io.reactivex.rxjava3.core.Completable.error(new RuntimeException("Forced failure"))));
 
         ts.assertNoValues();
         ts.assertError(RuntimeException.class);
@@ -704,13 +705,13 @@ public class RxJavaInteropTest {
     }
 
     // ----------------------------------------------------------
-    // 2.x Maybe -> 1.x Single
+    // 3.x Maybe -> 1.x Single
     // ----------------------------------------------------------
 
     @Test
-    public void m2s1Normal() {
+    public void m3s1Normal() {
         rx.observers.TestSubscriber<Integer> ts = test1(
-                toV1Single(io.reactivex.Maybe.just(1)));
+                toV1Single(io.reactivex.rxjava3.core.Maybe.just(1)));
 
         ts.assertValue(1);
         ts.assertNoErrors();
@@ -719,9 +720,9 @@ public class RxJavaInteropTest {
 
 
     @Test
-    public void m2s1Error() {
+    public void m3s1Error() {
         rx.observers.TestSubscriber<Integer> ts = test1(
-                toV1Single(io.reactivex.Maybe.<Integer>error(new RuntimeException())));
+                toV1Single(io.reactivex.rxjava3.core.Maybe.<Integer>error(new RuntimeException())));
 
         ts.assertNoValues();
         ts.assertError(RuntimeException.class);
@@ -729,9 +730,9 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void m2s1Empty() {
+    public void m3s1Empty() {
         rx.observers.TestSubscriber<Integer> ts = test1(
-                toV1Single(io.reactivex.Maybe.<Integer>empty()));
+                toV1Single(io.reactivex.rxjava3.core.Maybe.<Integer>empty()));
 
         ts.assertNoValues();
         ts.assertError(NoSuchElementException.class);
@@ -739,25 +740,25 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void m2s1Cancel() {
-        io.reactivex.subjects.PublishSubject<Integer> ps = io.reactivex.subjects.PublishSubject.create();
+    public void m3s1Cancel() {
+        io.reactivex.rxjava3.subjects.PublishSubject<Integer> ps = io.reactivex.rxjava3.subjects.PublishSubject.create();
         rx.observers.TestSubscriber<Integer> ts = test1(toV1Single(ps.singleElement()));
 
-        assertTrue("2.x PublishSubject has no observers!", ps.hasObservers());
+        assertTrue("3.x PublishSubject has no observers!", ps.hasObservers());
 
         ts.unsubscribe();
 
-        assertFalse("2.x PublishSubject has observers!", ps.hasObservers());
+        assertFalse("3.x PublishSubject has observers!", ps.hasObservers());
     }
 
     // ----------------------------------------------------------
-    // 2.x Maybe -> 1.x Completable
+    // 3.x Maybe -> 1.x Completable
     // ----------------------------------------------------------
 
     @Test
-    public void m2c1Normal() {
+    public void m3c1Normal() {
         rx.observers.TestSubscriber<Integer> ts = test1(
-                toV1Completable(io.reactivex.Maybe.just(1)));
+                toV1Completable(io.reactivex.rxjava3.core.Maybe.just(1)));
 
         ts.assertNoValues();
         ts.assertNoErrors();
@@ -766,9 +767,9 @@ public class RxJavaInteropTest {
 
 
     @Test
-    public void m2c1Error() {
+    public void m3c1Error() {
         rx.observers.TestSubscriber<Integer> ts = test1(
-                toV1Completable(io.reactivex.Maybe.<Integer>error(new RuntimeException())));
+                toV1Completable(io.reactivex.rxjava3.core.Maybe.<Integer>error(new RuntimeException())));
 
         ts.assertNoValues();
         ts.assertError(RuntimeException.class);
@@ -776,9 +777,9 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void m2c1Empty() {
+    public void m3c1Empty() {
         rx.observers.TestSubscriber<Integer> ts = test1(
-                toV1Completable(io.reactivex.Maybe.<Integer>empty()));
+                toV1Completable(io.reactivex.rxjava3.core.Maybe.<Integer>empty()));
 
         ts.assertNoValues();
         ts.assertNoErrors();
@@ -786,15 +787,15 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void m2c1Cancel() {
-        io.reactivex.subjects.PublishSubject<Integer> ps = io.reactivex.subjects.PublishSubject.create();
+    public void m3c1Cancel() {
+        io.reactivex.rxjava3.subjects.PublishSubject<Integer> ps = io.reactivex.rxjava3.subjects.PublishSubject.create();
         rx.observers.TestSubscriber<Integer> ts = test1(toV1Completable(ps.singleElement()));
 
-        assertTrue("2.x PublishSubject has no observers!", ps.hasObservers());
+        assertTrue("3.x PublishSubject has no observers!", ps.hasObservers());
 
         ts.unsubscribe();
 
-        assertFalse("2.x PublishSubject has observers!", ps.hasObservers());
+        assertFalse("3.x PublishSubject has observers!", ps.hasObservers());
     }
 
     @Test
@@ -811,280 +812,280 @@ public class RxJavaInteropTest {
     }
 
     // ----------------------------------------------------------
-    // 1.x Subject -> 2.x Subject
+    // 1.x Subject -> 3.x Subject
     // ----------------------------------------------------------
 
     @Test
-    public void sj1ToSj2Normal() {
+    public void sj1ToSj3Normal() {
         rx.subjects.PublishSubject<Integer> ps1 = rx.subjects.PublishSubject.create();
-        io.reactivex.subjects.Subject<Integer> sj2 = toV2Subject(ps1);
+        io.reactivex.rxjava3.subjects.Subject<Integer> sj3 = toV3Subject(ps1);
 
-        io.reactivex.observers.TestObserver<Integer> to = sj2.test();
+        io.reactivex.rxjava3.observers.TestObserver<Integer> to = sj3.test();
 
-        assertTrue(sj2.hasObservers());
+        assertTrue(sj3.hasObservers());
         assertTrue(ps1.hasObservers());
-        assertFalse(sj2.hasComplete());
-        assertFalse(sj2.hasThrowable());
-        assertNull(sj2.getThrowable());
+        assertFalse(sj3.hasComplete());
+        assertFalse(sj3.hasThrowable());
+        assertNull(sj3.getThrowable());
 
-        sj2.onNext(1);
-        sj2.onNext(2);
-        sj2.onComplete();
+        sj3.onNext(1);
+        sj3.onNext(2);
+        sj3.onComplete();
 
-        assertFalse(sj2.hasObservers());
+        assertFalse(sj3.hasObservers());
         assertFalse(ps1.hasObservers());
 
-        assertTrue(sj2.hasComplete());
-        assertFalse(sj2.hasThrowable());
-        assertNull(sj2.getThrowable());
+        assertTrue(sj3.hasComplete());
+        assertFalse(sj3.hasThrowable());
+        assertNull(sj3.getThrowable());
 
         to.assertResult(1, 2);
     }
 
     @Test
-    public void sj1ToSj2Error() {
+    public void sj1ToSj3Error() {
         rx.subjects.PublishSubject<Integer> ps1 = rx.subjects.PublishSubject.create();
-        io.reactivex.subjects.Subject<Integer> sj2 = toV2Subject(ps1);
+        io.reactivex.rxjava3.subjects.Subject<Integer> sj3 = toV3Subject(ps1);
 
-        io.reactivex.observers.TestObserver<Integer> to = sj2.test();
+        io.reactivex.rxjava3.observers.TestObserver<Integer> to = sj3.test();
 
-        assertTrue(sj2.hasObservers());
+        assertTrue(sj3.hasObservers());
         assertTrue(ps1.hasObservers());
-        assertFalse(sj2.hasComplete());
-        assertFalse(sj2.hasThrowable());
-        assertNull(sj2.getThrowable());
+        assertFalse(sj3.hasComplete());
+        assertFalse(sj3.hasThrowable());
+        assertNull(sj3.getThrowable());
 
-        sj2.onError(new IOException());
+        sj3.onError(new IOException());
 
-        assertFalse(sj2.hasObservers());
+        assertFalse(sj3.hasObservers());
         assertFalse(ps1.hasObservers());
 
-        assertFalse(sj2.hasComplete());
-        assertTrue(sj2.hasThrowable());
-        assertNotNull(sj2.getThrowable());
-        assertTrue(sj2.getThrowable() instanceof IOException);
+        assertFalse(sj3.hasComplete());
+        assertTrue(sj3.hasThrowable());
+        assertNotNull(sj3.getThrowable());
+        assertTrue(sj3.getThrowable() instanceof IOException);
 
         to.assertFailure(IOException.class);
     }
 
     @Test
-    public void sj1ToSj2Lifecycle() {
+    public void sj1ToSj3Lifecycle() {
         rx.subjects.PublishSubject<Integer> ps1 = rx.subjects.PublishSubject.create();
-        io.reactivex.subjects.Subject<Integer> sj2 = toV2Subject(ps1);
+        io.reactivex.rxjava3.subjects.Subject<Integer> sj3 = toV3Subject(ps1);
 
-        io.reactivex.observers.TestObserver<Integer> to = sj2.test();
+        io.reactivex.rxjava3.observers.TestObserver<Integer> to = sj3.test();
 
-        assertTrue(sj2.hasObservers());
+        assertTrue(sj3.hasObservers());
         assertTrue(ps1.hasObservers());
-        assertFalse(sj2.hasComplete());
-        assertFalse(sj2.hasThrowable());
-        assertNull(sj2.getThrowable());
+        assertFalse(sj3.hasComplete());
+        assertFalse(sj3.hasThrowable());
+        assertNull(sj3.getThrowable());
 
         Disposable d1 = Disposables.empty();
-        sj2.onSubscribe(d1);
+        sj3.onSubscribe(d1);
 
         assertFalse(d1.isDisposed());
 
-        sj2.onNext(1);
-        sj2.onNext(2);
-        sj2.onComplete();
-        sj2.onComplete();
-        sj2.onError(new IOException());
-        sj2.onNext(3);
+        sj3.onNext(1);
+        sj3.onNext(2);
+        sj3.onComplete();
+        sj3.onComplete();
+        sj3.onError(new IOException());
+        sj3.onNext(3);
 
-        Disposable d2 = Disposables.empty();
-        sj2.onSubscribe(d2);
+        Disposable d3 = Disposables.empty();
+        sj3.onSubscribe(d3);
 
         assertFalse(d1.isDisposed());
-        assertTrue(d2.isDisposed());
+        assertTrue(d3.isDisposed());
 
-        assertFalse(sj2.hasObservers());
+        assertFalse(sj3.hasObservers());
         assertFalse(ps1.hasObservers());
 
-        assertTrue(sj2.hasComplete());
-        assertFalse(sj2.hasThrowable());
-        assertNull(sj2.getThrowable());
+        assertTrue(sj3.hasComplete());
+        assertFalse(sj3.hasThrowable());
+        assertNull(sj3.getThrowable());
 
         to.assertResult(1, 2);
     }
 
     @Test
-    public void sj1ToSj2NullValue() {
+    public void sj1ToSj3NullValue() {
         rx.subjects.PublishSubject<Integer> ps1 = rx.subjects.PublishSubject.create();
-        io.reactivex.subjects.Subject<Integer> sj2 = toV2Subject(ps1);
+        io.reactivex.rxjava3.subjects.Subject<Integer> sj3 = toV3Subject(ps1);
 
-        io.reactivex.observers.TestObserver<Integer> to = sj2.test();
+        io.reactivex.rxjava3.observers.TestObserver<Integer> to = sj3.test();
 
-        sj2.onNext(null);
+        sj3.onNext(null);
 
-        assertFalse(sj2.hasObservers());
+        assertFalse(sj3.hasObservers());
         assertFalse(ps1.hasObservers());
 
         to.assertFailure(NullPointerException.class);
     }
 
     @Test
-    public void sj1ToSj2NullException() {
+    public void sj1ToSj3NullException() {
         rx.subjects.PublishSubject<Integer> ps1 = rx.subjects.PublishSubject.create();
-        io.reactivex.subjects.Subject<Integer> sj2 = toV2Subject(ps1);
+        io.reactivex.rxjava3.subjects.Subject<Integer> sj3 = toV3Subject(ps1);
 
-        io.reactivex.observers.TestObserver<Integer> to = sj2.test();
+        io.reactivex.rxjava3.observers.TestObserver<Integer> to = sj3.test();
 
-        sj2.onError(null);
+        sj3.onError(null);
 
-        assertFalse(sj2.hasObservers());
+        assertFalse(sj3.hasObservers());
         assertFalse(ps1.hasObservers());
 
         to.assertFailure(NullPointerException.class);
     }
 
     // ----------------------------------------------------------
-    // 2.x Subject -> 1.x Subject
+    // 3.x Subject -> 1.x Subject
     // ----------------------------------------------------------
 
     @Test
-    public void sj2ToSj1Normal() {
-        io.reactivex.subjects.PublishSubject<Integer> ps2 = io.reactivex.subjects.PublishSubject.create();
-        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(ps2);
+    public void sj3ToSj1Normal() {
+        io.reactivex.rxjava3.subjects.PublishSubject<Integer> ps3 = io.reactivex.rxjava3.subjects.PublishSubject.create();
+        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(ps3);
 
         rx.observers.AssertableSubscriber<Integer> to = sj1.test();
 
         assertTrue(sj1.hasObservers());
-        assertTrue(ps2.hasObservers());
+        assertTrue(ps3.hasObservers());
 
         sj1.onNext(1);
         sj1.onNext(2);
         sj1.onCompleted();
 
         assertFalse(sj1.hasObservers());
-        assertFalse(ps2.hasObservers());
+        assertFalse(ps3.hasObservers());
 
         to.assertResult(1, 2);
     }
 
     @Test
-    public void sj2ToSj1Error() {
-        io.reactivex.subjects.PublishSubject<Integer> ps2 = io.reactivex.subjects.PublishSubject.create();
-        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(ps2);
+    public void sj3ToSj1Error() {
+        io.reactivex.rxjava3.subjects.PublishSubject<Integer> ps3 = io.reactivex.rxjava3.subjects.PublishSubject.create();
+        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(ps3);
 
         rx.observers.AssertableSubscriber<Integer> to = sj1.test();
 
         assertTrue(sj1.hasObservers());
-        assertTrue(ps2.hasObservers());
+        assertTrue(ps3.hasObservers());
 
         sj1.onError(new IOException());
 
         assertFalse(sj1.hasObservers());
-        assertFalse(ps2.hasObservers());
+        assertFalse(ps3.hasObservers());
 
         to.assertFailure(IOException.class);
     }
 
     @Test
-    public void sj2ToSj1Backpressured() {
-        io.reactivex.subjects.PublishSubject<Integer> pp2 = io.reactivex.subjects.PublishSubject.create();
-        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp2);
+    public void sj3ToSj1Backpressured() {
+        io.reactivex.rxjava3.subjects.PublishSubject<Integer> pp3 = io.reactivex.rxjava3.subjects.PublishSubject.create();
+        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp3);
 
         rx.observers.AssertableSubscriber<Integer> to = sj1.test(0L);
 
         assertTrue(sj1.hasObservers());
-        assertTrue(pp2.hasObservers());
+        assertTrue(pp3.hasObservers());
 
         sj1.onNext(1);
 
         assertFalse(sj1.hasObservers());
-        assertFalse(pp2.hasObservers());
+        assertFalse(pp3.hasObservers());
 
-        assertFalse(pp2.hasComplete());
-        assertFalse(pp2.hasThrowable());
-        assertNull(pp2.getThrowable());
+        assertFalse(pp3.hasComplete());
+        assertFalse(pp3.hasThrowable());
+        assertNull(pp3.getThrowable());
 
         to.assertFailure(rx.exceptions.MissingBackpressureException.class);
     }
 
     @Test
-    public void sj2ToSj1Lifecycle() {
-        io.reactivex.subjects.PublishSubject<Integer> pp2 = io.reactivex.subjects.PublishSubject.create();
-        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp2);
+    public void sj3ToSj1Lifecycle() {
+        io.reactivex.rxjava3.subjects.PublishSubject<Integer> pp3 = io.reactivex.rxjava3.subjects.PublishSubject.create();
+        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp3);
 
         rx.observers.AssertableSubscriber<Integer> to = sj1.test(0L);
 
         assertTrue(sj1.hasObservers());
-        assertTrue(pp2.hasObservers());
+        assertTrue(pp3.hasObservers());
 
         sj1.onNext(1);
         sj1.onError(new IOException());
 
         assertFalse(sj1.hasObservers());
-        assertFalse(pp2.hasObservers());
+        assertFalse(pp3.hasObservers());
 
-        assertFalse(pp2.hasComplete());
-        assertTrue(pp2.hasThrowable());
-        assertNotNull(pp2.getThrowable());
+        assertFalse(pp3.hasComplete());
+        assertTrue(pp3.hasThrowable());
+        assertNotNull(pp3.getThrowable());
 
         to.assertFailure(rx.exceptions.MissingBackpressureException.class);
     }
 
     // ----------------------------------------------------------
-    // 2.x FlowableProcessor -> 1.x Subject
+    // 3.x FlowableProcessor -> 1.x Subject
     // ----------------------------------------------------------
 
     @Test
-    public void fp2ToSj1Normal() {
-        io.reactivex.processors.FlowableProcessor<Integer> pp2 = io.reactivex.processors.PublishProcessor.create();
-        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp2);
+    public void fp3ToSj1Normal() {
+        io.reactivex.rxjava3.processors.FlowableProcessor<Integer> pp3 = io.reactivex.rxjava3.processors.PublishProcessor.create();
+        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp3);
 
         rx.observers.AssertableSubscriber<Integer> to = sj1.test();
 
         assertTrue(sj1.hasObservers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp3.hasSubscribers());
 
         sj1.onNext(1);
         sj1.onNext(2);
         sj1.onCompleted();
 
         assertFalse(sj1.hasObservers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp3.hasSubscribers());
 
-        assertTrue(pp2.hasComplete());
-        assertFalse(pp2.hasThrowable());
-        assertNull(pp2.getThrowable());
+        assertTrue(pp3.hasComplete());
+        assertFalse(pp3.hasThrowable());
+        assertNull(pp3.getThrowable());
 
         to.assertResult(1, 2);
     }
 
     @Test
-    public void fp2ToSj1Error() {
-        io.reactivex.processors.FlowableProcessor<Integer> pp2 = io.reactivex.processors.PublishProcessor.create();
-        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp2);
+    public void fp3ToSj1Error() {
+        io.reactivex.rxjava3.processors.FlowableProcessor<Integer> pp3 = io.reactivex.rxjava3.processors.PublishProcessor.create();
+        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp3);
 
         rx.observers.AssertableSubscriber<Integer> to = sj1.test();
 
         assertTrue(sj1.hasObservers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp3.hasSubscribers());
 
         sj1.onError(new IOException());
 
         assertFalse(sj1.hasObservers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp3.hasSubscribers());
 
-        assertFalse(pp2.hasComplete());
-        assertTrue(pp2.hasThrowable());
-        assertNotNull(pp2.getThrowable());
-        assertTrue(pp2.getThrowable() instanceof IOException);
+        assertFalse(pp3.hasComplete());
+        assertTrue(pp3.hasThrowable());
+        assertNotNull(pp3.getThrowable());
+        assertTrue(pp3.getThrowable() instanceof IOException);
 
         to.assertFailure(IOException.class);
     }
 
     @Test
-    public void fp2ToSj1Backpressured() {
-        io.reactivex.processors.FlowableProcessor<Integer> pp2 = io.reactivex.processors.ReplayProcessor.create();
-        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp2);
+    public void fp3ToSj1Backpressured() {
+        io.reactivex.rxjava3.processors.FlowableProcessor<Integer> pp3 = io.reactivex.rxjava3.processors.ReplayProcessor.create();
+        rx.subjects.Subject<Integer, Integer> sj1 = toV1Subject(pp3);
 
         rx.observers.AssertableSubscriber<Integer> to = sj1.test(0L);
 
         assertTrue(sj1.hasObservers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp3.hasSubscribers());
 
         sj1.onNext(1);
         sj1.onNext(2);
@@ -1102,11 +1103,11 @@ public class RxJavaInteropTest {
         to.assertValues(1, 2, 3).assertNoErrors().assertNotCompleted();
 
         assertFalse(sj1.hasObservers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp3.hasSubscribers());
 
-        assertTrue(pp2.hasComplete());
-        assertFalse(pp2.hasThrowable());
-        assertNull(pp2.getThrowable());
+        assertTrue(pp3.hasComplete());
+        assertFalse(pp3.hasThrowable());
+        assertNull(pp3.getThrowable());
 
         to
         .requestMore(1)
@@ -1114,70 +1115,70 @@ public class RxJavaInteropTest {
     }
 
     // ----------------------------------------------------------
-    // 1.x Subject -> 2.x FlowableProcessor
+    // 1.x Subject -> 3.x FlowableProcessor
     // ----------------------------------------------------------
 
     @Test
-    public void sj1ToFp2Normal() {
+    public void sj1ToFp3Normal() {
         rx.subjects.Subject<Integer, Integer> sj1 = rx.subjects.PublishSubject.create();
-        io.reactivex.processors.FlowableProcessor<Integer> pp2 = toV2Processor(sj1);
+        io.reactivex.rxjava3.processors.FlowableProcessor<Integer> pp3 = toV3Processor(sj1);
 
-        io.reactivex.subscribers.TestSubscriber<Integer> to = pp2.test();
+        io.reactivex.rxjava3.subscribers.TestSubscriber<Integer> to = pp3.test();
 
         assertTrue(sj1.hasObservers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp3.hasSubscribers());
 
-        pp2.onNext(1);
-        pp2.onNext(2);
-        pp2.onComplete();
+        pp3.onNext(1);
+        pp3.onNext(2);
+        pp3.onComplete();
 
         assertFalse(sj1.hasObservers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp3.hasSubscribers());
 
-        assertTrue(pp2.hasComplete());
-        assertFalse(pp2.hasThrowable());
-        assertNull(pp2.getThrowable());
+        assertTrue(pp3.hasComplete());
+        assertFalse(pp3.hasThrowable());
+        assertNull(pp3.getThrowable());
 
         to.assertResult(1, 2);
     }
 
     @Test
-    public void sj1ToFp2Error() {
+    public void sj1ToFp3Error() {
         rx.subjects.Subject<Integer, Integer> sj1 = rx.subjects.PublishSubject.create();
-        io.reactivex.processors.FlowableProcessor<Integer> pp2 = toV2Processor(sj1);
+        io.reactivex.rxjava3.processors.FlowableProcessor<Integer> pp3 = toV3Processor(sj1);
 
-        io.reactivex.subscribers.TestSubscriber<Integer> to = pp2.test();
+        io.reactivex.rxjava3.subscribers.TestSubscriber<Integer> to = pp3.test();
 
         assertTrue(sj1.hasObservers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp3.hasSubscribers());
 
-        pp2.onError(new IOException());
+        pp3.onError(new IOException());
 
         assertFalse(sj1.hasObservers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp3.hasSubscribers());
 
-        assertFalse(pp2.hasComplete());
-        assertTrue(pp2.hasThrowable());
-        assertNotNull(pp2.getThrowable());
-        assertTrue(pp2.getThrowable() instanceof IOException);
+        assertFalse(pp3.hasComplete());
+        assertTrue(pp3.hasThrowable());
+        assertNotNull(pp3.getThrowable());
+        assertTrue(pp3.getThrowable() instanceof IOException);
 
         to.assertFailure(IOException.class);
     }
 
     @Test
-    public void sj1ToFp2Backpressured() {
+    public void sj1ToFp3Backpressured() {
         rx.subjects.Subject<Integer, Integer> sj1 = rx.subjects.ReplaySubject.create();
-        io.reactivex.processors.FlowableProcessor<Integer> pp2 = toV2Processor(sj1);
+        io.reactivex.rxjava3.processors.FlowableProcessor<Integer> pp3 = toV3Processor(sj1);
 
-        io.reactivex.subscribers.TestSubscriber<Integer> to = pp2.test(0L);
+        io.reactivex.rxjava3.subscribers.TestSubscriber<Integer> to = pp3.test(0L);
 
         assertTrue(sj1.hasObservers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp3.hasSubscribers());
 
-        pp2.onNext(1);
-        pp2.onNext(2);
-        pp2.onNext(3);
-        pp2.onNext(4);
+        pp3.onNext(1);
+        pp3.onNext(2);
+        pp3.onNext(3);
+        pp3.onNext(4);
 
         to.assertNoValues().assertNoErrors().assertNotComplete();
 
@@ -1185,16 +1186,16 @@ public class RxJavaInteropTest {
 
         to.requestMore(2).assertValues(1, 2, 3).assertNoErrors().assertNotComplete();
 
-        pp2.onComplete();
+        pp3.onComplete();
 
         to.assertValues(1, 2, 3).assertNoErrors().assertNotComplete();
 
         assertFalse(sj1.hasObservers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp3.hasSubscribers());
 
-        assertTrue(pp2.hasComplete());
-        assertFalse(pp2.hasThrowable());
-        assertNull(pp2.getThrowable());
+        assertTrue(pp3.hasComplete());
+        assertFalse(pp3.hasThrowable());
+        assertNull(pp3.getThrowable());
 
         to
         .requestMore(1)
@@ -1203,101 +1204,101 @@ public class RxJavaInteropTest {
 
 
     @Test
-    public void sj1ToFp2Lifecycle() {
+    public void sj1ToFp3Lifecycle() {
         rx.subjects.Subject<Integer, Integer> sj1 = rx.subjects.PublishSubject.create();
-        io.reactivex.processors.FlowableProcessor<Integer> pp2 = toV2Processor(sj1);
+        io.reactivex.rxjava3.processors.FlowableProcessor<Integer> pp3 = toV3Processor(sj1);
 
-        io.reactivex.subscribers.TestSubscriber<Integer> to = pp2.test(0L);
+        io.reactivex.rxjava3.subscribers.TestSubscriber<Integer> to = pp3.test(0L);
 
         assertTrue(sj1.hasObservers());
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp3.hasSubscribers());
 
-        pp2.onNext(1);
-        pp2.onError(new IOException());
+        pp3.onNext(1);
+        pp3.onError(new IOException());
 
         assertFalse(sj1.hasObservers());
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp3.hasSubscribers());
 
-        assertFalse(pp2.hasComplete());
-        assertTrue(pp2.hasThrowable());
-        assertNotNull(pp2.getThrowable());
+        assertFalse(pp3.hasComplete());
+        assertTrue(pp3.hasThrowable());
+        assertNotNull(pp3.getThrowable());
 
         to.assertFailure(rx.exceptions.MissingBackpressureException.class);
     }
 
     @Test
-    public void sj1ToFp2Lifecycle2() {
+    public void sj1ToFp3Lifecycle2() {
         rx.subjects.Subject<Integer, Integer> sj1 = rx.subjects.PublishSubject.create();
-        io.reactivex.processors.FlowableProcessor<Integer> pp2 = toV2Processor(sj1);
+        io.reactivex.rxjava3.processors.FlowableProcessor<Integer> pp3 = toV3Processor(sj1);
 
-        io.reactivex.subscribers.TestSubscriber<Integer> to = pp2.test();
+        io.reactivex.rxjava3.subscribers.TestSubscriber<Integer> to = pp3.test();
 
-        assertTrue(pp2.hasSubscribers());
+        assertTrue(pp3.hasSubscribers());
         assertTrue(sj1.hasObservers());
-        assertFalse(pp2.hasComplete());
-        assertFalse(pp2.hasThrowable());
-        assertNull(pp2.getThrowable());
+        assertFalse(pp3.hasComplete());
+        assertFalse(pp3.hasThrowable());
+        assertNull(pp3.getThrowable());
 
         BooleanSubscription d1 = new BooleanSubscription();
-        pp2.onSubscribe(d1);
+        pp3.onSubscribe(d1);
 
         assertFalse(d1.isCancelled());
 
-        pp2.onNext(1);
-        pp2.onNext(2);
-        pp2.onComplete();
-        pp2.onComplete();
-        pp2.onError(new IOException());
-        pp2.onNext(3);
+        pp3.onNext(1);
+        pp3.onNext(2);
+        pp3.onComplete();
+        pp3.onComplete();
+        pp3.onError(new IOException());
+        pp3.onNext(3);
 
-        BooleanSubscription d2 = new BooleanSubscription();
-        pp2.onSubscribe(d2);
+        BooleanSubscription d3 = new BooleanSubscription();
+        pp3.onSubscribe(d3);
 
         assertFalse(d1.isCancelled());
-        assertTrue(d2.isCancelled());
+        assertTrue(d3.isCancelled());
 
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp3.hasSubscribers());
         assertFalse(sj1.hasObservers());
 
-        assertTrue(pp2.hasComplete());
-        assertFalse(pp2.hasThrowable());
-        assertNull(pp2.getThrowable());
+        assertTrue(pp3.hasComplete());
+        assertFalse(pp3.hasThrowable());
+        assertNull(pp3.getThrowable());
 
         to.assertResult(1, 2);
     }
 
     @Test
-    public void sj1ToFp2NullValue() {
+    public void sj1ToFp3NullValue() {
         rx.subjects.Subject<Integer, Integer> sj1 = rx.subjects.PublishSubject.create();
-        io.reactivex.processors.FlowableProcessor<Integer> pp2 = toV2Processor(sj1);
+        io.reactivex.rxjava3.processors.FlowableProcessor<Integer> pp3 = toV3Processor(sj1);
 
-        io.reactivex.subscribers.TestSubscriber<Integer> to = pp2.test();
+        io.reactivex.rxjava3.subscribers.TestSubscriber<Integer> to = pp3.test();
 
-        pp2.onNext(null);
+        pp3.onNext(null);
 
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp3.hasSubscribers());
         assertFalse(sj1.hasObservers());
 
         to.assertFailure(NullPointerException.class);
     }
 
     @Test
-    public void sj1ToFp2NullException() {
+    public void sj1ToFp3NullException() {
         rx.subjects.Subject<Integer, Integer> sj1 = rx.subjects.PublishSubject.create();
-        io.reactivex.processors.FlowableProcessor<Integer> pp2 = toV2Processor(sj1);
+        io.reactivex.rxjava3.processors.FlowableProcessor<Integer> pp3 = toV3Processor(sj1);
 
-        io.reactivex.subscribers.TestSubscriber<Integer> to = pp2.test();
+        io.reactivex.rxjava3.subscribers.TestSubscriber<Integer> to = pp3.test();
 
-        pp2.onError(null);
+        pp3.onError(null);
 
-        assertFalse(pp2.hasSubscribers());
+        assertFalse(pp3.hasSubscribers());
         assertFalse(sj1.hasObservers());
 
         to.assertFailure(NullPointerException.class);
     }
 
     @Test
-    public void ft1ToFt2() {
+    public void ft1ToFt3() {
         rx.Observable.Transformer<Integer, Integer> transformer = new Transformer<Integer, Integer>() {
             @Override
             public Observable<Integer> call(Observable<Integer> o) {
@@ -1311,13 +1312,13 @@ public class RxJavaInteropTest {
         };
 
         Flowable.just(1)
-        .compose(toV2Transformer(transformer))
+        .compose(toV3Transformer(transformer))
         .test()
         .assertResult(2);
     }
 
     @Test
-    public void ft2ToFt1() {
+    public void ft3ToFt1() {
         FlowableTransformer<Integer, Integer> transformer = new FlowableTransformer<Integer, Integer>() {
             @Override
             public Flowable<Integer> apply(Flowable<Integer> o) {
@@ -1337,7 +1338,7 @@ public class RxJavaInteropTest {
     }
 
   @Test
-  public void ot1ToOt2() {
+  public void ot1ToOt3() {
     rx.Observable.Transformer<Integer, Integer> transformer = new rx.Observable.Transformer<Integer, Integer>() {
       @Override
       public Observable<Integer> call(Observable<Integer> o) {
@@ -1350,17 +1351,17 @@ public class RxJavaInteropTest {
       }
     };
 
-    io.reactivex.Observable.just(1)
-        .compose(toV2Transformer(transformer, BackpressureStrategy.BUFFER))
+    io.reactivex.rxjava3.core.Observable.just(1)
+        .compose(toV3Transformer(transformer, BackpressureStrategy.BUFFER))
         .test()
         .assertResult(2);
   }
 
     @Test
-    public void ot2ToOt1() {
+    public void ot3ToOt1() {
         ObservableTransformer<Integer, Integer> transformer = new ObservableTransformer<Integer, Integer>() {
             @Override
-            public io.reactivex.Observable<Integer> apply(io.reactivex.Observable<Integer> o) {
+            public io.reactivex.rxjava3.core.Observable<Integer> apply(io.reactivex.rxjava3.core.Observable<Integer> o) {
                 return o.map(new Function<Integer, Integer>() {
                     @Override
                     public Integer apply(Integer v) {
@@ -1377,7 +1378,7 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void st1ToSt2() {
+    public void st1ToSt3() {
         rx.Single.Transformer<Integer, Integer> transformer = new rx.Single.Transformer<Integer, Integer>() {
             @Override
             public rx.Single<Integer> call(rx.Single<Integer> o) {
@@ -1391,13 +1392,13 @@ public class RxJavaInteropTest {
         };
 
         Single.just(1)
-        .compose(toV2Transformer(transformer))
+        .compose(toV3Transformer(transformer))
         .test()
         .assertResult(2);
     }
 
     @Test
-    public void st2ToSt1() {
+    public void st3ToSt1() {
         SingleTransformer<Integer, Integer> transformer = new SingleTransformer<Integer, Integer>() {
             @Override
             public Single<Integer> apply(Single<Integer> o) {
@@ -1417,7 +1418,7 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void ct1ToCt2() {
+    public void ct1ToCt3() {
 
         final int[] calls = { 0 };
 
@@ -1434,7 +1435,7 @@ public class RxJavaInteropTest {
         };
 
         Completable.complete()
-        .compose(toV2Transformer(transformer))
+        .compose(toV3Transformer(transformer))
         .test()
         .assertResult();
 
@@ -1442,14 +1443,14 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void ct2ToCt1() {
+    public void ct3ToCt1() {
 
         final int[] calls = { 0 };
 
         CompletableTransformer transformer = new CompletableTransformer() {
             @Override
             public Completable apply(Completable o) {
-                return o.doOnComplete(new io.reactivex.functions.Action() {
+                return o.doOnComplete(new io.reactivex.rxjava3.functions.Action() {
                     @Override
                     public void run() {
                         calls[0]++;
@@ -1467,7 +1468,7 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void fo1ToFo2() {
+    public void fo1ToFo3() {
         rx.Observable.Operator<Integer, Integer> transformer = new rx.Observable.Operator<Integer, Integer>() {
             @Override
             public rx.Subscriber<? super Integer> call(final rx.Subscriber<? super Integer> o) {
@@ -1491,13 +1492,13 @@ public class RxJavaInteropTest {
         };
 
         Flowable.just(1)
-        .lift(toV2Operator(transformer))
+        .lift(toV3Operator(transformer))
         .test()
         .assertResult(2);
     }
 
     @Test
-    public void fo2ToFo1() {
+    public void fo3ToFo1() {
         FlowableOperator<Integer, Integer> transformer = new FlowableOperator<Integer, Integer>() {
             @Override
             public org.reactivestreams.Subscriber<? super Integer> apply(final org.reactivestreams.Subscriber<? super Integer> o) {
@@ -1533,7 +1534,7 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void fo2ToFo1Crash() {
+    public void fo3ToFo1Crash() {
         FlowableOperator<Integer, Integer> transformer = new FlowableOperator<Integer, Integer>() {
             @Override
             public org.reactivestreams.Subscriber<? super Integer> apply(final org.reactivestreams.Subscriber<? super Integer> o) {
@@ -1548,7 +1549,7 @@ public class RxJavaInteropTest {
     }
 
     @Test
-    public void fo1ToFo2Crash() {
+    public void fo1ToFo3Crash() {
         rx.Observable.Operator<Integer, Integer> transformer = new rx.Observable.Operator<Integer, Integer>() {
             @Override
             public rx.Subscriber<? super Integer> call(final rx.Subscriber<? super Integer> o) {
@@ -1557,31 +1558,31 @@ public class RxJavaInteropTest {
         };
 
         Flowable.just(1)
-        .lift(toV2Operator(transformer))
+        .lift(toV3Operator(transformer))
         .test()
         .assertFailure(IllegalArgumentException.class);
     }
 
     @Test(expected = NullPointerException.class)
-    public void toV2DisposableNullSubscription() {
-        RxJavaInterop.toV2Disposable(null);
+    public void toV3DisposableNullSubscription() {
+        RxJavaInterop.toV3Disposable(null);
     }
 
     @Test
-    public void toV2DisposableIsDisposedTrue() {
-        assertTrue(RxJavaInterop.toV2Disposable(Subscriptions.unsubscribed()).isDisposed());
+    public void toV3DisposableIsDisposedTrue() {
+        assertTrue(RxJavaInterop.toV3Disposable(Subscriptions.unsubscribed()).isDisposed());
     }
 
     @Test
-    public void toV2DisposableIsDisposedFalse() {
-        assertFalse(RxJavaInterop.toV2Disposable(Subscriptions.empty()).isDisposed());
+    public void toV3DisposableIsDisposedFalse() {
+        assertFalse(RxJavaInterop.toV3Disposable(Subscriptions.empty()).isDisposed());
     }
 
     @Test
-    public void toV2DisposableCallsUnsubscribe() {
+    public void toV3DisposableCallsUnsubscribe() {
         rx.Subscription subscription = mock(rx.Subscription.class);
 
-        Disposable disposable = RxJavaInterop.toV2Disposable(subscription);
+        Disposable disposable = RxJavaInterop.toV3Disposable(subscription);
         verifyZeroInteractions(subscription);
 
         disposable.dispose();
@@ -1618,7 +1619,7 @@ public class RxJavaInteropTest {
     public void v1ObservableIsUnsubscribedOnError() {
         Action0 onUnsubscribe = mock(Action0.class);
 
-        RxJavaInterop.toV2Observable(rx.Observable.error(new IOException())
+        RxJavaInterop.toV3Observable(rx.Observable.error(new IOException())
         .doOnUnsubscribe(onUnsubscribe))
         .test()
         .assertFailure(IOException.class);
@@ -1631,7 +1632,7 @@ public class RxJavaInteropTest {
     public void v1ObservableIsUnsubscribedOnCompletion() {
         Action0 onUnsubscribe = mock(Action0.class);
 
-        RxJavaInterop.toV2Observable(rx.Observable.just(1)
+        RxJavaInterop.toV3Observable(rx.Observable.just(1)
         .doOnUnsubscribe(onUnsubscribe))
         .test()
         .assertResult(1);
@@ -1643,7 +1644,7 @@ public class RxJavaInteropTest {
     public void v1ObservableIsUnsubscribedOnError2() {
         Action0 onUnsubscribe = mock(Action0.class);
 
-        RxJavaInterop.toV2Flowable(rx.Observable.error(new IOException())
+        RxJavaInterop.toV3Flowable(rx.Observable.error(new IOException())
         .doOnUnsubscribe(onUnsubscribe))
         .test()
         .assertFailure(IOException.class);
@@ -1655,7 +1656,7 @@ public class RxJavaInteropTest {
     public void v1ObservableIsUnsubscribedOnCompletion2() {
         Action0 onUnsubscribe = mock(Action0.class);
 
-        RxJavaInterop.toV2Flowable(rx.Observable.just(1)
+        RxJavaInterop.toV3Flowable(rx.Observable.just(1)
         .doOnUnsubscribe(onUnsubscribe))
         .test()
         .assertResult(1);

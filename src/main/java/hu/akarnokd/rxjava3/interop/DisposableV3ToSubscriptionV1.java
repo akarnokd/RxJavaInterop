@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import rx.Subscription;
 
 /**
- * Wraps a v2 Disposable and exposes it as a v1 Subscription.
+ * Wraps a v3 Disposable and exposes it as a v1 Subscription.
  * @since 0.11.0
  * @author Artem Zinnatulin
  */
-final class DisposableV2ToSubscriptionV1 implements Subscription {
+final class DisposableV3ToSubscriptionV1 implements Subscription {
 
     private final Disposable disposable;
 
-    DisposableV2ToSubscriptionV1(Disposable disposable) {
+    DisposableV3ToSubscriptionV1(Disposable disposable) {
         this.disposable = disposable;
     }
 

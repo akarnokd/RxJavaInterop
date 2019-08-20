@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Convert a V2 Single into a V1 Single, composing cancellation.
+ * Convert a V3 Single into a V1 Single, composing cancellation.
  *
  * @param <T> the value type
  */
-final class SingleV2ToSingleV1<T> implements rx.Single.OnSubscribe<T> {
+final class SingleV3ToSingleV1<T> implements rx.Single.OnSubscribe<T> {
 
-    final io.reactivex.SingleSource<T> source;
+    final io.reactivex.rxjava3.core.SingleSource<T> source;
 
-    SingleV2ToSingleV1(io.reactivex.SingleSource<T> source) {
+    SingleV3ToSingleV1(io.reactivex.rxjava3.core.SingleSource<T> source) {
         this.source = source;
     }
 
@@ -39,8 +39,8 @@ final class SingleV2ToSingleV1<T> implements rx.Single.OnSubscribe<T> {
     }
 
     static final class SourceSingleObserver<T>
-    extends AtomicReference<io.reactivex.disposables.Disposable>
-    implements io.reactivex.SingleObserver<T>, rx.Subscription {
+    extends AtomicReference<io.reactivex.rxjava3.disposables.Disposable>
+    implements io.reactivex.rxjava3.core.SingleObserver<T>, rx.Subscription {
 
         private static final long serialVersionUID = 4758098209431016997L;
 
@@ -52,17 +52,17 @@ final class SingleV2ToSingleV1<T> implements rx.Single.OnSubscribe<T> {
 
         @Override
         public void unsubscribe() {
-            io.reactivex.internal.disposables.DisposableHelper.dispose(this);
+            io.reactivex.rxjava3.internal.disposables.DisposableHelper.dispose(this);
         }
 
         @Override
         public boolean isUnsubscribed() {
-            return io.reactivex.internal.disposables.DisposableHelper.isDisposed(get());
+            return io.reactivex.rxjava3.internal.disposables.DisposableHelper.isDisposed(get());
         }
 
         @Override
-        public void onSubscribe(io.reactivex.disposables.Disposable d) {
-            io.reactivex.internal.disposables.DisposableHelper.setOnce(this, d);
+        public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable d) {
+            io.reactivex.rxjava3.internal.disposables.DisposableHelper.setOnce(this, d);
         }
 
         @Override

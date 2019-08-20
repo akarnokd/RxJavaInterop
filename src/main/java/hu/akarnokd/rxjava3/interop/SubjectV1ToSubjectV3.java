@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
 /**
- * Wrap a V1 Subject and expose it as a V2 Subject.
+ * Wrap a V1 Subject and expose it as a V3 Subject.
  * @param <T> the input/output value type
  * @since 0.9.0
  */
-final class SubjectV1ToSubjectV2<T> extends io.reactivex.subjects.Subject<T> {
+final class SubjectV1ToSubjectV3<T> extends io.reactivex.rxjava3.subjects.Subject<T> {
 
     final rx.subjects.Subject<T, T> source;
 
     volatile boolean terminated;
     Throwable error;
 
-    SubjectV1ToSubjectV2(rx.subjects.Subject<T, T> source) {
+    SubjectV1ToSubjectV3(rx.subjects.Subject<T, T> source) {
         this.source = source;
     }
 
     @Override
-    public void onSubscribe(io.reactivex.disposables.Disposable d) {
+    public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable d) {
         if (terminated) {
             d.dispose();
         }
@@ -60,7 +60,7 @@ final class SubjectV1ToSubjectV2<T> extends io.reactivex.subjects.Subject<T> {
             terminated = true;
             source.onError(e);
         } else {
-            io.reactivex.plugins.RxJavaPlugins.onError(e);
+            io.reactivex.rxjava3.plugins.RxJavaPlugins.onError(e);
         }
     }
 
@@ -73,9 +73,9 @@ final class SubjectV1ToSubjectV2<T> extends io.reactivex.subjects.Subject<T> {
     }
 
     @Override
-    protected void subscribeActual(io.reactivex.Observer<? super T> observer) {
-        hu.akarnokd.rxjava.interop.ObservableV1ToObservableV2.ObservableSubscriber<T> parent =
-                new hu.akarnokd.rxjava.interop.ObservableV1ToObservableV2.ObservableSubscriber<T>(observer);
+    protected void subscribeActual(io.reactivex.rxjava3.core.Observer<? super T> observer) {
+        hu.akarnokd.rxjava3.interop.ObservableV1ToObservableV3.ObservableSubscriber<T> parent =
+                new hu.akarnokd.rxjava3.interop.ObservableV1ToObservableV3.ObservableSubscriber<T>(observer);
         observer.onSubscribe(parent);
 
         source.unsafeSubscribe(parent);

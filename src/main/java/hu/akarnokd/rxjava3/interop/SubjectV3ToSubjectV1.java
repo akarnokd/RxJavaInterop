@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
 import java.util.concurrent.atomic.*;
 
 /**
- * Wrap a 2.x Subject into a 1.x Subject.
+ * Wrap a 3.x Subject into a 1.x Subject.
  * @param <T> the input and output value type
  * @since 0.9.0
  */
-final class SubjectV2ToSubjectV1<T> extends rx.subjects.Subject<T, T> {
+final class SubjectV3ToSubjectV1<T> extends rx.subjects.Subject<T, T> {
 
-    static <T> rx.subjects.Subject<T, T> createWith(io.reactivex.subjects.Subject<T> subject) {
+    static <T> rx.subjects.Subject<T, T> createWith(io.reactivex.rxjava3.subjects.Subject<T> subject) {
         State<T> state = new State<T>(subject);
-        return new SubjectV2ToSubjectV1<T>(state);
+        return new SubjectV3ToSubjectV1<T>(state);
     }
 
     final State<T> state;
 
-    private SubjectV2ToSubjectV1(State<T> state) {
+    private SubjectV3ToSubjectV1(State<T> state) {
         super(state);
         this.state = state;
     }
@@ -60,9 +60,9 @@ final class SubjectV2ToSubjectV1<T> extends rx.subjects.Subject<T, T> {
     static final class State<T>
     implements rx.Observable.OnSubscribe<T> {
 
-        final io.reactivex.subjects.Subject<T> subject;
+        final io.reactivex.rxjava3.subjects.Subject<T> subject;
 
-        State(io.reactivex.subjects.Subject<T> subject) {
+        State(io.reactivex.rxjava3.subjects.Subject<T> subject) {
             this.subject = subject;
         }
 
@@ -94,8 +94,8 @@ final class SubjectV2ToSubjectV1<T> extends rx.subjects.Subject<T, T> {
     }
 
     static final class SourceObserver<T>
-    extends AtomicReference<io.reactivex.disposables.Disposable>
-    implements io.reactivex.Observer<T>, rx.Subscription, rx.Producer {
+    extends AtomicReference<io.reactivex.rxjava3.disposables.Disposable>
+    implements io.reactivex.rxjava3.core.Observer<T>, rx.Subscription, rx.Producer {
 
         private static final long serialVersionUID = -6567012932544037069L;
 
@@ -111,30 +111,30 @@ final class SubjectV2ToSubjectV1<T> extends rx.subjects.Subject<T, T> {
         @Override
         public void request(long n) {
             if (n > 0L) {
-                io.reactivex.internal.util.BackpressureHelper.add(requested, n);
+                io.reactivex.rxjava3.internal.util.BackpressureHelper.add(requested, n);
             }
         }
 
         @Override
         public void unsubscribe() {
-            io.reactivex.internal.disposables.DisposableHelper.dispose(this);
+            io.reactivex.rxjava3.internal.disposables.DisposableHelper.dispose(this);
         }
 
         @Override
         public boolean isUnsubscribed() {
-            return io.reactivex.internal.disposables.DisposableHelper.isDisposed(get());
+            return io.reactivex.rxjava3.internal.disposables.DisposableHelper.isDisposed(get());
         }
 
         @Override
-        public void onSubscribe(io.reactivex.disposables.Disposable d) {
-            io.reactivex.internal.disposables.DisposableHelper.setOnce(this, d);
+        public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable d) {
+            io.reactivex.rxjava3.internal.disposables.DisposableHelper.setOnce(this, d);
         }
 
         @Override
         public void onNext(T t) {
             if (requested.get() != 0) {
                 actual.onNext(t);
-                io.reactivex.internal.util.BackpressureHelper.produced(requested, 1);
+                io.reactivex.rxjava3.internal.util.BackpressureHelper.produced(requested, 1);
             } else {
                 unsubscribe();
                 actual.onError(new rx.exceptions.MissingBackpressureException());
@@ -143,13 +143,13 @@ final class SubjectV2ToSubjectV1<T> extends rx.subjects.Subject<T, T> {
 
         @Override
         public void onError(Throwable t) {
-            lazySet(io.reactivex.internal.disposables.DisposableHelper.DISPOSED);
+            lazySet(io.reactivex.rxjava3.internal.disposables.DisposableHelper.DISPOSED);
             actual.onError(t);
         }
 
         @Override
         public void onComplete() {
-            lazySet(io.reactivex.internal.disposables.DisposableHelper.DISPOSED);
+            lazySet(io.reactivex.rxjava3.internal.disposables.DisposableHelper.DISPOSED);
             actual.onCompleted();
         }
     }

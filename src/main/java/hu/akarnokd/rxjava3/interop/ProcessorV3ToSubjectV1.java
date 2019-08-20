@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
 /**
- * Wrap a 2.x FlowableProcessor into a 1.x Subject.
+ * Wrap a 3.x FlowableProcessor into a 1.x Subject.
  * @param <T> the input and output value type
  * @since 0.9.0
  */
-final class ProcessorV2ToSubjectV1<T> extends rx.subjects.Subject<T, T> {
+final class ProcessorV3ToSubjectV1<T> extends rx.subjects.Subject<T, T> {
 
-    static <T> rx.subjects.Subject<T, T> createWith(io.reactivex.processors.FlowableProcessor<T> processor) {
+    static <T> rx.subjects.Subject<T, T> createWith(io.reactivex.rxjava3.processors.FlowableProcessor<T> processor) {
         State<T> state = new State<T>(processor);
-        return new ProcessorV2ToSubjectV1<T>(state);
+        return new ProcessorV3ToSubjectV1<T>(state);
     }
 
     final State<T> state;
 
-    private ProcessorV2ToSubjectV1(State<T> state) {
+    private ProcessorV3ToSubjectV1(State<T> state) {
         super(state);
         this.state = state;
     }
@@ -58,16 +58,16 @@ final class ProcessorV2ToSubjectV1<T> extends rx.subjects.Subject<T, T> {
     static final class State<T>
     implements rx.Observable.OnSubscribe<T> {
 
-        final io.reactivex.processors.FlowableProcessor<T> processor;
+        final io.reactivex.rxjava3.processors.FlowableProcessor<T> processor;
 
-        State(io.reactivex.processors.FlowableProcessor<T> processor) {
+        State(io.reactivex.rxjava3.processors.FlowableProcessor<T> processor) {
             this.processor = processor;
         }
 
         @Override
         public void call(rx.Subscriber<? super T> t) {
-            hu.akarnokd.rxjava.interop.FlowableV2ToObservableV1.SourceSubscriber<T> parent =
-                    new hu.akarnokd.rxjava.interop.FlowableV2ToObservableV1.SourceSubscriber<T>(t);
+            hu.akarnokd.rxjava3.interop.FlowableV3ToObservableV1.SourceSubscriber<T> parent =
+                    new hu.akarnokd.rxjava3.interop.FlowableV3ToObservableV1.SourceSubscriber<T>(t);
 
             t.add(parent);
             t.setProducer(parent);

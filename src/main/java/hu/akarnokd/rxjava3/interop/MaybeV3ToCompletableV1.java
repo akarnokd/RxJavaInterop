@@ -14,61 +14,60 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
-import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Converts a V2 Maybe into a V1 Single where an onComplete triggers a NoSuchElementException.
+ * Converts a V3 Maybe into a V1 Complete where an onSuccess value triggers onCompleted.
  *
  * @param <T> the value type
  */
-final class MaybeV2ToSingleV1<T> implements rx.Single.OnSubscribe<T> {
+final class MaybeV3ToCompletableV1<T> implements rx.Completable.OnSubscribe {
 
-    final io.reactivex.MaybeSource<T> source;
+    final io.reactivex.rxjava3.core.MaybeSource<T> source;
 
-    MaybeV2ToSingleV1(io.reactivex.MaybeSource<T> source) {
+    MaybeV3ToCompletableV1(io.reactivex.rxjava3.core.MaybeSource<T> source) {
         this.source = source;
     }
 
     @Override
-    public void call(rx.SingleSubscriber<? super T> t) {
-        MaybeV2Observer<T> parent = new MaybeV2Observer<T>(t);
-        t.add(parent);
+    public void call(rx.CompletableSubscriber t) {
+        MaybeV3Observer<T> parent = new MaybeV3Observer<T>(t);
+        t.onSubscribe(parent);
         source.subscribe(parent);
     }
 
-    static final class MaybeV2Observer<T>
-    extends AtomicReference<io.reactivex.disposables.Disposable>
-    implements io.reactivex.MaybeObserver<T>, rx.Subscription {
+    static final class MaybeV3Observer<T>
+    extends AtomicReference<io.reactivex.rxjava3.disposables.Disposable>
+    implements io.reactivex.rxjava3.core.MaybeObserver<T>, rx.Subscription {
 
         private static final long serialVersionUID = 5045507662443540605L;
 
-        final rx.SingleSubscriber<? super T> actual;
+        final rx.CompletableSubscriber actual;
 
-        MaybeV2Observer(rx.SingleSubscriber<? super T> actual) {
+        MaybeV3Observer(rx.CompletableSubscriber actual) {
             this.actual = actual;
         }
 
         @Override
         public void unsubscribe() {
-            io.reactivex.internal.disposables.DisposableHelper.dispose(this);
+            io.reactivex.rxjava3.internal.disposables.DisposableHelper.dispose(this);
         }
 
         @Override
         public boolean isUnsubscribed() {
-            return io.reactivex.internal.disposables.DisposableHelper.isDisposed(get());
+            return io.reactivex.rxjava3.internal.disposables.DisposableHelper.isDisposed(get());
         }
 
         @Override
-        public void onSubscribe(io.reactivex.disposables.Disposable d) {
-            io.reactivex.internal.disposables.DisposableHelper.setOnce(this, d);
+        public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable d) {
+            io.reactivex.rxjava3.internal.disposables.DisposableHelper.setOnce(this, d);
         }
 
         @Override
         public void onSuccess(T value) {
-            actual.onSuccess(value);
+            actual.onCompleted();
         }
 
         @Override
@@ -78,7 +77,7 @@ final class MaybeV2ToSingleV1<T> implements rx.Single.OnSubscribe<T> {
 
         @Override
         public void onComplete() {
-            actual.onError(new NoSuchElementException("The source Maybe was empty."));
+            actual.onCompleted();
         }
     }
 }

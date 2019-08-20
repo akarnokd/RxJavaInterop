@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
 import java.util.concurrent.TimeUnit;
 
 /**
  * Wraps a 1.x {@link rx.Scheduler} and exposes it as a
- * 2.x {@link io.reactivex.Scheduler}.
+ * 3.x {@link io.reactivex.rxjava3.core.Scheduler}.
  * @since 0.12.0
  */
-final class SchedulerV1ToSchedulerV2 extends io.reactivex.Scheduler {
+final class SchedulerV1ToSchedulerV3 extends io.reactivex.rxjava3.core.Scheduler {
 
     final rx.Scheduler source;
 
-    SchedulerV1ToSchedulerV2(rx.Scheduler source) {
+    SchedulerV1ToSchedulerV3(rx.Scheduler source) {
         this.source = source;
     }
 
@@ -52,33 +52,33 @@ final class SchedulerV1ToSchedulerV2 extends io.reactivex.Scheduler {
 
     @Override
     public Worker createWorker() {
-        return new WorkerV1ToWorkerV2(source.createWorker());
+        return new WorkerV1ToWorkerV3(source.createWorker());
     }
 
-    static final class WorkerV1ToWorkerV2 extends io.reactivex.Scheduler.Worker {
+    static final class WorkerV1ToWorkerV3 extends io.reactivex.rxjava3.core.Scheduler.Worker {
 
         final rx.Scheduler.Worker v1Worker;
 
-        WorkerV1ToWorkerV2(rx.Scheduler.Worker v1Worker) {
+        WorkerV1ToWorkerV3(rx.Scheduler.Worker v1Worker) {
             this.v1Worker = v1Worker;
         }
 
         @Override
-        public io.reactivex.disposables.Disposable schedule(Runnable action) {
+        public io.reactivex.rxjava3.disposables.Disposable schedule(Runnable action) {
             final RunnableToV1Action0 runnable = new RunnableToV1Action0(action);
-            return RxJavaInterop.toV2Disposable(v1Worker.schedule(runnable));
+            return RxJavaInterop.toV3Disposable(v1Worker.schedule(runnable));
         }
 
         @Override
-        public io.reactivex.disposables.Disposable schedule(Runnable action, long delayTime, TimeUnit unit) {
+        public io.reactivex.rxjava3.disposables.Disposable schedule(Runnable action, long delayTime, TimeUnit unit) {
             final RunnableToV1Action0 runnable = new RunnableToV1Action0(action);
-            return RxJavaInterop.toV2Disposable(v1Worker.schedule(runnable, delayTime, unit));
+            return RxJavaInterop.toV3Disposable(v1Worker.schedule(runnable, delayTime, unit));
         }
 
         @Override
-        public io.reactivex.disposables.Disposable schedulePeriodically(Runnable action, long initialDelay, long period, TimeUnit unit) {
+        public io.reactivex.rxjava3.disposables.Disposable schedulePeriodically(Runnable action, long initialDelay, long period, TimeUnit unit) {
             final RunnableToV1Action0 runnable = new RunnableToV1Action0(action);
-            return RxJavaInterop.toV2Disposable(v1Worker.schedulePeriodically(runnable, initialDelay, period, unit));
+            return RxJavaInterop.toV3Disposable(v1Worker.schedulePeriodically(runnable, initialDelay, period, unit));
         }
 
         @Override
@@ -102,7 +102,7 @@ final class SchedulerV1ToSchedulerV2 extends io.reactivex.Scheduler {
         final Runnable source;
 
         RunnableToV1Action0(Runnable source) {
-            io.reactivex.internal.functions.ObjectHelper.requireNonNull(source, "Source 2.x Runnable is null");
+            io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "Source 3.x Runnable is null");
             this.source = source;
         }
 

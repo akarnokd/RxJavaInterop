@@ -14,44 +14,44 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
 /**
- * Convert a V1 Completable into a V2 Completable, composing cancellation.
+ * Convert a V3 Completable into a V1 Completable, composing cancellation.
  */
-final class CompletableV1ToCompletableV2 extends io.reactivex.Completable {
+final class CompletableV3ToCompletableV1 implements rx.Completable.OnSubscribe {
 
-    final rx.Completable source;
+    final io.reactivex.rxjava3.core.CompletableSource source;
 
-    CompletableV1ToCompletableV2(rx.Completable source) {
+    CompletableV3ToCompletableV1(io.reactivex.rxjava3.core.CompletableSource source) {
         this.source = source;
     }
 
     @Override
-    protected void subscribeActual(io.reactivex.CompletableObserver observer) {
+    public void call(rx.CompletableSubscriber observer) {
         source.subscribe(new SourceCompletableSubscriber(observer));
     }
 
     static final class SourceCompletableSubscriber
-    implements rx.CompletableSubscriber, io.reactivex.disposables.Disposable {
+    implements io.reactivex.rxjava3.core.CompletableObserver, rx.Subscription {
 
-        final io.reactivex.CompletableObserver observer;
+        final rx.CompletableSubscriber observer;
 
-        rx.Subscription s;
+        io.reactivex.rxjava3.disposables.Disposable d;
 
-        SourceCompletableSubscriber(io.reactivex.CompletableObserver observer) {
+        SourceCompletableSubscriber(rx.CompletableSubscriber observer) {
             this.observer = observer;
         }
 
         @Override
-        public void onSubscribe(rx.Subscription d) {
-            this.s = d;
+        public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable d) {
+            this.d = d;
             observer.onSubscribe(this);
         }
 
         @Override
-        public void onCompleted() {
-            observer.onComplete();
+        public void onComplete() {
+            observer.onCompleted();
         }
 
         @Override
@@ -60,13 +60,13 @@ final class CompletableV1ToCompletableV2 extends io.reactivex.Completable {
         }
 
         @Override
-        public void dispose() {
-            s.unsubscribe();
+        public void unsubscribe() {
+            d.dispose();
         }
 
         @Override
-        public boolean isDisposed() {
-            return s.isUnsubscribed();
+        public boolean isUnsubscribed() {
+            return d.isDisposed();
         }
     }
 }

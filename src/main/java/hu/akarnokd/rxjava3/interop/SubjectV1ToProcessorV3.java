@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
 /**
- * Wrap a V1 Subject and expose it as a V2 FlowableProcessor.
+ * Wrap a V1 Subject and expose it as a V3 FlowableProcessor.
  * @param <T> the input/output value type
  * @since 0.9.0
  */
-final class SubjectV1ToProcessorV2<T> extends io.reactivex.processors.FlowableProcessor<T> {
+final class SubjectV1ToProcessorV3<T> extends io.reactivex.rxjava3.processors.FlowableProcessor<T> {
 
     final rx.subjects.Subject<T, T> source;
 
     volatile boolean terminated;
     Throwable error;
 
-    SubjectV1ToProcessorV2(rx.subjects.Subject<T, T> source) {
+    SubjectV1ToProcessorV3(rx.subjects.Subject<T, T> source) {
         this.source = source;
     }
 
@@ -62,7 +62,7 @@ final class SubjectV1ToProcessorV2<T> extends io.reactivex.processors.FlowablePr
             terminated = true;
             source.onError(e);
         } else {
-            io.reactivex.plugins.RxJavaPlugins.onError(e);
+            io.reactivex.rxjava3.plugins.RxJavaPlugins.onError(e);
         }
     }
 
@@ -76,10 +76,10 @@ final class SubjectV1ToProcessorV2<T> extends io.reactivex.processors.FlowablePr
 
     @Override
     protected void subscribeActual(org.reactivestreams.Subscriber<? super T> s) {
-        hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriber<T> parent =
-                new hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriber<T>(s);
-        hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriberSubscription parentSubscription =
-                new hu.akarnokd.rxjava.interop.ObservableV1ToFlowableV2.ObservableSubscriberSubscription(parent);
+        hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriber<T> parent =
+                new hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriber<T>(s);
+        hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriberSubscription parentSubscription =
+                new hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriberSubscription(parent);
         s.onSubscribe(parentSubscription);
 
         source.unsafeSubscribe(parent);

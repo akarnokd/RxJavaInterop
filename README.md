@@ -17,7 +17,7 @@ Library to convert between RxJava 1.x and 3.x reactive types.
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava3-interop:3.0.0-RC1"
+    compile "com.github.akarnokd:rxjava3-interop:3.0.0-RC2"
 }
 ```
 
@@ -31,21 +31,21 @@ Maven search:
 ### Convert between the reactive base types
 
 ```java
-import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import hu.akarnokd.rxjava3.interop.RxJavaInterop;
 
 // convert from 1.x to 3.x
 
-io.reactivex.Flowable    f2 = RxJavaInterop.toV2Flowable(rx.Observable);
+io.reactivex.Flowable    f2 = RxJavaInterop.toV3Flowable(rx.Observable);
 
-io.reactivex.Observable  o2 = RxJavaInterop.toV2Observable(rx.Observable);
+io.reactivex.Observable  o2 = RxJavaInterop.toV3Observable(rx.Observable);
 
-io.reactive.Single       s2 = RxJavaInterop.toV2Single(rx.Single);
+io.reactive.Single       s2 = RxJavaInterop.toV3Single(rx.Single);
 
-io.reactivex.Completable c2 = RxJavaInterop.toV2Completable(rx.Completable);
+io.reactivex.Completable c2 = RxJavaInterop.toV3Completable(rx.Completable);
 
-io.reactivex.Maybe m2s = RxJavaInterop.toV2Maybe(rx.Single);
+io.reactivex.Maybe m2s = RxJavaInterop.toV3Maybe(rx.Single);
 
-io.reactivex.Maybe m2c = RxJavaInterop.toV2Maybe(rx.Completable);
+io.reactivex.Maybe m2c = RxJavaInterop.toV3Maybe(rx.Completable);
 
 // convert from 3.x to 1.x
 
@@ -69,9 +69,9 @@ Note that 3.x `Subject`s and `FlowableProcessor`s support only the same input an
 ```java
 // convert from 1.x to 3.x
 
-io.reactivex.subjects.Subject sj2 = RxJavaInterop.toV2Subject(rx.subjects.Subject);
+io.reactivex.subjects.Subject sj2 = RxJavaInterop.toV3Subject(rx.subjects.Subject);
 
-io.reactivex.processors.FlowableProcessor fp2 = RxJavaInterop.toV2Processor(rx.subjects.Subject);
+io.reactivex.processors.FlowableProcessor fp2 = RxJavaInterop.toV3Processor(rx.subjects.Subject);
 
 // convert from 3.x to 1.x
 
@@ -85,14 +85,14 @@ rx.subjects.Subject sj1b = RxJavaInterop.toV1Subject(io.reactivex.processors.Flo
 ```java
 // convert from 1.x to 3.x
 
-io.reactivex.FlowableTransformer ft2 = RxJavaInterop.toV2Transformer(rx.Observable.Transformer);
+io.reactivex.FlowableTransformer ft2 = RxJavaInterop.toV3Transformer(rx.Observable.Transformer);
 
-io.reactivex.ObservableTransformer ot2 = RxJavaInterop.toV2Transformer(
+io.reactivex.ObservableTransformer ot2 = RxJavaInterop.toV3Transformer(
                                              rx.Observable.Transformer, io.reactivex.BackpressureStrategy);
 
-io.reactivex.SingleTransformer st2 = RxJavaInterop.toV2Transformer(rx.Single.Transformer);
+io.reactivex.SingleTransformer st2 = RxJavaInterop.toV3Transformer(rx.Single.Transformer);
 
-io.reactivex.CompletableTransformer ct2 = RxJavaInterop.toV2Transformer(rx.Completable.Transformer);
+io.reactivex.CompletableTransformer ct2 = RxJavaInterop.toV3Transformer(rx.Completable.Transformer);
 
 // convert from 3.x to 1.x
 
@@ -111,7 +111,7 @@ rx.Completable.Transformer ct1 = RxJavaInterop.toV1Transformer(io.reactivex.Comp
 ```java
 // convert from 1.x to 3.x
 
-io.reactivex.FlowableOperator fo2 = RxJavaInterop.toV2Operator(rx.Observable.Operator);
+io.reactivex.FlowableOperator fo2 = RxJavaInterop.toV3Operator(rx.Observable.Operator);
 
 // convert from 3.x to 1.x
 
@@ -123,7 +123,7 @@ rx.Observable.Operator fo1 = RxJavaInterop.toV1Operator(io.reactivex.FlowableOpe
 ```java
 // convert from 1.x to 3.x
 
-io.reactivex.disposables.Disposable d2 = RxJavaInterop.toV2Disposable(rx.Subscription);
+io.reactivex.disposables.Disposable d2 = RxJavaInterop.toV3Disposable(rx.Subscription);
 
 // convert from 3.x to 1.x
 
@@ -136,7 +136,7 @@ rx.Subscription s1 = RxJavaInterop.toV1Subscription(io.reactivex.disposables.Dis
 ```java
 // convert from 1.x to 3.x
 
-io.reactivex.Scheduler s2 = RxJavaInterop.toV2Scheduler(rx.Scheduler);
+io.reactivex.Scheduler s2 = RxJavaInterop.toV3Scheduler(rx.Scheduler);
 
 // convert from 3.x to 1.x
 

@@ -1,4 +1,4 @@
-package hu.akarnokd.rxjava.interop;
+package hu.akarnokd.rxjava3.interop;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.junit.Assert.*;
@@ -8,28 +8,29 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.Test;
 
+import hu.akarnokd.rxjava3.interop.RxJavaInterop;
 import rx.internal.schedulers.SchedulerLifecycle;
 
-public class RxJavaInteropV1SchedulerToV2SchedulerTest {
+public class RxJavaInteropV1SchedulerToV3SchedulerTest {
 
     @Test
     public void now() {
         rx.Scheduler v1Scheduler = mock(rx.Scheduler.class);
-        io.reactivex.Scheduler v2Scheduler = RxJavaInterop.toV2Scheduler(v1Scheduler);
+        io.reactivex.rxjava3.core.Scheduler v3Scheduler = RxJavaInterop.toV3Scheduler(v1Scheduler);
 
         when(v1Scheduler.now()).thenReturn(123L);
 
-        assertEquals(123L, v2Scheduler.now(TimeUnit.MILLISECONDS));
+        assertEquals(123L, v3Scheduler.now(TimeUnit.MILLISECONDS));
     }
 
     @Test
     public void workerSchedule() {
         rx.schedulers.TestScheduler v1Scheduler = new rx.schedulers.TestScheduler();
-        io.reactivex.Scheduler v2Scheduler = RxJavaInterop.toV2Scheduler(v1Scheduler);
+        io.reactivex.rxjava3.core.Scheduler v3Scheduler = RxJavaInterop.toV3Scheduler(v1Scheduler);
 
         Runnable action0 = mock(Runnable.class);
 
-        v2Scheduler.createWorker().schedule(action0);
+        v3Scheduler.createWorker().schedule(action0);
         verifyZeroInteractions(action0);
 
         v1Scheduler.triggerActions();
@@ -39,24 +40,24 @@ public class RxJavaInteropV1SchedulerToV2SchedulerTest {
     @Test
     public void workerScheduleNullAction() {
         rx.Scheduler v1Scheduler = mock(rx.Scheduler.class);
-        io.reactivex.Scheduler v2Scheduler = RxJavaInterop.toV2Scheduler(v1Scheduler);
+        io.reactivex.rxjava3.core.Scheduler v3Scheduler = RxJavaInterop.toV3Scheduler(v1Scheduler);
 
         try {
-            v2Scheduler.createWorker().schedule(null);
+            v3Scheduler.createWorker().schedule(null);
             fail();
         } catch (NullPointerException expected) {
-            assertEquals("Source 2.x Runnable is null", expected.getMessage());
+            assertEquals("Source 3.x Runnable is null", expected.getMessage());
         }
     }
 
     @Test
     public void workerScheduleDelayed() {
         rx.schedulers.TestScheduler v1Scheduler = new rx.schedulers.TestScheduler();
-        io.reactivex.Scheduler v2Scheduler = RxJavaInterop.toV2Scheduler(v1Scheduler);
+        io.reactivex.rxjava3.core.Scheduler v3Scheduler = RxJavaInterop.toV3Scheduler(v1Scheduler);
 
         Runnable action0 = mock(Runnable.class);
 
-        v2Scheduler.createWorker().schedule(action0, 123L, MINUTES);
+        v3Scheduler.createWorker().schedule(action0, 123L, MINUTES);
         verifyZeroInteractions(action0);
 
         v1Scheduler.advanceTimeBy(122L, MINUTES);
@@ -72,24 +73,24 @@ public class RxJavaInteropV1SchedulerToV2SchedulerTest {
     @Test
     public void workerScheduleDelayedNullAction() {
         rx.Scheduler v1Scheduler = mock(rx.Scheduler.class);
-        io.reactivex.Scheduler v2Scheduler = RxJavaInterop.toV2Scheduler(v1Scheduler);
+        io.reactivex.rxjava3.core.Scheduler v3Scheduler = RxJavaInterop.toV3Scheduler(v1Scheduler);
 
         try {
-            v2Scheduler.createWorker().schedule(null, 123L, MINUTES);
+            v3Scheduler.createWorker().schedule(null, 123L, MINUTES);
             fail();
         } catch (NullPointerException expected) {
-            assertEquals("Source 2.x Runnable is null", expected.getMessage());
+            assertEquals("Source 3.x Runnable is null", expected.getMessage());
         }
     }
 
     @Test
     public void workerSchedulePeriodically() {
         rx.schedulers.TestScheduler v1Scheduler = new rx.schedulers.TestScheduler();
-        io.reactivex.Scheduler v2Scheduler = RxJavaInterop.toV2Scheduler(v1Scheduler);
+        io.reactivex.rxjava3.core.Scheduler v3Scheduler = RxJavaInterop.toV3Scheduler(v1Scheduler);
 
         Runnable action0 = mock(Runnable.class);
 
-        v2Scheduler.createWorker().schedulePeriodically(action0, 10L, 123L, MINUTES);
+        v3Scheduler.createWorker().schedulePeriodically(action0, 10L, 123L, MINUTES);
         verifyZeroInteractions(action0);
 
         v1Scheduler.advanceTimeBy(9L, MINUTES);
@@ -114,72 +115,72 @@ public class RxJavaInteropV1SchedulerToV2SchedulerTest {
     @Test
     public void workerSchedulePeriodicallyNullAction() {
         rx.Scheduler v1Scheduler = mock(rx.Scheduler.class);
-        io.reactivex.Scheduler v2Scheduler = RxJavaInterop.toV2Scheduler(v1Scheduler);
+        io.reactivex.rxjava3.core.Scheduler v3Scheduler = RxJavaInterop.toV3Scheduler(v1Scheduler);
 
         try {
-            v2Scheduler.createWorker().schedulePeriodically(null, 10L, 123L, MINUTES);
+            v3Scheduler.createWorker().schedulePeriodically(null, 10L, 123L, MINUTES);
             fail();
         } catch (NullPointerException expected) {
-            assertEquals("Source 2.x Runnable is null", expected.getMessage());
+            assertEquals("Source 3.x Runnable is null", expected.getMessage());
         }
     }
 
     @Test
     public void workerNow() {
         rx.Scheduler v1Scheduler = mock(rx.Scheduler.class);
-        io.reactivex.Scheduler v2Scheduler = RxJavaInterop.toV2Scheduler(v1Scheduler);
+        io.reactivex.rxjava3.core.Scheduler v3Scheduler = RxJavaInterop.toV3Scheduler(v1Scheduler);
 
         rx.Scheduler.Worker v1Worker = mock(rx.Scheduler.Worker.class);
         when(v1Scheduler.createWorker()).thenReturn(v1Worker);
-        io.reactivex.Scheduler.Worker v2Worker = v2Scheduler.createWorker();
+        io.reactivex.rxjava3.core.Scheduler.Worker v3Worker = v3Scheduler.createWorker();
 
         when(v1Worker.now()).thenReturn(123L);
 
-        assertEquals(123L, v2Worker.now(TimeUnit.MILLISECONDS));
+        assertEquals(123L, v3Worker.now(TimeUnit.MILLISECONDS));
     }
 
     @Test
     public void workerUnsubscribe() {
         rx.Scheduler v1Scheduler = mock(rx.Scheduler.class);
-        io.reactivex.Scheduler v2Scheduler = RxJavaInterop.toV2Scheduler(v1Scheduler);
+        io.reactivex.rxjava3.core.Scheduler v3Scheduler = RxJavaInterop.toV3Scheduler(v1Scheduler);
 
         rx.Scheduler.Worker v1Worker = mock(rx.Scheduler.Worker.class);
         when(v1Scheduler.createWorker()).thenReturn(v1Worker);
 
-        io.reactivex.Scheduler.Worker v2Worker = v2Scheduler.createWorker();
+        io.reactivex.rxjava3.core.Scheduler.Worker v3Worker = v3Scheduler.createWorker();
         verify(v1Worker, never()).unsubscribe();
 
-        v2Worker.dispose();
+        v3Worker.dispose();
         verify(v1Worker).unsubscribe();
     }
 
     @Test
     public void workerIsUnsubscribed() {
         rx.Scheduler v1Scheduler = mock(rx.Scheduler.class);
-        io.reactivex.Scheduler v2Scheduler = RxJavaInterop.toV2Scheduler(v1Scheduler);
+        io.reactivex.rxjava3.core.Scheduler v3Scheduler = RxJavaInterop.toV3Scheduler(v1Scheduler);
 
         rx.Scheduler.Worker v1Worker = mock(rx.Scheduler.Worker.class);
         when(v1Scheduler.createWorker()).thenReturn(v1Worker);
 
-        io.reactivex.Scheduler.Worker v2Worker = v2Scheduler.createWorker();
+        io.reactivex.rxjava3.core.Scheduler.Worker v3Worker = v3Scheduler.createWorker();
 
         when(v1Worker.isUnsubscribed()).thenReturn(true);
-        assertTrue(v2Worker.isDisposed());
+        assertTrue(v3Worker.isDisposed());
 
         when(v1Worker.isUnsubscribed()).thenReturn(false);
-        assertFalse(v2Worker.isDisposed());
+        assertFalse(v3Worker.isDisposed());
     }
 
     @Test
     public void startStopNotSupported() {
         rx.Scheduler v1Scheduler = mock(rx.Scheduler.class);
-        io.reactivex.Scheduler v2Scheduler = RxJavaInterop.toV2Scheduler(v1Scheduler);
+        io.reactivex.rxjava3.core.Scheduler v3Scheduler = RxJavaInterop.toV3Scheduler(v1Scheduler);
 
-        v2Scheduler.start();
+        v3Scheduler.start();
 
         verifyNoMoreInteractions(v1Scheduler);
 
-        v2Scheduler.shutdown();
+        v3Scheduler.shutdown();
 
         verifyNoMoreInteractions(v1Scheduler);
     }
@@ -187,13 +188,13 @@ public class RxJavaInteropV1SchedulerToV2SchedulerTest {
     @Test
     public void startStopSupported() {
         rx.Scheduler v1Scheduler = mock(rx.Scheduler.class, withSettings().extraInterfaces(SchedulerLifecycle.class));
-        io.reactivex.Scheduler v2Scheduler = RxJavaInterop.toV2Scheduler(v1Scheduler);
+        io.reactivex.rxjava3.core.Scheduler v3Scheduler = RxJavaInterop.toV3Scheduler(v1Scheduler);
 
-        v2Scheduler.start();
+        v3Scheduler.start();
 
         ((SchedulerLifecycle)verify(v1Scheduler)).start();
 
-        v2Scheduler.shutdown();
+        v3Scheduler.shutdown();
 
         ((SchedulerLifecycle)verify(v1Scheduler)).shutdown();
     }
