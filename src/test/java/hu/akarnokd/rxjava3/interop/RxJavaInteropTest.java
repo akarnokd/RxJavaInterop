@@ -1663,4 +1663,14 @@ public class RxJavaInteropTest {
 
         verify(onUnsubscribe).call();
     }
+
+    @Test
+    public void flowableV3toObservableV1SourceUnsubscribed() {
+        rx.Subscription s = new FlowableV3ToObservableV1.SourceSubscriber<Integer>(
+                new rx.observers.TestSubscriber<Integer>());
+
+        assertFalse(s.isUnsubscribed());
+        s.unsubscribe();
+        assertTrue(s.isUnsubscribed());
+    }
 }
