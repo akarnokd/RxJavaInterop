@@ -17,7 +17,7 @@ Library to convert between RxJava 1.x and 3.x reactive types.
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava3-interop:3.0.0-RC3"
+    compile "com.github.akarnokd:rxjava3-interop:3.0.0-RC4"
 }
 ```
 
