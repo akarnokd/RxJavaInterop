@@ -7,9 +7,11 @@ buildscript {
     }
 
     dependencies {
-        classpath 'gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.14.0'
-        classpath "me.champeau.gradle:jmh-gradle-plugin:0.4.4"
-        classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.2.0'
+        classpath "gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.15.0"
+        classpath "me.champeau.gradle:jmh-gradle-plugin:0.5.0"
+        classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.5.0'
+        classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:4.3.0"
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.8.0'
     }
 }
 
@@ -41,10 +43,6 @@ repositories {
     maven { url 'http://repo.spring.io/libs-snapshot' }
 }
 
-apply from: file('gradle/maven.gradle')
-apply plugin: 'maven'
-apply plugin: 'osgi'
-
 dependencies {
     signature 'org.codehaus.mojo.signature:java16:1.1@signature'
 
@@ -53,62 +51,25 @@ dependencies {
     compile "io.reactivex.rxjava3:rxjava:3.0.0-RC4"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile 'org.mockito:mockito-core:3.0.0'
+    testCompile 'org.mockito:mockito-core:3.1.0'
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
+apply plugin: 'maven'
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives jar
-    archives sourcesJar
-    archives javadocJar
-}
-
-//uploadMavenCentral {
-//    repositories {
-//        mavenDeployer {
-//            pom.whenConfigured {
-//                p -> p.dependencies = p.dependencies.findAll { 
-//                    dep -> dep.artifactId != "rxjava" 
-//                }
-//            }
-//        }
-//    }
-//}
+apply plugin: 'biz.aQute.bnd.builder'
 
 jar {
-    manifest {
-        name = 'rxjava3-interop'
-        instruction 'Bundle-Vendor', 'akarnokd'
-        instruction 'Bundle-DocURL', 'https://github.com/akarnokd/RxJavaInterop'
-        instruction 'Import-Package', '!org.junit,!junit.framework,!org.mockito.*,*'
-        instruction 'Eclipse-ExtensibleAPI', 'true'
-    }
+    bnd ('Bundle-Name': 'rxjava3-interop',
+            'Bundle-Vendor': 'akarnokd',
+            'Bundle-Description': 'Library to convert between RxJava 1.x and 3.x reactive types, schedulers and resource handles.',
+            'Import-Package': '!org.junit,!junit.framework,!org.mockito.*,*',
+            'Bundle-DocURL': 'https://github.com/akarnokd/RxJavaInterop')
 }
 
-apply plugin: 'maven-publish'
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifact (sourcesJar) { 
-                classifier = 'sources'
-            }
-        }
-    }
-}
+apply plugin: "com.vanniktech.maven.publish"
 
 jmh {
-    jmhVersion = '1.19'
+    jmhVersion = '1.21'
     humanOutputFile = null
     if (project.hasProperty('jmh')) {
         include = ".*" + project.jmh + ".*"
@@ -148,7 +109,7 @@ license {
 }
 
 jacoco {
-    toolVersion = '0.7.9' // See http://www.eclemma.org/jacoco/.
+    toolVersion = '0.8.5' // See http://www.eclemma.org/jacoco/.
 }
 
 jacocoTestReport {
