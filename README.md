@@ -85,27 +85,33 @@ rx.subjects.Subject sj1b = RxJavaInterop.toV1Subject(io.reactivex.rxjava3.proces
 ```java
 // convert from 1.x to 3.x
 
-io.reactivex.rxjava3.core.FlowableTransformer ft2 = RxJavaInterop.toV3Transformer(rx.Observable.Transformer);
+io.reactivex.rxjava3.core.FlowableTransformer    ft3 = RxJavaInterop.toV3Transformer(
+                                                           rx.Observable.Transformer);
 
-io.reactivex.rxjava3.core.ObservableTransformer ot2 = RxJavaInterop.toV3Transformer(
-                                                            rx.Observable.Transformer, 
-                                                            io.reactivex.rxjava3.core.BackpressureStrategy);
+io.reactivex.rxjava3.core.ObservableTransformer  ot3 = RxJavaInterop.toV3Transformer(
+                                                           rx.Observable.Transformer, 
+                                                           io.reactivex.rxjava3.core.BackpressureStrategy);
 
-io.reactivex.rxjava3.core.SingleTransformer st2 = RxJavaInterop.toV3Transformer(rx.Single.Transformer);
+io.reactivex.rxjava3.core.SingleTransformer      st3 = RxJavaInterop.toV3Transformer(
+                                                           rx.Single.Transformer);
 
-io.reactivex.rxjava3.core.CompletableTransformer ct2 = RxJavaInterop.toV3Transformer(rx.Completable.Transformer);
+io.reactivex.rxjava3.core.CompletableTransformer ct3 = RxJavaInterop.toV3Transformer(
+                                                           rx.Completable.Transformer);
 
 // convert from 3.x to 1.x
 
-rx.Observable.Transformer ft1 = RxJavaInterop.toV1Transformer(io.reactivex.rxjava3.core.FlowableTransformer);
+rx.Observable.Transformer  ft1 = RxJavaInterop.toV1Transformer(
+                                     io.reactivex.rxjava3.core.FlowableTransformer);
 
-rx.Observable.Transformer ot1 = RxJavaInterop.toV1Transformer(
-                                                  io.reactivex.rxjava3.core.ObservableTransformer,
-                                                  io.reactivex.rxjava3.core.BackpressureStrategy);
+rx.Observable.Transformer  ot1 = RxJavaInterop.toV1Transformer(
+                                     io.reactivex.rxjava3.core.ObservableTransformer,
+                                     io.reactivex.rxjava3.core.BackpressureStrategy);
 
-rx.Single.Transformer st1 = RxJavaInterop.toV1Transformer(io.reactivex.rxjava3.core.SingleTransformer);
+rx.Single.Transformer      st1 = RxJavaInterop.toV1Transformer(
+                                     io.reactivex.rxjava3.core.SingleTransformer);
 
-rx.Completable.Transformer ct1 = RxJavaInterop.toV1Transformer(io.reactivex.rxjava3.core.CompletableTransformer);
+rx.Completable.Transformer ct1 = RxJavaInterop.toV1Transformer(
+                                     io.reactivex.rxjava3.core.CompletableTransformer);
 ```
 
 ### Convert between 1.x `Flowable.Operator` and 3.x `FlowableOperator`
@@ -113,7 +119,7 @@ rx.Completable.Transformer ct1 = RxJavaInterop.toV1Transformer(io.reactivex.rxja
 ```java
 // convert from 1.x to 3.x
 
-io.reactivex.rxjava3.core.FlowableOperator fo2 = RxJavaInterop.toV3Operator(rx.Observable.Operator);
+io.reactivex.rxjava3.core.FlowableOperator fo3 = RxJavaInterop.toV3Operator(rx.Observable.Operator);
 
 // convert from 3.x to 1.x
 
@@ -125,7 +131,7 @@ rx.Observable.Operator fo1 = RxJavaInterop.toV1Operator(io.reactivex.rxjava3.cor
 ```java
 // convert from 1.x to 3.x
 
-io.reactivex.rxjava3.disposables.Disposable d2 = RxJavaInterop.toV3Disposable(rx.Subscription);
+io.reactivex.rxjava3.disposables.Disposable d3 = RxJavaInterop.toV3Disposable(rx.Subscription);
 
 // convert from 3.x to 1.x
 
@@ -138,7 +144,7 @@ rx.Subscription s1 = RxJavaInterop.toV1Subscription(io.reactivex.rxjava3.disposa
 ```java
 // convert from 1.x to 3.x
 
-io.reactivex.rxjava3.core.Scheduler s2 = RxJavaInterop.toV3Scheduler(rx.Scheduler);
+io.reactivex.rxjava3.core.Scheduler s3 = RxJavaInterop.toV3Scheduler(rx.Scheduler);
 
 // convert from 3.x to 1.x
 
