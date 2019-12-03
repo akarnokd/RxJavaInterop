@@ -35,17 +35,17 @@ import hu.akarnokd.rxjava3.interop.RxJavaInterop;
 
 // convert from 1.x to 3.x
 
-io.reactivex.Flowable    f2 = RxJavaInterop.toV3Flowable(rx.Observable);
+io.reactivex.rxjava3.core.Flowable     f3  = RxJavaInterop.toV3Flowable(rx.Observable);
 
-io.reactivex.Observable  o2 = RxJavaInterop.toV3Observable(rx.Observable);
+io.reactivex.rxjava3.core.Observable   o3  = RxJavaInterop.toV3Observable(rx.Observable);
 
-io.reactive.Single       s2 = RxJavaInterop.toV3Single(rx.Single);
+io.reactivex.rxjava3.core.Single       s3  = RxJavaInterop.toV3Single(rx.Single);
 
-io.reactivex.Completable c2 = RxJavaInterop.toV3Completable(rx.Completable);
+io.reactivex.rxjava3.core.Completable  c3  = RxJavaInterop.toV3Completable(rx.Completable);
 
-io.reactivex.Maybe m2s = RxJavaInterop.toV3Maybe(rx.Single);
+io.reactivex.rxjava3.core.Maybe        m3s = RxJavaInterop.toV3Maybe(rx.Single);
 
-io.reactivex.Maybe m2c = RxJavaInterop.toV3Maybe(rx.Completable);
+io.reactivex.rxjava3.core.Maybe        m3c = RxJavaInterop.toV3Maybe(rx.Completable);
 
 // convert from 3.x to 1.x
 
@@ -69,15 +69,15 @@ Note that 3.x `Subject`s and `FlowableProcessor`s support only the same input an
 ```java
 // convert from 1.x to 3.x
 
-io.reactivex.subjects.Subject sj2 = RxJavaInterop.toV3Subject(rx.subjects.Subject);
+io.reactivex.rxjava3.subjects.Subject sj3 = RxJavaInterop.toV3Subject(rx.subjects.Subject);
 
-io.reactivex.processors.FlowableProcessor fp2 = RxJavaInterop.toV3Processor(rx.subjects.Subject);
+io.reactivex.rxjava3.processors.FlowableProcessor fp3 = RxJavaInterop.toV3Processor(rx.subjects.Subject);
 
 // convert from 3.x to 1.x
 
-rx.subjects.Subject sj1 = RxJavaInterop.toV1Subject(io.reactivex.subjects.Subject);
+rx.subjects.Subject sj1 = RxJavaInterop.toV1Subject(io.reactivex.rxjava3.subjects.Subject);
 
-rx.subjects.Subject sj1b = RxJavaInterop.toV1Subject(io.reactivex.processors.FlowableProcessor);
+rx.subjects.Subject sj1b = RxJavaInterop.toV1Subject(io.reactivex.rxjava3.processors.FlowableProcessor);
 ```
 
 ### Convert between 1.x `X.Transformer`s and 3.x `XTransformer`s.
@@ -85,25 +85,27 @@ rx.subjects.Subject sj1b = RxJavaInterop.toV1Subject(io.reactivex.processors.Flo
 ```java
 // convert from 1.x to 3.x
 
-io.reactivex.FlowableTransformer ft2 = RxJavaInterop.toV3Transformer(rx.Observable.Transformer);
+io.reactivex.rxjava3.core.FlowableTransformer ft2 = RxJavaInterop.toV3Transformer(rx.Observable.Transformer);
 
-io.reactivex.ObservableTransformer ot2 = RxJavaInterop.toV3Transformer(
-                                             rx.Observable.Transformer, io.reactivex.BackpressureStrategy);
+io.reactivex.rxjava3.core.ObservableTransformer ot2 = RxJavaInterop.toV3Transformer(
+                                                            rx.Observable.Transformer, 
+                                                            io.reactivex.rxjava3.core.BackpressureStrategy);
 
-io.reactivex.SingleTransformer st2 = RxJavaInterop.toV3Transformer(rx.Single.Transformer);
+io.reactivex.rxjava3.core.SingleTransformer st2 = RxJavaInterop.toV3Transformer(rx.Single.Transformer);
 
-io.reactivex.CompletableTransformer ct2 = RxJavaInterop.toV3Transformer(rx.Completable.Transformer);
+io.reactivex.rxjava3.core.CompletableTransformer ct2 = RxJavaInterop.toV3Transformer(rx.Completable.Transformer);
 
 // convert from 3.x to 1.x
 
-rx.Observable.Transformer ft1 = RxJavaInterop.toV1Transformer(io.reactivex.FlowableTransformer);
+rx.Observable.Transformer ft1 = RxJavaInterop.toV1Transformer(io.reactivex.rxjava3.core.FlowableTransformer);
 
 rx.Observable.Transformer ot1 = RxJavaInterop.toV1Transformer(
-                                                  io.reactivex.ObservableTransformer, io.reactivex.BackpressureStrategy);
+                                                  io.reactivex.rxjava3.core.ObservableTransformer,
+                                                  io.reactivex.rxjava3.core.BackpressureStrategy);
 
-rx.Single.Transformer st1 = RxJavaInterop.toV1Transformer(io.reactivex.SingleTransformer);
+rx.Single.Transformer st1 = RxJavaInterop.toV1Transformer(io.reactivex.rxjava3.core.SingleTransformer);
 
-rx.Completable.Transformer ct1 = RxJavaInterop.toV1Transformer(io.reactivex.CompletableTransformer);
+rx.Completable.Transformer ct1 = RxJavaInterop.toV1Transformer(io.reactivex.rxjava3.core.CompletableTransformer);
 ```
 
 ### Convert between 1.x `Flowable.Operator` and 3.x `FlowableOperator`
@@ -111,11 +113,11 @@ rx.Completable.Transformer ct1 = RxJavaInterop.toV1Transformer(io.reactivex.Comp
 ```java
 // convert from 1.x to 3.x
 
-io.reactivex.FlowableOperator fo2 = RxJavaInterop.toV3Operator(rx.Observable.Operator);
+io.reactivex.rxjava3.core.FlowableOperator fo2 = RxJavaInterop.toV3Operator(rx.Observable.Operator);
 
 // convert from 3.x to 1.x
 
-rx.Observable.Operator fo1 = RxJavaInterop.toV1Operator(io.reactivex.FlowableOperator);
+rx.Observable.Operator fo1 = RxJavaInterop.toV1Operator(io.reactivex.rxjava3.core.FlowableOperator);
 ```
 
 ### Convert between 1.x `Subscription` and 3.x `Disposable`
@@ -123,11 +125,11 @@ rx.Observable.Operator fo1 = RxJavaInterop.toV1Operator(io.reactivex.FlowableOpe
 ```java
 // convert from 1.x to 3.x
 
-io.reactivex.disposables.Disposable d2 = RxJavaInterop.toV3Disposable(rx.Subscription);
+io.reactivex.rxjava3.disposables.Disposable d2 = RxJavaInterop.toV3Disposable(rx.Subscription);
 
 // convert from 3.x to 1.x
 
-rx.Subscription s1 = RxJavaInterop.toV1Subscription(io.reactivex.disposables.Disposable);
+rx.Subscription s1 = RxJavaInterop.toV1Subscription(io.reactivex.rxjava3.disposables.Disposable);
 ```
 
 
@@ -136,9 +138,9 @@ rx.Subscription s1 = RxJavaInterop.toV1Subscription(io.reactivex.disposables.Dis
 ```java
 // convert from 1.x to 3.x
 
-io.reactivex.Scheduler s2 = RxJavaInterop.toV3Scheduler(rx.Scheduler);
+io.reactivex.rxjava3.core.Scheduler s2 = RxJavaInterop.toV3Scheduler(rx.Scheduler);
 
 // convert from 3.x to 1.x
 
-rx.Scheduler s1 = RxJavaInterop.toV1Scheduler(io.reactivex.Scheduler);
+rx.Scheduler s1 = RxJavaInterop.toV1Scheduler(io.reactivex.rxjava3.core.Scheduler);
 ```
