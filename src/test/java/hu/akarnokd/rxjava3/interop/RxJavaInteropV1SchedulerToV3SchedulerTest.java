@@ -31,7 +31,7 @@ public class RxJavaInteropV1SchedulerToV3SchedulerTest {
         Runnable action0 = mock(Runnable.class);
 
         v3Scheduler.createWorker().schedule(action0);
-        verifyZeroInteractions(action0);
+        verifyNoInteractions(action0);
 
         v1Scheduler.triggerActions();
         verify(action0).run();
@@ -58,10 +58,10 @@ public class RxJavaInteropV1SchedulerToV3SchedulerTest {
         Runnable action0 = mock(Runnable.class);
 
         v3Scheduler.createWorker().schedule(action0, 123L, MINUTES);
-        verifyZeroInteractions(action0);
+        verifyNoInteractions(action0);
 
         v1Scheduler.advanceTimeBy(122L, MINUTES);
-        verifyZeroInteractions(action0);
+        verifyNoInteractions(action0);
 
         v1Scheduler.advanceTimeBy(1L, MINUTES);
         verify(action0).run();
@@ -91,10 +91,10 @@ public class RxJavaInteropV1SchedulerToV3SchedulerTest {
         Runnable action0 = mock(Runnable.class);
 
         v3Scheduler.createWorker().schedulePeriodically(action0, 10L, 123L, MINUTES);
-        verifyZeroInteractions(action0);
+        verifyNoInteractions(action0);
 
         v1Scheduler.advanceTimeBy(9L, MINUTES);
-        verifyZeroInteractions(action0);
+        verifyNoInteractions(action0);
 
         v1Scheduler.advanceTimeBy(1L, MINUTES);
         verify(action0).run();

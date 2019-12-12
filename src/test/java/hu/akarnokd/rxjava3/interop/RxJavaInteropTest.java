@@ -1583,7 +1583,7 @@ public class RxJavaInteropTest {
         rx.Subscription subscription = mock(rx.Subscription.class);
 
         Disposable disposable = RxJavaInterop.toV3Disposable(subscription);
-        verifyZeroInteractions(subscription);
+        verifyNoInteractions(subscription);
 
         disposable.dispose();
         verify(subscription).unsubscribe();
@@ -1609,7 +1609,7 @@ public class RxJavaInteropTest {
         Disposable disposable = mock(Disposable.class);
 
         rx.Subscription subscription = RxJavaInterop.toV1Subscription(disposable);
-        verifyZeroInteractions(disposable);
+        verifyNoInteractions(disposable);
 
         subscription.unsubscribe();
         verify(disposable).dispose();
