@@ -31,7 +31,7 @@ final class ObservableV1ToObservableV3<T> extends io.reactivex.rxjava3.core.Obse
 
     @Override
     protected void subscribeActual(io.reactivex.rxjava3.core.Observer<? super T> s) {
-        ObservableSubscriber<T> parent = new ObservableSubscriber<T>(s);
+        ObservableSubscriber<T> parent = new ObservableSubscriber<>(s);
         s.onSubscribe(parent);
 
         source.unsafeSubscribe(parent);

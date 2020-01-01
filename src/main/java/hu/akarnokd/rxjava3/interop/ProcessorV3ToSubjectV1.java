@@ -24,8 +24,8 @@ package hu.akarnokd.rxjava3.interop;
 final class ProcessorV3ToSubjectV1<T> extends rx.subjects.Subject<T, T> {
 
     static <T> rx.subjects.Subject<T, T> createWith(io.reactivex.rxjava3.processors.FlowableProcessor<T> processor) {
-        State<T> state = new State<T>(processor);
-        return new ProcessorV3ToSubjectV1<T>(state);
+        State<T> state = new State<>(processor);
+        return new ProcessorV3ToSubjectV1<>(state);
     }
 
     final State<T> state;
@@ -67,7 +67,7 @@ final class ProcessorV3ToSubjectV1<T> extends rx.subjects.Subject<T, T> {
         @Override
         public void call(rx.Subscriber<? super T> t) {
             hu.akarnokd.rxjava3.interop.FlowableV3ToObservableV1.SourceSubscriber<T> parent =
-                    new hu.akarnokd.rxjava3.interop.FlowableV3ToObservableV1.SourceSubscriber<T>(t);
+                    new hu.akarnokd.rxjava3.interop.FlowableV3ToObservableV1.SourceSubscriber<>(t);
 
             t.add(parent);
             t.setProducer(parent);

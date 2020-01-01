@@ -77,7 +77,7 @@ final class SubjectV1ToProcessorV3<T> extends io.reactivex.rxjava3.processors.Fl
     @Override
     protected void subscribeActual(org.reactivestreams.Subscriber<? super T> s) {
         hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriber<T> parent =
-                new hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriber<T>(s);
+                new hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriber<>(s);
         hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriberSubscription parentSubscription =
                 new hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriberSubscription(parent);
         s.onSubscribe(parentSubscription);

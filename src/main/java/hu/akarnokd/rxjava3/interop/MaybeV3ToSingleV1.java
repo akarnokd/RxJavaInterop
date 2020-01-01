@@ -34,7 +34,7 @@ final class MaybeV3ToSingleV1<T> implements rx.Single.OnSubscribe<T> {
 
     @Override
     public void call(rx.SingleSubscriber<? super T> t) {
-        MaybeV3Observer<T> parent = new MaybeV3Observer<T>(t);
+        MaybeV3Observer<T> parent = new MaybeV3Observer<>(t);
         t.add(parent);
         source.subscribe(parent);
     }

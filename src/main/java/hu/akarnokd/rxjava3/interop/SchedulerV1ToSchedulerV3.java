@@ -102,7 +102,7 @@ final class SchedulerV1ToSchedulerV3 extends io.reactivex.rxjava3.core.Scheduler
         final Runnable source;
 
         RunnableToV1Action0(Runnable source) {
-            io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "Source 3.x Runnable is null");
+            java.util.Objects.requireNonNull(source, "Source 3.x Runnable is null");
             this.source = source;
         }
 

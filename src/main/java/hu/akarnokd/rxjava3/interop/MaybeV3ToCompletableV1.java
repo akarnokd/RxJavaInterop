@@ -33,7 +33,7 @@ final class MaybeV3ToCompletableV1<T> implements rx.Completable.OnSubscribe {
 
     @Override
     public void call(rx.CompletableSubscriber t) {
-        MaybeV3Observer<T> parent = new MaybeV3Observer<T>(t);
+        MaybeV3Observer<T> parent = new MaybeV3Observer<>(t);
         t.onSubscribe(parent);
         source.subscribe(parent);
     }

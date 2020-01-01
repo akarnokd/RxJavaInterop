@@ -50,8 +50,8 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T> io.reactivex.rxjava3.core.Flowable<T> toV3Flowable(rx.Observable<T> source) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
-        return new ObservableV1ToFlowableV3<T>(source);
+        java.util.Objects.requireNonNull(source, "source is null");
+        return new ObservableV1ToFlowableV3<>(source);
     }
 
     /**
@@ -70,8 +70,8 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T> io.reactivex.rxjava3.core.Observable<T> toV3Observable(rx.Observable<T> source) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
-        return new ObservableV1ToObservableV3<T>(source);
+        java.util.Objects.requireNonNull(source, "source is null");
+        return new ObservableV1ToObservableV3<>(source);
     }
 
     /**
@@ -87,8 +87,8 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T> io.reactivex.rxjava3.core.Maybe<T> toV3Maybe(rx.Completable source) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
-        return new CompletableV1ToMaybeV3<T>(source);
+        java.util.Objects.requireNonNull(source, "source is null");
+        return new CompletableV1ToMaybeV3<>(source);
     }
 
     /**
@@ -104,8 +104,8 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T> io.reactivex.rxjava3.core.Maybe<T> toV3Maybe(rx.Single<T> source) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
-        return new SingleV1ToMaybeV3<T>(source);
+        java.util.Objects.requireNonNull(source, "source is null");
+        return new SingleV1ToMaybeV3<>(source);
     }
 
     /**
@@ -121,8 +121,8 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T> io.reactivex.rxjava3.core.Single<T> toV3Single(rx.Single<T> source) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
-        return new SingleV1ToSingleV3<T>(source);
+        java.util.Objects.requireNonNull(source, "source is null");
+        return new SingleV1ToSingleV3<>(source);
     }
 
     /**
@@ -137,7 +137,7 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static io.reactivex.rxjava3.core.Completable toV3Completable(rx.Completable source) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
+        java.util.Objects.requireNonNull(source, "source is null");
         return new CompletableV1ToCompletableV3(source);
     }
 
@@ -156,8 +156,8 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T> io.reactivex.rxjava3.subjects.Subject<T> toV3Subject(rx.subjects.Subject<T, T> subject) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(subject, "subject is null");
-        return new SubjectV1ToSubjectV3<T>(subject);
+        java.util.Objects.requireNonNull(subject, "subject is null");
+        return new SubjectV1ToSubjectV3<>(subject);
     }
 
     /**
@@ -178,8 +178,8 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T> io.reactivex.rxjava3.processors.FlowableProcessor<T> toV3Processor(rx.subjects.Subject<T, T> subject) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(subject, "subject is null");
-        return new SubjectV1ToProcessorV3<T>(subject);
+        java.util.Objects.requireNonNull(subject, "subject is null");
+        return new SubjectV1ToProcessorV3<>(subject);
     }
 
     /**
@@ -199,7 +199,7 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T, R> io.reactivex.rxjava3.core.FlowableTransformer<T, R> toV3Transformer(final rx.Observable.Transformer<T, R> transformer) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        java.util.Objects.requireNonNull(transformer, "transformer is null");
         return new io.reactivex.rxjava3.core.FlowableTransformer<T, R>() {
             @Override
             public org.reactivestreams.Publisher<R> apply(io.reactivex.rxjava3.core.Flowable<T> f) {
@@ -224,7 +224,7 @@ public final class RxJavaInterop {
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T, R> io.reactivex.rxjava3.core.ObservableTransformer<T, R> toV3Transformer(final rx.Observable.Transformer<T, R> transformer,
         final io.reactivex.rxjava3.core.BackpressureStrategy strategy) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        java.util.Objects.requireNonNull(transformer, "transformer is null");
         return new io.reactivex.rxjava3.core.ObservableTransformer<T, R>() {
             @Override
             public io.reactivex.rxjava3.core.ObservableSource<R> apply(io.reactivex.rxjava3.core.Observable<T> obs) {
@@ -247,7 +247,7 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T, R> io.reactivex.rxjava3.core.SingleTransformer<T, R> toV3Transformer(final rx.Single.Transformer<T, R> transformer) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        java.util.Objects.requireNonNull(transformer, "transformer is null");
         return new io.reactivex.rxjava3.core.SingleTransformer<T, R>() {
             @Override
             public io.reactivex.rxjava3.core.Single<R> apply(io.reactivex.rxjava3.core.Single<T> f) {
@@ -268,7 +268,7 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static io.reactivex.rxjava3.core.CompletableTransformer toV3Transformer(final rx.Completable.Transformer transformer) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        java.util.Objects.requireNonNull(transformer, "transformer is null");
         return new io.reactivex.rxjava3.core.CompletableTransformer() {
             @Override
             public io.reactivex.rxjava3.core.Completable apply(io.reactivex.rxjava3.core.Completable f) {
@@ -294,18 +294,18 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T, R> io.reactivex.rxjava3.core.FlowableOperator<R, T> toV3Operator(final rx.Observable.Operator<R, T> operator) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(operator, "operator is null");
+        java.util.Objects.requireNonNull(operator, "operator is null");
         return new io.reactivex.rxjava3.core.FlowableOperator<R, T>() {
             @Override
             public org.reactivestreams.Subscriber<? super T> apply(org.reactivestreams.Subscriber<? super R> s) throws Exception {
-                hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriber<R> parent = new hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriber<R>(s);
+                hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriber<R> parent = new hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriber<>(s);
                 hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriberSubscription parentSubscription = new hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriberSubscription(parent);
                 s.onSubscribe(parentSubscription);
 
                 rx.Subscriber<? super T> t;
 
                 try {
-                    t = io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(operator.call(parent), "The operator returned a null rx.Subscriber");
+                    t = java.util.Objects.requireNonNull(operator.call(parent), "The operator returned a null rx.Subscriber");
                 } catch (Throwable ex) {
                     io.reactivex.rxjava3.exceptions.Exceptions.throwIfFatal(ex);
                     rx.exceptions.Exceptions.throwIfFatal(ex);
@@ -314,7 +314,7 @@ public final class RxJavaInterop {
                     t.unsubscribe();
                 }
 
-                hu.akarnokd.rxjava3.interop.FlowableV3ToObservableV1.SourceSubscriber<T> z = new hu.akarnokd.rxjava3.interop.FlowableV3ToObservableV1.SourceSubscriber<T>(t);
+                hu.akarnokd.rxjava3.interop.FlowableV3ToObservableV1.SourceSubscriber<T> z = new hu.akarnokd.rxjava3.interop.FlowableV3ToObservableV1.SourceSubscriber<>(t);
 
                 t.add(z);
                 t.setProducer(z);
@@ -331,7 +331,7 @@ public final class RxJavaInterop {
      * @since 0.11.0
      */
     public static io.reactivex.rxjava3.disposables.Disposable toV3Disposable(final rx.Subscription subscription) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(subscription, "subscription is null");
+        java.util.Objects.requireNonNull(subscription, "subscription is null");
         return new SubscriptionV1ToDisposableV3(subscription);
     }
 
@@ -360,8 +360,8 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T> rx.Observable<T> toV1Observable(org.reactivestreams.Publisher<T> source) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
-        return rx.Observable.unsafeCreate(new FlowableV3ToObservableV1<T>(source));
+        java.util.Objects.requireNonNull(source, "source is null");
+        return rx.Observable.unsafeCreate(new FlowableV3ToObservableV1<>(source));
     }
 
     /**
@@ -382,8 +382,8 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T> rx.Observable<T> toV1Observable(io.reactivex.rxjava3.core.ObservableSource<T> source, io.reactivex.rxjava3.core.BackpressureStrategy strategy) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(strategy, "strategy is null");
+        java.util.Objects.requireNonNull(source, "source is null");
+        java.util.Objects.requireNonNull(strategy, "strategy is null");
         return toV1Observable(io.reactivex.rxjava3.core.Observable.wrap(source).toFlowable(strategy));
     }
 
@@ -401,8 +401,8 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T> rx.Single<T> toV1Single(io.reactivex.rxjava3.core.SingleSource<T> source) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
-        return rx.Single.create(new SingleV3ToSingleV1<T>(source));
+        java.util.Objects.requireNonNull(source, "source is null");
+        return rx.Single.create(new SingleV3ToSingleV1<>(source));
     }
 
     /**
@@ -418,7 +418,7 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static rx.Completable toV1Completable(io.reactivex.rxjava3.core.CompletableSource source) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
+        java.util.Objects.requireNonNull(source, "source is null");
         return rx.Completable.create(new CompletableV3ToCompletableV1(source));
     }
 
@@ -437,8 +437,8 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T> rx.Single<T> toV1Single(io.reactivex.rxjava3.core.MaybeSource<T> source) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
-        return rx.Single.create(new MaybeV3ToSingleV1<T>(source));
+        java.util.Objects.requireNonNull(source, "source is null");
+        return rx.Single.create(new MaybeV3ToSingleV1<>(source));
     }
 
     /**
@@ -456,8 +456,8 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T> rx.Completable toV1Completable(io.reactivex.rxjava3.core.MaybeSource<T> source) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "source is null");
-        return rx.Completable.create(new MaybeV3ToCompletableV1<T>(source));
+        java.util.Objects.requireNonNull(source, "source is null");
+        return rx.Completable.create(new MaybeV3ToCompletableV1<>(source));
     }
 
     /**
@@ -475,7 +475,7 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T> rx.subjects.Subject<T, T> toV1Subject(io.reactivex.rxjava3.subjects.Subject<T> subject) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(subject, "subject is null");
+        java.util.Objects.requireNonNull(subject, "subject is null");
         return SubjectV3ToSubjectV1.<T>createWith(subject);
     }
 
@@ -497,7 +497,7 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T> rx.subjects.Subject<T, T> toV1Subject(io.reactivex.rxjava3.processors.FlowableProcessor<T> processor) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(processor, "processor is null");
+        java.util.Objects.requireNonNull(processor, "processor is null");
         return ProcessorV3ToSubjectV1.<T>createWith(processor);
     }
 
@@ -518,7 +518,7 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T, R> rx.Observable.Transformer<T, R> toV1Transformer(final io.reactivex.rxjava3.core.FlowableTransformer<T, R> transformer) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        java.util.Objects.requireNonNull(transformer, "transformer is null");
         return new rx.Observable.Transformer<T, R>() {
             @Override
             public rx.Observable<R> call(rx.Observable<T> f) {
@@ -543,7 +543,7 @@ public final class RxJavaInterop {
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T, R> rx.Observable.Transformer<T, R> toV1Transformer(final io.reactivex.rxjava3.core.ObservableTransformer<T, R> transformer,
         final io.reactivex.rxjava3.core.BackpressureStrategy strategy) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        java.util.Objects.requireNonNull(transformer, "transformer is null");
         return new rx.Observable.Transformer<T, R>() {
             @Override
             public rx.Observable<R> call(rx.Observable<T> obs) {
@@ -566,7 +566,7 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T, R> rx.Single.Transformer<T, R> toV1Transformer(final io.reactivex.rxjava3.core.SingleTransformer<T, R> transformer) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        java.util.Objects.requireNonNull(transformer, "transformer is null");
         return new rx.Single.Transformer<T, R>() {
             @Override
             public rx.Single<R> call(rx.Single<T> f) {
@@ -587,7 +587,7 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static rx.Completable.Transformer toV1Transformer(final io.reactivex.rxjava3.core.CompletableTransformer transformer) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(transformer, "transformer is null");
+        java.util.Objects.requireNonNull(transformer, "transformer is null");
         return new rx.Completable.Transformer() {
             @Override
             public rx.Completable call(rx.Completable f) {
@@ -613,11 +613,11 @@ public final class RxJavaInterop {
      */
     @io.reactivex.rxjava3.annotations.SchedulerSupport(io.reactivex.rxjava3.annotations.SchedulerSupport.NONE)
     public static <T, R> rx.Observable.Operator<R, T> toV1Operator(final io.reactivex.rxjava3.core.FlowableOperator<R, T> operator) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(operator, "operator is null");
+        java.util.Objects.requireNonNull(operator, "operator is null");
         return new rx.Observable.Operator<R, T>() {
             @Override
             public rx.Subscriber<? super T> call(rx.Subscriber<? super R> t) {
-                hu.akarnokd.rxjava3.interop.FlowableV3ToObservableV1.SourceSubscriber<R> z = new hu.akarnokd.rxjava3.interop.FlowableV3ToObservableV1.SourceSubscriber<R>(t);
+                hu.akarnokd.rxjava3.interop.FlowableV3ToObservableV1.SourceSubscriber<R> z = new hu.akarnokd.rxjava3.interop.FlowableV3ToObservableV1.SourceSubscriber<>(t);
 
                 t.add(z);
                 t.setProducer(z);
@@ -625,7 +625,7 @@ public final class RxJavaInterop {
                 org.reactivestreams.Subscriber<? super T> s;
 
                 try {
-                    s = io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(operator.apply(z), "The operator returned a null Subscriber");
+                    s = java.util.Objects.requireNonNull(operator.apply(z), "The operator returned a null Subscriber");
                 } catch (Throwable ex) {
                     io.reactivex.rxjava3.exceptions.Exceptions.throwIfFatal(ex);
                     rx.exceptions.Exceptions.throwIfFatal(ex);
@@ -635,7 +635,7 @@ public final class RxJavaInterop {
                     return r;
                 }
 
-                hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriber<T> parent = new hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriber<T>(s);
+                hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriber<T> parent = new hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriber<>(s);
                 hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriberSubscription parentSubscription = new hu.akarnokd.rxjava3.interop.ObservableV1ToFlowableV3.ObservableSubscriberSubscription(parent);
                 s.onSubscribe(parentSubscription);
 
@@ -651,7 +651,7 @@ public final class RxJavaInterop {
      * @since 0.11.0
      */
     public static rx.Subscription toV1Subscription(final io.reactivex.rxjava3.disposables.Disposable disposable) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(disposable, "disposable is null");
+        java.util.Objects.requireNonNull(disposable, "disposable is null");
         return new DisposableV3ToSubscriptionV1(disposable);
     }
 
@@ -662,7 +662,7 @@ public final class RxJavaInterop {
      * @since 0.12.0
      */
     public static rx.Scheduler toV1Scheduler(io.reactivex.rxjava3.core.Scheduler scheduler) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        java.util.Objects.requireNonNull(scheduler, "scheduler is null");
         return new SchedulerV3ToSchedulerV1(scheduler);
     }
 
@@ -673,7 +673,7 @@ public final class RxJavaInterop {
      * @since 0.12.0
      */
     public static io.reactivex.rxjava3.core.Scheduler toV3Scheduler(rx.Scheduler scheduler) {
-        io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(scheduler, "scheduler is null");
+        java.util.Objects.requireNonNull(scheduler, "scheduler is null");
         return new SchedulerV1ToSchedulerV3(scheduler);
     }
 }

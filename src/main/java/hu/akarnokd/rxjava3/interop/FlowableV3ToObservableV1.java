@@ -32,7 +32,7 @@ final class FlowableV3ToObservableV1<T> implements rx.Observable.OnSubscribe<T> 
 
     @Override
     public void call(rx.Subscriber<? super T> t) {
-        SourceSubscriber<T> parent = new SourceSubscriber<T>(t);
+        SourceSubscriber<T> parent = new SourceSubscriber<>(t);
 
         t.add(parent);
         t.setProducer(parent);

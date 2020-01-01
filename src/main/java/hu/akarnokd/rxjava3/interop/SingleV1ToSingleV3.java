@@ -31,7 +31,7 @@ final class SingleV1ToSingleV3<T> extends io.reactivex.rxjava3.core.Single<T> {
 
     @Override
     protected void subscribeActual(io.reactivex.rxjava3.core.SingleObserver<? super T> observer) {
-        SourceSingleSubscriber<T> parent = new SourceSingleSubscriber<T>(observer);
+        SourceSingleSubscriber<T> parent = new SourceSingleSubscriber<>(observer);
         observer.onSubscribe(parent);
         source.subscribe(parent);
     }

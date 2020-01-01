@@ -31,7 +31,7 @@ final class SingleV1ToMaybeV3<T> extends io.reactivex.rxjava3.core.Maybe<T> {
 
     @Override
     protected void subscribeActual(io.reactivex.rxjava3.core.MaybeObserver<? super T> observer) {
-        SourceSingleSubscriber<T> parent = new SourceSingleSubscriber<T>(observer);
+        SourceSingleSubscriber<T> parent = new SourceSingleSubscriber<>(observer);
         observer.onSubscribe(parent);
         source.subscribe(parent);
     }

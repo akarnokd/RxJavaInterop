@@ -33,7 +33,7 @@ final class SingleV3ToSingleV1<T> implements rx.Single.OnSubscribe<T> {
 
     @Override
     public void call(rx.SingleSubscriber<? super T> t) {
-        SourceSingleObserver<T> parent = new SourceSingleObserver<T>(t);
+        SourceSingleObserver<T> parent = new SourceSingleObserver<>(t);
         t.add(parent);
         source.subscribe(parent);
     }

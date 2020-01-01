@@ -101,7 +101,7 @@ final class SchedulerV3ToSchedulerV1 extends rx.Scheduler implements rx.internal
         final rx.functions.Action0 source;
 
         Action0V1ToRunnable(rx.functions.Action0 source) {
-            io.reactivex.rxjava3.internal.functions.ObjectHelper.requireNonNull(source, "Source 1.x Action0 is null");
+            java.util.Objects.requireNonNull(source, "Source 1.x Action0 is null");
             this.source = source;
         }
 

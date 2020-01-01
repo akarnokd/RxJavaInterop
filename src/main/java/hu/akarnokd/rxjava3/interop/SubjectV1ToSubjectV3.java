@@ -75,7 +75,7 @@ final class SubjectV1ToSubjectV3<T> extends io.reactivex.rxjava3.subjects.Subjec
     @Override
     protected void subscribeActual(io.reactivex.rxjava3.core.Observer<? super T> observer) {
         hu.akarnokd.rxjava3.interop.ObservableV1ToObservableV3.ObservableSubscriber<T> parent =
-                new hu.akarnokd.rxjava3.interop.ObservableV1ToObservableV3.ObservableSubscriber<T>(observer);
+                new hu.akarnokd.rxjava3.interop.ObservableV1ToObservableV3.ObservableSubscriber<>(observer);
         observer.onSubscribe(parent);
 
         source.unsafeSubscribe(parent);

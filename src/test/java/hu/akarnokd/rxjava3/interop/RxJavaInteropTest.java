@@ -162,7 +162,6 @@ public class RxJavaInteropTest {
         .assertResult();
     }
 
-    @SuppressWarnings("unchecked")
     static void assertFailureAndMessage(BaseTestConsumer<?, ?> testConsumer, Class<? extends Throwable> errorClass, final String message) {
         testConsumer
         .assertFailure(errorClass)
@@ -512,13 +511,13 @@ public class RxJavaInteropTest {
     // ----------------------------------------------------------
 
     static <T> rx.observers.TestSubscriber<T> test1(rx.Observable<T> s) {
-        rx.observers.TestSubscriber<T> ts = new rx.observers.TestSubscriber<T>();
+        rx.observers.TestSubscriber<T> ts = new rx.observers.TestSubscriber<>();
         s.subscribe(ts);
         return ts;
     }
 
     static <T> rx.observers.TestSubscriber<T> test1(rx.Observable<T> s, long initialRequest) {
-        rx.observers.TestSubscriber<T> ts = new rx.observers.TestSubscriber<T>(initialRequest);
+        rx.observers.TestSubscriber<T> ts = new rx.observers.TestSubscriber<>(initialRequest);
         s.subscribe(ts);
         return ts;
     }
@@ -626,7 +625,7 @@ public class RxJavaInteropTest {
     // ----------------------------------------------------------
 
     static <T> rx.observers.TestSubscriber<T> test1(rx.Single<T> s) {
-        rx.observers.TestSubscriber<T> ts = new rx.observers.TestSubscriber<T>();
+        rx.observers.TestSubscriber<T> ts = new rx.observers.TestSubscriber<>();
         s.subscribe(ts);
         return ts;
     }
@@ -667,7 +666,7 @@ public class RxJavaInteropTest {
     // ----------------------------------------------------------
 
     static <T> rx.observers.TestSubscriber<T> test1(rx.Completable s) {
-        rx.observers.TestSubscriber<T> ts = new rx.observers.TestSubscriber<T>();
+        rx.observers.TestSubscriber<T> ts = new rx.observers.TestSubscriber<>();
         s.subscribe(ts);
         return ts;
     }
@@ -881,7 +880,7 @@ public class RxJavaInteropTest {
         assertFalse(sj3.hasThrowable());
         assertNull(sj3.getThrowable());
 
-        Disposable d1 = Disposables.empty();
+        Disposable d1 = Disposable.empty();
         sj3.onSubscribe(d1);
 
         assertFalse(d1.isDisposed());
@@ -893,7 +892,7 @@ public class RxJavaInteropTest {
         sj3.onError(new IOException());
         sj3.onNext(3);
 
-        Disposable d3 = Disposables.empty();
+        Disposable d3 = Disposable.empty();
         sj3.onSubscribe(d3);
 
         assertFalse(d1.isDisposed());
@@ -1596,12 +1595,12 @@ public class RxJavaInteropTest {
 
     @Test
     public void toV1SubscriptionIsUnsubscribedTrue() {
-        assertTrue(RxJavaInterop.toV1Subscription(Disposables.disposed()).isUnsubscribed());
+        assertTrue(RxJavaInterop.toV1Subscription(Disposable.disposed()).isUnsubscribed());
     }
 
     @Test
     public void toV1SubscriptionIsUnsubscribedFalse() {
-        assertFalse(RxJavaInterop.toV1Subscription(Disposables.empty()).isUnsubscribed());
+        assertFalse(RxJavaInterop.toV1Subscription(Disposable.empty()).isUnsubscribed());
     }
 
     @Test
@@ -1666,7 +1665,7 @@ public class RxJavaInteropTest {
 
     @Test
     public void flowableV3toObservableV1SourceUnsubscribed() {
-        rx.Subscription s = new FlowableV3ToObservableV1.SourceSubscriber<Integer>(
+        rx.Subscription s = new FlowableV3ToObservableV1.SourceSubscriber<>(
                 new rx.observers.TestSubscriber<Integer>());
 
         assertFalse(s.isUnsubscribed());

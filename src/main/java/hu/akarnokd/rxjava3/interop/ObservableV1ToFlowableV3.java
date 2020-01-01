@@ -31,7 +31,7 @@ final class ObservableV1ToFlowableV3<T> extends io.reactivex.rxjava3.core.Flowab
 
     @Override
     protected void subscribeActual(org.reactivestreams.Subscriber<? super T> s) {
-        ObservableSubscriber<T> parent = new ObservableSubscriber<T>(s);
+        ObservableSubscriber<T> parent = new ObservableSubscriber<>(s);
         ObservableSubscriberSubscription parentSubscription = new ObservableSubscriberSubscription(parent);
         s.onSubscribe(parentSubscription);
 

@@ -26,8 +26,8 @@ import java.util.concurrent.atomic.*;
 final class SubjectV3ToSubjectV1<T> extends rx.subjects.Subject<T, T> {
 
     static <T> rx.subjects.Subject<T, T> createWith(io.reactivex.rxjava3.subjects.Subject<T> subject) {
-        State<T> state = new State<T>(subject);
-        return new SubjectV3ToSubjectV1<T>(state);
+        State<T> state = new State<>(subject);
+        return new SubjectV3ToSubjectV1<>(state);
     }
 
     final State<T> state;
@@ -68,7 +68,7 @@ final class SubjectV3ToSubjectV1<T> extends rx.subjects.Subject<T, T> {
 
         @Override
         public void call(rx.Subscriber<? super T> t) {
-            SourceObserver<T> parent = new SourceObserver<T>(t);
+            SourceObserver<T> parent = new SourceObserver<>(t);
 
             t.add(parent);
             t.setProducer(parent);
