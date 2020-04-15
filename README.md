@@ -10,6 +10,10 @@ RxJava 3.x: [![RxJava 3.x](https://maven-badges.herokuapp.com/maven-central/io.r
 
 Library to convert between RxJava 1.x and 3.x reactive types.
 
+### Interop between 2.x and 3.x
+
+Check out the [https://github.com/akarnokd/RxJavaBridge](https://github.com/akarnokd/RxJavaBridge#RxJavaBridge) project.
+
 # Releases
 
 
