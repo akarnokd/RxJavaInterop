@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 David Karnok
+ * Copyright 2016-2020 David Karnok
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,23 +58,23 @@ final class FlowableV3ToObservableV1<T> implements rx.Observable.OnSubscribe<T> 
         @Override
         public void request(long n) {
             if (n != 0L) {
-                io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper.deferredRequest(this, requested, n);
+                SubscriptionHelper.deferredRequest(this, requested, n);
             }
         }
 
         @Override
         public void unsubscribe() {
-            io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper.cancel(this);
+            SubscriptionHelper.cancel(this);
         }
 
         @Override
         public boolean isUnsubscribed() {
-            return io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper.CANCELLED == get();
+            return SubscriptionHelper.CANCELLED == get();
         }
 
         @Override
         public void onSubscribe(org.reactivestreams.Subscription s) {
-            io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper.deferredSetOnce(this, requested, s);
+            SubscriptionHelper.deferredSetOnce(this, requested, s);
         }
 
         @Override

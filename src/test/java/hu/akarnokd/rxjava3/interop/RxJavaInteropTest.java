@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 David Karnok
+ * Copyright 2016-2020 David Karnok
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,10 @@ import java.util.NoSuchElementException;
 import org.junit.Test;
 import org.reactivestreams.Subscription;
 
-import hu.akarnokd.rxjava3.interop.RxJavaInterop;
 import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.disposables.*;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.functions.Predicate;
 import io.reactivex.rxjava3.internal.subscriptions.BooleanSubscription;
@@ -172,7 +171,7 @@ public class RxJavaInteropTest {
             }
         });
     }
-    
+
     @Test
     public void o1f3Error() {
         assertFailureAndMessage(toV3Flowable(rx.Observable.error(new RuntimeException("Forced failure")))

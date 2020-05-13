@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2018 David Karnok
+ * Copyright 2016-2020 David Karnok
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,17 +53,17 @@ final class MaybeV3ToSingleV1<T> implements rx.Single.OnSubscribe<T> {
 
         @Override
         public void unsubscribe() {
-            io.reactivex.rxjava3.internal.disposables.DisposableHelper.dispose(this);
+            DisposableHelper.dispose(this);
         }
 
         @Override
         public boolean isUnsubscribed() {
-            return io.reactivex.rxjava3.internal.disposables.DisposableHelper.isDisposed(get());
+            return DisposableHelper.isDisposed(get());
         }
 
         @Override
         public void onSubscribe(io.reactivex.rxjava3.disposables.Disposable d) {
-            io.reactivex.rxjava3.internal.disposables.DisposableHelper.setOnce(this, d);
+            DisposableHelper.setOnce(this, d);
         }
 
         @Override

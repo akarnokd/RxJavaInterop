@@ -21,7 +21,7 @@ Check out the [https://github.com/akarnokd/RxJavaBridge](https://github.com/akar
 
 ```
 dependencies {
-    compile "com.github.akarnokd:rxjava3-interop:3.0.0"
+    compile "com.github.akarnokd:rxjava3-interop:3.0.1"
 }
 ```
 

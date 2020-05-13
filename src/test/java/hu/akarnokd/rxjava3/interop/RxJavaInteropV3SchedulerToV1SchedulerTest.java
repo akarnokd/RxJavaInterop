@@ -1,17 +1,15 @@
 package hu.akarnokd.rxjava3.interop;
 
-import io.reactivex.rxjava3.core.Scheduler;
-import io.reactivex.rxjava3.schedulers.TestScheduler;
-import org.junit.Test;
-
-import hu.akarnokd.rxjava3.interop.RxJavaInterop;
-import rx.functions.Action0;
-import rx.internal.schedulers.SchedulerLifecycle;
-
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+
+import org.junit.Test;
+
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.schedulers.TestScheduler;
+import rx.functions.Action0;
+import rx.internal.schedulers.SchedulerLifecycle;
 
 public class RxJavaInteropV3SchedulerToV1SchedulerTest {
 
