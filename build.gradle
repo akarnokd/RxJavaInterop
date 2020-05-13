@@ -63,7 +63,9 @@ jar {
             'Bundle-Vendor': 'akarnokd',
             'Bundle-Description': 'Library to convert between RxJava 1.x and 3.x reactive types, schedulers and resource handles.',
             'Import-Package': '!org.junit,!junit.framework,!org.mockito.*,*',
-            'Bundle-DocURL': 'https://github.com/akarnokd/RxJavaInterop')
+            'Bundle-DocURL': 'https://github.com/akarnokd/RxJavaInterop',
+            'Export-Package': 'hu.akarnokd.rxjava3.interop.*'
+        )
 }
 
 apply plugin: "com.vanniktech.maven.publish"
