@@ -1,7 +1,7 @@
 # RxJavaInterop
 
 
-<a href='https://travis-ci.com/akarnokd/RxJavaInterop/builds'><img src='https://travis-ci.com/akarnokd/RxJavaInterop.svg?branch=3.x'></a>
+<a href='https://github.com/akarnokd/RxJavaInterop/actions?query=workflow%3A%22Java+CI+with+Gradle%22'><img src='https://github.com/akarnokd/RxJavaInterop/workflows/Java%20CI%20with%20Gradle/badge.svg'></a>
 [![codecov.io](http://codecov.io/github/akarnokd/RxJavaInterop/coverage.svg?branch=3.x)](http://codecov.io/github/akarnokd/RxJavaInterop?branch=3.x)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-interop/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.akarnokd/rxjava3-interop)
 
