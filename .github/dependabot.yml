@@ -1,0 +1,15 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 20
+  ignore:
+  - dependency-name: com.vanniktech:gradle-maven-publish-plugin
+    versions:
+    - 0.14.0
+    - 0.14.1
+    - 0.14.2
+    - 0.15.0
