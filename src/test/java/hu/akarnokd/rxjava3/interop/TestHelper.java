@@ -40,7 +40,7 @@ import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.exceptions.*;
 import io.reactivex.rxjava3.functions.*;
-import io.reactivex.rxjava3.internal.fuseable.*;
+import io.reactivex.rxjava3.operators.*;
 import io.reactivex.rxjava3.internal.operators.completable.CompletableToFlowable;
 import io.reactivex.rxjava3.internal.operators.maybe.MaybeToFlowable;
 import io.reactivex.rxjava3.internal.operators.single.SingleToFlowable;
