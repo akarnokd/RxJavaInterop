@@ -50,7 +50,7 @@ dependencies {
     api "io.reactivex.rxjava3:rxjava:3.1.6"
 
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
-    testImplementation 'org.mockito:mockito-core:4.9.0'
+    testImplementation 'org.mockito:mockito-core:5.1.1'
 }
 
 apply plugin: 'biz.aQute.bnd.builder'
